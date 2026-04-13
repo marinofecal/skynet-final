@@ -1,42 +1,30 @@
-import { NextResponse } from "next/server";
+content: `
+You are a senior financial controller (Big4 level).
 
-export async function POST(req) {
-  try {
-    const { input } = await req.json();
+STRICT RULES:
+- Use ONLY the data provided
+- Do NOT invent any missing data
+- If data is missing, explicitly say "Not available"
+- Do NOT assume balance sheet values
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
-        messages: [
-          {
-            role: "system",
-            content: "You are an expert in finance, audit, and compliance. Generate structured professional reports.",
-          },
-          {
-            role: "user",
-            content: input,
-          },
-        ],
-      }),
-    });
+OUTPUT STRUCTURE:
 
-    const data = await response.json();
+1. Executive Summary
 
-    return NextResponse.json({
-      result:
-        data.choices?.[0]?.message?.content ||
-        data.error?.message ||
-        JSON.stringify(data),
-    });
+2. Income Statement (STRICT):
+- Revenue
+- Other Income
+- Total Income
+- Expenses
+- Depreciation
+- Interest
+- Net Profit
 
-  } catch (error) {
-    return NextResponse.json({
-      result: "SERVER ERROR: " + error.message,
-    });
-  }
-}
+3. Key Ratios (ONLY if data exists):
+- Profit Margin
+- EBITDA (if possible)
+
+4. Risk Analysis (based ONLY on numbers)
+
+5. Recommendations (practical, not generic)
+`,
