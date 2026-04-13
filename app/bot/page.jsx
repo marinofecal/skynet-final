@@ -3,11 +3,37 @@
 import { useState } from "react";
 
 export default function BotPage() {
-  const [prompt, setPrompt] = useState("");
+  const [form, setForm] = useState({
+    client: "",
+    revenue: "",
+    otherIncome: "",
+    expenses: "",
+    depreciation: "",
+    interest: ""
+  });
+
   const [result, setResult] = useState("");
 
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
+
   const runBot = async () => {
-    setResult("Loading...");
+    setResult("Generating report...");
+
+    const prompt = `
+CLIENT: ${form.client}
+REVENUE: ${form.revenue}
+OTHER_INCOME: ${form.otherIncome}
+EXPENSES: ${form.expenses}
+DEPRECIATION: ${form.depreciation}
+INTEREST: ${form.interest}
+
+TASK: Generate IFRS financial report
+`;
 
     const res = await fetch("/api/bot", {
       method: "POST",
@@ -22,42 +48,23 @@ export default function BotPage() {
   };
 
   return (
-    <div style={{ padding: 40, background: "black", minHeight: "100vh", color: "white" }}>
-      <h1 style={{ fontSize: 32, marginBottom: 20 }}>AI Financial Bot</h1>
+    <div style={{ padding: 40, background: "black", color: "white", minHeight: "100vh" }}>
+      <h1>AI Financial Report Generator</h1>
 
-      <textarea
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        rows={10}
-        style={{
-          width: "100%",
-          padding: 15,
-          background: "#111",
-          color: "white",
-          border: "1px solid #333"
-        }}
-        placeholder={`CLIENT: OILI
-
-REVENUE: 50000
-OTHER_INCOME: 1800
-EXPENSES: 18000
-DEPRECIATION: 9000
-INTEREST: 1500
-
-TASK: Generate IFRS report`}
-      />
+      <div style={{ display: "grid", gap: 10, maxWidth: 400 }}>
+        <input name="client" placeholder="Client" onChange={handleChange} />
+        <input name="revenue" placeholder="Revenue" onChange={handleChange} />
+        <input name="otherIncome" placeholder="Other Income" onChange={handleChange} />
+        <input name="expenses" placeholder="Expenses" onChange={handleChange} />
+        <input name="depreciation" placeholder="Depreciation" onChange={handleChange} />
+        <input name="interest" placeholder="Interest" onChange={handleChange} />
+      </div>
 
       <button
         onClick={runBot}
-        style={{
-          marginTop: 15,
-          padding: "10px 20px",
-          background: "white",
-          color: "black",
-          cursor: "pointer"
-        }}
+        style={{ marginTop: 20, padding: 10 }}
       >
-        Run
+        Generate Report
       </button>
 
       <pre style={{ marginTop: 30, whiteSpace: "pre-wrap" }}>
