@@ -1,21 +1,21 @@
 export default function ToolsPage() {
-  return (
-    <div style={{
-      background: "#0a0a0a",
-      color: "white",
-      minHeight: "100vh",
-      padding: 40
-    }}>
-      <h1 style={{ fontSize: 32, marginBottom: 30 }}>
-        Tools
-      </h1>
+  const tools = [
+    { name: "IFRS Generator", path: "/tools/ifrs" },
+    { name: "Audit Analyzer", path: "/tools/audit" },
+    { name: "Excel AI", path: "/tools/excel" },
+  ];
 
-      <div style={{ display: "grid", gap: 20 }}>
-        <a href="/tools/ifrs">IFRS Report Generator</a>
-        <a href="/tools/audit">Audit Evidence Intelligence</a>
-        <a href="/tools/excel">Excel → Financial Report</a>
-        <a href="/tools/variance">Variance Analysis AI</a>
-      </div>
-    </div>
+  return (
+    <main style={{ padding: "40px", background: "#000", color: "#fff", minHeight: "100vh" }}>
+      <h1>AI Tools</h1>
+
+      {tools.map((tool) => (
+        <div key={tool.path} style={{ marginTop: "20px" }}>
+          <a href={tool.path} style={{ color: "#4ea1ff", fontSize: "20px" }}>
+            {tool.name}
+          </a>
+        </div>
+      ))}
+    </main>
   );
 }
