@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function ExcelAI() {
+export default function ExcelPage() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
 
@@ -10,6 +10,9 @@ export default function ExcelAI() {
     try {
       const res = await fetch("/api/bot", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({ input }),
       });
 
@@ -21,15 +24,25 @@ export default function ExcelAI() {
   }
 
   return (
-    <main style={{ padding: 40, background: "#000", color: "#fff", minHeight: "100vh" }}>
+    <main style={{
+      background: "#0a0a0a",
+      color: "#fff",
+      minHeight: "100vh",
+      padding: "60px"
+    }}>
       <h1>Excel AI Assistant</h1>
 
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
         rows={10}
-        style={{ width: "100%", marginTop: 20 }}
-        placeholder="Describe your Excel problem..."
+        style={{
+          width: "100%",
+          marginTop: 20,
+          background: "#111",
+          color: "#fff",
+          padding: "10px"
+        }}
       />
 
       <button onClick={run} style={{ marginTop: 20 }}>
