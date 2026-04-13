@@ -11,7 +11,7 @@ export async function POST(req) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192", // 👈 ESTE ES EL FIX
+        model: "llama3-8b-8192",
         messages: [
           {
             role: "system",
@@ -27,11 +27,18 @@ export async function POST(req) {
 
     const data = await response.json();
 
+    console.log("FULL GROQ RESPONSE:", JSON.stringify(data, null, 2));
+
     return NextResponse.json({
-      result: data.choices?.[0]?.message?.content || "No response",
+      result:
+        data.choices?.[0]?.message?.content ||
+        data.error?.message ||
+        JSON.stringify(data),
     });
 
   } catch (error) {
-    return NextResponse.json({ error: error.message });
+    return NextResponse.json({
+      result: "SERVER ERROR: " + error.message,
+    });
   }
 }
