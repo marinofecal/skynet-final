@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
                     <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-[150px] opacity-20 animate-pulse"></div>
                     <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600 rounded-full blur-[150px] opacity-20 animate-pulse delay-1000"></div>
                     <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-blue-600 rounded-full blur-[150px] opacity-10 animate-pulse delay-700"></div>
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="80" height="80" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"%3E%3Cpath d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(6,182,212,0.03)" stroke-width="1"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100%" height="100%" fill="url(%23grid)"/%3E%3C/svg%3E')] opacity-50"></div>
+                    <div className="absolute inset-0 bg-grid-pattern opacity-50"></div>
                 </div>
 
                 {/* Navbar SKYNET */}
