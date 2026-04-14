@@ -13,16 +13,12 @@ export default function Home() {
       <div style={{
         maxWidth: "1100px",
         margin: "0 auto",
-        padding: "120px 20px 60px"
+        padding: "120px 20px 80px"
       }}>
 
-        <div style={{
-          fontSize: "14px",
-          color: "#6b7280",
-          marginBottom: "20px"
-        }}>
+        <p style={{ color: "#6b7280", marginBottom: "20px" }}>
           AI for Finance • Audit • Controls
-        </div>
+        </p>
 
         <h1 style={{
           fontSize: "72px",
@@ -30,9 +26,9 @@ export default function Home() {
           lineHeight: "1.05",
           marginBottom: "20px"
         }}>
-          From Financial Data  
+          AI that understands  
           <br />
-          to Intelligent Decisions
+          Finance, Audit & Decisions
         </h1>
 
         <p style={{
@@ -41,11 +37,11 @@ export default function Home() {
           maxWidth: "700px",
           marginBottom: "40px"
         }}>
-          Build AI copilots that understand accounting, audit and business processes — not just text.
+          Not another chatbot.  
+          A system designed to turn financial workflows into structured, actionable outputs.
         </p>
 
         <div style={{ display: "flex", gap: "20px" }}>
-          
           <Link href="/tools">
             <button style={{
               padding: "16px 28px",
@@ -56,98 +52,154 @@ export default function Home() {
               fontSize: "16px",
               cursor: "pointer"
             }}>
-              View Systems
+              Explore Systems
             </button>
           </Link>
 
-          <button style={{
+          <div style={{
             padding: "16px 28px",
             borderRadius: "12px",
             border: "1px solid #333",
-            background: "transparent",
-            color: "white",
-            fontSize: "16px"
+            color: "#9ca3af"
           }}>
-            How it works
-          </button>
-
+            Built for real workflows
+          </div>
         </div>
+
       </div>
 
-      {/* VALUE SECTION */}
+      {/* PROBLEM / VALUE */}
       <div style={{
         maxWidth: "1100px",
         margin: "0 auto",
         padding: "60px 20px",
         borderTop: "1px solid #111"
       }}>
+        <h2 style={{ fontSize: "28px", marginBottom: "30px" }}>
+          Finance teams don’t need more tools.
+        </h2>
 
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "40px"
+          gap: "20px"
+        }}>
+          <p style={{ color: "#9ca3af" }}>
+            They need better decisions.
+          </p>
+
+          <p style={{ color: "#9ca3af" }}>
+            We transform:
+          </p>
+
+          <ul style={{ color: "#d1d5db" }}>
+            <li>• Accounting standards → into actions</li>
+            <li>• Audit processes → into structured outputs</li>
+            <li>• Business scenarios → into decisions</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* SYSTEMS */}
+      <div style={{
+        maxWidth: "1100px",
+        margin: "0 auto",
+        padding: "80px 20px"
+      }}>
+
+        <h2 style={{
+          fontSize: "36px",
+          marginBottom: "40px"
+        }}>
+          AI Systems
+        </h2>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "20px"
         }}>
 
-          <div>
-            <h3>Audit Intelligence</h3>
-            <p style={{ color: "#9ca3af" }}>
-              Identify risks, controls and audit procedures instantly.
-            </p>
-          </div>
-
-          <div>
-            <h3>IFRS Understanding</h3>
-            <p style={{ color: "#9ca3af" }}>
-              Translate complex standards into real business decisions.
-            </p>
-          </div>
-
-          <div>
-            <h3>Process Automation</h3>
-            <p style={{ color: "#9ca3af" }}>
-              Turn financial workflows into AI-assisted systems.
-            </p>
-          </div>
+          {[
+            {
+              title: "Audit AI Assistant",
+              desc: "Identify risks, controls and audit procedures for real business scenarios.",
+              link: "/tools/audit"
+            },
+            {
+              title: "IFRS AI Advisor",
+              desc: "Interpret accounting standards and generate compliant outputs.",
+              link: "/tools/ifrs"
+            },
+            {
+              title: "Excel AI Copilot",
+              desc: "Turn financial problems into structured Excel logic and analysis.",
+              link: "/tools/excel"
+            }
+          ].map((tool, i) => (
+            <Link key={i} href={tool.link}>
+              <div style={{
+                padding: "24px",
+                borderRadius: "16px",
+                background: "#0b0f1a",
+                border: "1px solid #1f2937",
+                cursor: "pointer",
+                transition: "0.3s"
+              }}>
+                <h3 style={{ marginBottom: "10px" }}>
+                  {tool.title}
+                </h3>
+                <p style={{ color: "#9ca3af", fontSize: "14px" }}>
+                  {tool.desc}
+                </p>
+              </div>
+            </Link>
+          ))}
 
         </div>
 
       </div>
 
-      {/* SINGLE FOCUS CTA */}
+      {/* DIFFERENTIATION */}
       <div style={{
         maxWidth: "1100px",
         margin: "0 auto",
-        padding: "80px 20px",
-        textAlign: "center"
+        padding: "60px 20px",
+        borderTop: "1px solid #111"
       }}>
-
-        <h2 style={{
-          fontSize: "36px",
-          marginBottom: "20px"
-        }}>
-          Explore the AI Systems
+        <h2 style={{ fontSize: "28px", marginBottom: "20px" }}>
+          Why this is different
         </h2>
 
-        <p style={{
-          color: "#9ca3af",
-          marginBottom: "30px"
-        }}>
-          Real tools built for finance, audit and compliance workflows.
-        </p>
+        <ul style={{ color: "#d1d5db", lineHeight: "1.8" }}>
+          <li>❌ Not a generic AI chatbot</li>
+          <li>❌ Not built for prompts</li>
+          <li>✔ Built for finance workflows</li>
+          <li>✔ Structured outputs (not paragraphs)</li>
+          <li>✔ Designed for audit and compliance environments</li>
+        </ul>
+      </div>
+
+      {/* FINAL CTA */}
+      <div style={{
+        textAlign: "center",
+        padding: "100px 20px"
+      }}>
+        <h2 style={{ fontSize: "36px", marginBottom: "20px" }}>
+          See how AI can work in finance
+        </h2>
 
         <Link href="/tools">
           <button style={{
-            padding: "14px 24px",
-            borderRadius: "10px",
+            padding: "16px 28px",
+            borderRadius: "12px",
             background: "#111827",
             border: "1px solid #333",
             color: "white",
             cursor: "pointer"
           }}>
-            Go to Tools →
+            Explore Systems →
           </button>
         </Link>
-
       </div>
 
       {/* FOOTER */}
@@ -158,7 +210,7 @@ export default function Home() {
         color: "#6b7280",
         fontSize: "14px"
       }}>
-        Built for real finance, audit and control environments
+        AI applied to finance, audit and decision-making
       </div>
 
     </div>
