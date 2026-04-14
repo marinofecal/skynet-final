@@ -1,45 +1,26 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
-    <main style={{
-      background: "#0a0a0a",
-      color: "#fff",
-      minHeight: "100vh",
-      padding: "80px 40px",
-      fontFamily: "system-ui"
-    }}>
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-6">
       
-      <h1 style={{ fontSize: "56px", marginBottom: "20px" }}>
-        Skynet Intelligence
-      </h1>
+      <div className="text-center max-w-3xl">
+        
+        <h1 className="text-6xl font-bold mb-6">
+          AI for Finance, Risk & Compliance
+        </h1>
 
-      <p style={{ fontSize: "20px", color: "#aaa", maxWidth: "600px" }}>
-        AI tools for finance, audit and compliance professionals.
-        Turn raw data into structured decisions.
-      </p>
+        <p className="text-gray-400 mb-10 text-lg">
+          Building intelligent systems to automate reporting, controls and decision-making in enterprise environments.
+        </p>
 
-      <div style={{ marginTop: "40px" }}>
-        <a href="/tools" style={{
-          background: "#4ea1ff",
-          color: "#000",
-          padding: "12px 24px",
-          borderRadius: "8px",
-          textDecoration: "none",
-          fontWeight: "bold"
-        }}>
-          Explore Tools →
-        </a>
+        <Link href="/tools">
+          <button className="px-8 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 hover:scale-105 transition">
+            Explore AI Systems
+          </button>
+        </Link>
+
       </div>
-
-      <div style={{ marginTop: "80px" }}>
-        <h2 style={{ marginBottom: "20px" }}>Core Tools</h2>
-
-        <ul style={{ lineHeight: "2" }}>
-          <li>IFRS Financial Report Generator</li>
-          <li>Audit Risk Analyzer</li>
-          <li>Excel AI Assistant</li>
-        </ul>
-      </div>
-
-    </main>
+    </div>
   );
 }
