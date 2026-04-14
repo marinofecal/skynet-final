@@ -1,197 +1,85 @@
-"use client";
+'use client';
 
 import { useState } from "react";
+import Link from "next/link";
 
-export default function AuditPage() {
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
-  const [loading, setLoading] = useState(false);
+export default function AuditBot() {
+    const [input, setInput] = useState("");
+    const [response, setResponse] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const handleGenerate = async () => {
-    if (!input) return;
-
-    setLoading(true);
-    setOutput("");
-
-    try {
-      const res = await fetch("/api/bot", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: input,
-        }),
-      });
-
-      const data = await res.json();
-      setOutput(data.result);
-    } catch {
-      setOutput("Error generating response.");
-    }
-
-    setLoading(false);
-  };
-
-  const handleQuick = (text) => {
-    setInput(text);
-  };
-
-  const buttonStyle = {
-    padding: "10px 16px",
-    borderRadius: "10px",
-    border: "1px solid #333",
-    background: "#111",
-    color: "white",
-    cursor: "pointer",
-  };
-
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom, black, #0a0f1c)",
-        color: "white",
-        padding: "60px 20px",
-      }}
-    >
-      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!input.trim()) return;
         
-        {/* HEADER */}
-        <h1 style={{ fontSize: "42px", marginBottom: "10px" }}>
-          Audit AI Assistant
-        </h1>
+        setLoading(true);
+        setResponse("");
+        
+        // Simulación de respuesta (conectarás tu API después)
+        setTimeout(() => {
+            setResponse(`[AUDIT BOT RESPONSE]\nAnalyzing: "${input}"\nRisk Level: MODERATE\nSuggested Controls:\n- Implement automated monitoring\n- Quarterly review required\n- Documentation needed for compliance`);
+            setLoading(false);
+        }, 1500);
+    };
 
-        <p style={{ color: "#aaa", marginBottom: "30px" }}>
-          Identify risks, controls and audit procedures for real business scenarios.
-        </p>
-
-        {/* QUICK ACTIONS */}
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            marginBottom: "20px",
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            style={buttonStyle}
-            onClick={() =>
-              setInput("Revenue recognition process risks and controls")
-            }
-          >
-            Revenue
-          </button>
-
-          <button
-            style={buttonStyle}
-            onClick={() =>
-              setInput("Procurement cycle audit procedures")
-            }
-          >
-            Procurement
-          </button>
-
-          <button
-            style={buttonStyle}
-            onClick={() =>
-              setInput("Cash management fraud risks")
-            }
-          >
-            Cash
-          </button>
-        </div>
-
-        {/* INPUT CARD */}
-        <div
-          style={{
-            background: "#0b0f1a",
-            padding: "20px",
-            borderRadius: "12px",
-            border: "1px solid #222",
-            marginBottom: "20px",
-          }}
-        >
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Describe an audit scenario (e.g. revenue process, procurement, control failure...)"
-            style={{
-              width: "100%",
-              height: "140px",
-              background: "transparent",
-              color: "white",
-              border: "none",
-              outline: "none",
-              fontSize: "14px",
-              lineHeight: "1.5",
-            }}
-          />
-
-          <div style={{ textAlign: "right", marginTop: "10px" }}>
-            <button
-              onClick={handleGenerate}
-              disabled={loading}
-              style={{
-                padding: "12px 20px",
-                borderRadius: "10px",
-                background:
-                  "linear-gradient(to right, #3b82f6, #8b5cf6)",
-                border: "none",
-                color: "white",
-                cursor: "pointer",
-                opacity: loading ? 0.6 : 1,
-              }}
-            >
-              {loading ? "Analyzing..." : "Generate Audit Analysis"}
-            </button>
-          </div>
-        </div>
-
-        {/* OUTPUT CARD */}
-        <div
-          style={{
-            background: "#0b0f1a",
-            padding: "20px",
-            borderRadius: "12px",
-            border: "1px solid #222",
-          }}
-        >
-          <p style={{ color: "#aaa", marginBottom: "10px" }}>
-            Audit Output
-          </p>
-
-          {!output && (
-            <p style={{ color: "#aaa" }}>
-              Your audit analysis will appear here.
-            </p>
-          )}
-
-          {output && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              
-              {output.split("\n\n").map((section, i) => (
-                <div
-                  key={i}
-                  style={{
-                    background: "#111827",
-                    padding: "15px",
-                    borderRadius: "10px",
-                    border: "1px solid #333",
-                  }}
-                >
-                  <div style={{ whiteSpace: "pre-line", fontSize: "14px" }}>
-                    {section}
-                  </div>
+    return (
+        <div className="min-h-screen py-12 px-6">
+            <div className="max-w-5xl mx-auto">
+                {/* Header */}
+                <div className="mb-8">
+                    <Link href="/" className="text-cyan-400 hover:text-cyan-300 transition text-sm font-mono">
+                        ← BACK TO HOME
+                    </Link>
+                    <div className="flex items-center gap-4 mt-4">
+                        <div className="text-5xl">🔍</div>
+                        <div>
+                            <h1 className="text-4xl font-bold">AUDIT AI</h1>
+                            <p className="text-cyan-400 font-mono text-sm">SENTINEL PROTOCOL</p>
+                        </div>
+                    </div>
+                    <p className="text-gray-400 mt-4 max-w-2xl">
+                        Autonomous risk assessment and audit procedure generator.
+                        Describe your scenario and receive structured analysis.
+                    </p>
                 </div>
-              ))}
 
+                {/* Chat Interface */}
+                <div className="glass-card rounded-2xl p-6 mb-6">
+                    <form onSubmit={handleSubmit}>
+                        <textarea
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Describe the business process or area to audit..."
+                            className="w-full p-4 rounded-xl bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition resize-none"
+                            rows={4}
+                        />
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="mt-4 px-6 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-lg font-semibold hover:shadow-[0_0_20px_rgba(0,212,255,0.3)] transition disabled:opacity-50"
+                        >
+                            {loading ? "PROCESSING..." : "EXECUTE AUDIT →"}
+                        </button>
+                    </form>
+                </div>
+
+                {/* Response */}
+                {response && (
+                    <div className="glass-card rounded-2xl p-6 animate-fadeIn">
+                        <h3 className="text-cyan-400 font-mono text-sm mb-3">⟫ AUDIT REPORT</h3>
+                        <pre className="text-gray-300 whitespace-pre-wrap font-mono text-sm">
+                            {response}
+                        </pre>
+                    </div>
+                )}
+
+                {/* Info */}
+                <div className="mt-8 p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/20">
+                    <p className="text-xs text-gray-500 text-center">
+                        This bot demonstrates AI-powered audit automation. Connect to OpenAI API for production use.
+                    </p>
+                </div>
             </div>
-          )}
         </div>
-
-      </div>
-    </div>
-  );
+    );
 }
