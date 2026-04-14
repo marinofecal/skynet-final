@@ -162,16 +162,33 @@ export default function AuditPage() {
             Audit Output
           </p>
 
-          <div
-            style={{
-              whiteSpace: "pre-line",
-              lineHeight: "1.6",
-              fontSize: "14px",
-              color: "#e5e7eb",
-            }}
-          >
-            {output || "Your audit analysis will appear here."}
-          </div>
+          {!output && (
+            <p style={{ color: "#aaa" }}>
+              Your audit analysis will appear here.
+            </p>
+          )}
+
+          {output && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              
+              {output.split("\n\n").map((section, i) => (
+                <div
+                  key={i}
+                  style={{
+                    background: "#111827",
+                    padding: "15px",
+                    borderRadius: "10px",
+                    border: "1px solid #333",
+                  }}
+                >
+                  <div style={{ whiteSpace: "pre-line", fontSize: "14px" }}>
+                    {section}
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          )}
         </div>
 
       </div>
