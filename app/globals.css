@@ -1,19 +1,81 @@
-/* Mejoras responsive */
-@media (max-width: 640px) {
-    .text-7xl {
-        font-size: 3rem !important;
-    }
-    
-    .grid-cols-3.gap-8 {
-        gap: 1rem !important;
-    }
-    
-    .text-2xl.font-bold.text-cyan-400 {
-        font-size: 1.25rem !important;
-    }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Efecto de brillo en hover */
-.hover-glow:hover {
-    filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.5));
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0a0f;
+    color: #ededee;
+}
+
+/* Scrollbar futurista */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
+}
+
+/* Animaciones */
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(0, 212, 255, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.6); }
+}
+
+@keyframes borderFlow {
+    0% { border-image: linear-gradient(0deg, #00d4ff, #8b5cf6) 1; }
+    100% { border-image: linear-gradient(360deg, #00d4ff, #8b5cf6) 1; }
+}
+
+.animate-glow {
+    animation: glow 3s ease-in-out infinite;
+}
+
+/* Clases utilitarias */
+.glass-dark {
+    background: rgba(20, 20, 35, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+}
+
+.glass-card {
+    background: rgba(25, 25, 40, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: rgba(0, 212, 255, 0.6);
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.1);
+    transform: translateY(-4px);
+}
+
+.gradient-border {
+    border: 1px solid transparent;
+    background: linear-gradient(#0a0a0f, #0a0a0f) padding-box,
+                linear-gradient(135deg, #00d4ff, #8b5cf6) border-box;
 }
