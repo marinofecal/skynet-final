@@ -20,7 +20,7 @@ export default function AuditPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prompt: `You are an audit expert. Analyze this scenario and provide:
+          prompt: `You are an audit expert. Analyze:
 1. Risks
 2. Controls
 3. Audit procedures
@@ -31,75 +31,103 @@ Scenario: ${input}`,
 
       const data = await res.json();
       setOutput(data.result);
-    } catch (error) {
-      setOutput("Error generating audit response.");
+    } catch {
+      setOutput("Error generating response.");
     }
 
     setLoading(false);
   };
 
-  const handleQuick = (text) => {
-    setInput(text);
+  const buttonStyle = {
+    padding: "10px 16px",
+    borderRadius: "10px",
+    border: "1px solid #333",
+    background: "#111",
+    color: "white",
+    cursor: "pointer",
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-[#0a0f1c] text-white px-6 py-16">
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(to bottom, black, #0a0f1c)",
+      color: "white",
+      padding: "60px 20px"
+    }}>
       
-      <div className="max-w-4xl mx-auto">
+      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
 
-        {/* HEADER */}
-        <h1 className="text-5xl font-bold mb-4 tracking-tight">
+        <h1 style={{ fontSize: "42px", marginBottom: "10px" }}>
           Audit AI Assistant
         </h1>
 
-        <p className="text-gray-400 mb-10 text-lg">
-          Identify risks, design controls and generate audit procedures for real business scenarios.
+        <p style={{ color: "#aaa", marginBottom: "30px" }}>
+          Identify risks, controls and audit procedures for real business scenarios.
         </p>
 
-        {/* QUICK ACTIONS */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          {[
-            "Revenue recognition process risks and controls",
-            "Procurement cycle audit procedures",
-            "Cash management fraud risks",
-          ].map((item, i) => (
-            <button
-              key={i}
-              onClick={() => handleQuick(item)}
-              className="px-4 py-2 bg-[#111827] border border-gray-700 rounded-lg hover:border-blue-500 hover:text-blue-400 transition text-sm"
-            >
-              {item}
-            </button>
-          ))}
+        {/* QUICK */}
+        <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
+          <button style={buttonStyle} onClick={() => setInput("Revenue risks and controls")}>
+            Revenue
+          </button>
+          <button style={buttonStyle} onClick={() => setInput("Procurement audit procedures")}>
+            Procurement
+          </button>
+          <button style={buttonStyle} onClick={() => setInput("Cash fraud risks")}>
+            Cash
+          </button>
         </div>
 
-        {/* INPUT CARD */}
-        <div className="bg-[#0b0f1a] border border-gray-800 rounded-2xl p-6 mb-6 shadow-lg">
+        {/* INPUT */}
+        <div style={{
+          background: "#0b0f1a",
+          padding: "20px",
+          borderRadius: "12px",
+          border: "1px solid #222",
+          marginBottom: "20px"
+        }}>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="w-full h-40 bg-transparent outline-none text-sm resize-none"
-            placeholder="Describe an audit scenario (e.g. revenue process, procurement, control failure...)"
+            style={{
+              width: "100%",
+              height: "120px",
+              background: "transparent",
+              color: "white",
+              border: "none",
+              outline: "none"
+            }}
           />
 
-          <div className="flex justify-end mt-4">
+          <div style={{ textAlign: "right", marginTop: "10px" }}>
             <button
               onClick={handleGenerate}
-              disabled={loading}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:scale-105 transition disabled:opacity-50"
+              style={{
+                padding: "12px 20px",
+                borderRadius: "10px",
+                background: "linear-gradient(to right, #3b82f6, #8b5cf6)",
+                border: "none",
+                color: "white",
+                cursor: "pointer"
+              }}
             >
               {loading ? "Analyzing..." : "Generate Audit Analysis"}
             </button>
           </div>
         </div>
 
-        {/* OUTPUT CARD */}
-        <div className="bg-[#0b0f1a] border border-gray-800 rounded-2xl p-6 shadow-lg">
-          <p className="text-sm text-gray-400 mb-3">
+        {/* OUTPUT */}
+        <div style={{
+          background: "#0b0f1a",
+          padding: "20px",
+          borderRadius: "12px",
+          border: "1px solid #222"
+        }}>
+          <p style={{ color: "#aaa", marginBottom: "10px" }}>
             Audit Output
           </p>
 
-          <div className="text-sm whitespace-pre-line leading-relaxed text-gray-200">
+          <div style={{ whiteSpace: "pre-line" }}>
             {output || "Your audit analysis will appear here."}
           </div>
         </div>
