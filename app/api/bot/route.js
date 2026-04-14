@@ -1,7 +1,11 @@
 export async function POST(req) {
   try {
     const body = await req.json();
-    const userPrompt = body.prompt; // ✅ FIX CLAVE
+    const userPrompt = body.prompt;
+
+    if (!userPrompt) {
+      return Response.json({ result: "No prompt received" });
+    }
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -14,26 +18,11 @@ export async function POST(req) {
         messages: [
           {
             role: "system",
-            content: `
-You are a senior audit expert.
-
-Analyze the scenario and respond in this structured format:
-
-1. RISKS
-- Bullet points
-
-2. CONTROLS
-- Bullet points
-
-3. AUDIT PROCEDURES
-- Bullet points
-
-Keep it concise and business-oriented.
-`,
+            content: "You are an IFRS and accounting expert.",
           },
           {
             role: "user",
-            content: userPrompt, // ✅ AQUÍ USAS LA VARIABLE CORRECTA
+            content: userPrompt,
           },
         ],
       }),
@@ -41,15 +30,23 @@ Keep it concise and business-oriented.
 
     const data = await response.json();
 
+    console.log("OPENAI RAW:", data);
+
+    if (!data.choices) {
+      return Response.json({
+        result: "Error: No response from AI",
+      });
+    }
+
     return Response.json({
-      result: data.choices?.[0]?.message?.content || "No response",
+      result: data.choices[0].message.content,
     });
 
   } catch (error) {
+    console.error("ERROR:", error);
+
     return Response.json({
-      result: "Error processing request",
+      result: "Server error",
     });
   }
 }
-console.log("BODY:", body);
-console.log("OPENAI RESPONSE:", data);
