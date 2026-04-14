@@ -58,34 +58,21 @@ export default function Home() {
           structured, actionable outputs.
         </p>
 
-        <div style={{ display: "flex", gap: "16px" }}>
-          <Link href="/tools">
-            <button
-              style={{
-                padding: "16px 28px",
-                borderRadius: "12px",
-                background: "linear-gradient(to right, #3b82f6, #8b5cf6)",
-                border: "none",
-                color: "white",
-                fontSize: "16px",
-                cursor: "pointer",
-              }}
-            >
-              Explore Systems
-            </button>
-          </Link>
-
-          <div
+        <Link href="/tools">
+          <button
             style={{
               padding: "16px 28px",
               borderRadius: "12px",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "#9ca3af",
+              background: "linear-gradient(to right, #3b82f6, #8b5cf6)",
+              border: "none",
+              color: "white",
+              fontSize: "16px",
+              cursor: "pointer",
             }}
           >
-            Built for real workflows
-          </div>
-        </div>
+            Explore Systems
+          </button>
+        </Link>
       </section>
 
       {/* VALUE */}
@@ -162,13 +149,6 @@ export default function Home() {
                   border: "1px solid rgba(255,255,255,0.08)",
                   boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
                   cursor: "pointer",
-                  transition: "all 0.25s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-5px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
                 <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>
@@ -205,15 +185,7 @@ export default function Home() {
             "Structured outputs (not paragraphs)",
             "Designed for audit and compliance environments",
           ].map((item, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                gap: "10px",
-                alignItems: "center",
-                color: "#d1d5db",
-              }}
-            >
+            <div key={i} style={{ display: "flex", gap: "10px", color: "#d1d5db" }}>
               <span style={{ color: "#8b5cf6" }}>✔</span>
               {item}
             </div>
