@@ -9,98 +9,123 @@ export default function Home() {
     const tools = [
         {
             id: "audit",
-            title: "Audit AI Assistant",
-            desc: "Identify risks, controls and audit procedures for real business scenarios.",
-            icon: "📋",
+            title: "AUDIT AI",
+            subtitle: "SENTINEL PROTOCOL",
+            desc: "Neural risk assessment & autonomous audit execution",
+            icon: "🔍",
             link: "/tools/audit",
-            gradient: "from-blue-500 to-cyan-500",
-            features: ["Risk Assessment", "Control Mapping", "Audit Planning"]
+            gradient: "from-cyan-500 to-blue-600",
+            features: ["REAL-TIME SCAN", "RISK MATRIX", "AUTO-REPORT"]
         },
         {
             id: "ifrs",
-            title: "IFRS AI Advisor",
-            desc: "Interpret accounting standards and generate compliant outputs.",
-            icon: "📊",
+            title: "IFRS CORE",
+            subtitle: "COMPLIANCE ENGINE",
+            desc: "Quantum interpretation of global accounting standards",
+            icon: "⚡",
             link: "/tools/ifrs",
-            gradient: "from-purple-500 to-pink-500",
-            features: ["Standards Interpretation", "Compliance Check", "Documentation"]
+            gradient: "from-purple-600 to-pink-600",
+            features: ["STANDARDS AI", "COMPLIANCE CHECK", "SMART DOCS"]
         },
         {
             id: "excel",
-            title: "Excel AI Copilot",
-            desc: "Turn financial problems into structured Excel logic and analysis.",
-            icon: "🧮",
+            title: "EXCEL FORGE",
+            subtitle: "DATA WEAPON",
+            desc: "Turn complex data into tactical financial intelligence",
+            icon: "📊",
             link: "/tools/excel",
-            gradient: "from-green-500 to-emerald-500",
-            features: ["Formula Generation", "Data Analysis", "Optimization"]
+            gradient: "from-emerald-500 to-teal-600",
+            features: ["FORMULA CANNON", "DATA MINING", "OPTIMIZATION"]
         },
     ];
 
     return (
         <div className="min-h-screen">
-            {/* Hero Section */}
-            <section className="relative pt-20 pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+            {/* Hero Section ÉPICA */}
+            <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
+                {/* Efecto de fondo */}
                 <div className="absolute inset-0 -z-10">
-                    <div className="absolute top-20 left-10 w-72 h-72 bg-cyan-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse" />
-                    <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500 rounded-full blur-[150px] opacity-20 animate-pulse"></div>
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600 rounded-full blur-[120px] opacity-20 animate-pulse delay-1000"></div>
+                    <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-600 rounded-full blur-[130px] opacity-10 animate-pulse delay-700"></div>
                 </div>
 
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-slate-800/50 rounded-full border border-slate-700/50 backdrop-blur-sm">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
+                <div className="max-w-6xl mx-auto text-center relative z-10">
+                    {/* Badge futurista */}
+                    <div className="inline-flex items-center gap-3 mb-8 px-5 py-2 bg-black/50 rounded-full border border-cyan-500/30 backdrop-blur-xl shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                        <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
                         </span>
-                        <span className="text-sm text-slate-300">Enterprise AI Solutions Available</span>
+                        <span className="text-sm font-mono text-cyan-400 tracking-wider">▲ SYSTEM ONLINE ▲</span>
+                        <span className="text-xs text-cyan-500/70 font-mono">v.4.0</span>
                     </div>
 
-                    <h1 className="text-5xl sm:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                        AI Intelligence for Finance & Compliance
-                    </h1>
+                    {/* SKYNET gigante */}
+                    <div className="relative mb-8">
+                        <h1 className="text-8xl sm:text-9xl font-black font-mono tracking-wider bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent animate-pulse">
+                            SKYNET
+                        </h1>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent blur-2xl"></div>
+                    </div>
 
-                    <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-                        Advanced machine learning tools designed specifically for auditors, accountants, and financial professionals. Automate complex processes and enhance decision-making.
+                    {/* Tagline */}
+                    <p className="text-2xl sm:text-3xl font-mono text-gray-300 mb-4 tracking-wider">
+                        Neural Enterprise Intelligence
+                    </p>
+                    
+                    {/* Descripción */}
+                    <p className="text-lg text-gray-400 mb-12 max-w-3xl mx-auto font-mono leading-relaxed">
+                        {">"} INITIALIZING NEXT-GEN AI PROTOCOLS FOR FINANCIAL DOMINANCE.{">"} AUTONOMOUS AUDIT, QUANTUM COMPLIANCE, NEURAL DATA FORGE.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="#tools" className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition transform hover:scale-105">
-                            Explore Tools →
+                    {/* Botones CTA */}
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                        <a href="#tools" className="group relative px-10 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-bold text-white tracking-wider overflow-hidden">
+                            <span className="relative z-10">⟫ INITIALIZE SYSTEMS ⟪</span>
+                            <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition duration-300"></span>
                         </a>
-                        <button className="px-8 py-4 border border-slate-600 rounded-lg font-semibold text-slate-200 hover:bg-slate-800 transition">
-                            Request Demo
+                        <button className="px-10 py-4 border-2 border-cyan-500/50 rounded-lg font-mono text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all duration-300 tracking-wider">
+                            ⟫ REQUEST ACCESS ⟪
                         </button>
                     </div>
-                </div>
-            </section>
 
-            {/* Features Overview */}
-            <section className="px-4 sm:px-6 lg:px-8 mb-20">
-                <div className="max-w-6xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Stats futuristas */}
+                    <div className="grid grid-cols-3 gap-8 mt-20 pt-10 border-t border-cyan-500/20 max-w-2xl mx-auto">
                         {[
-                            { icon: "⚡", title: "Lightning Fast", desc: "Real-time AI analysis with instant results" },
-                            { icon: "🔒", title: "Enterprise Secure", desc: "Bank-level encryption and compliance" },
-                            { icon: "📈", title: "Proven Results", desc: "Trusted by leading global firms" }
-                        ].map((feature, idx) => (
-                            <div key={idx} className="p-6 rounded-xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 backdrop-blur-sm hover:border-slate-600/50 transition">
-                                <div className="text-4xl mb-4">{feature.icon}</div>
-                                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                                <p className="text-slate-400">{feature.desc}</p>
+                            { value: "99.9%", label: "UPTIME" },
+                            { value: "<1ms", label: "LATENCY" },
+                            { value: "256bit", label: "ENCRYPTION" }
+                        ].map((stat, idx) => (
+                            <div key={idx} className="text-center">
+                                <div className="text-2xl font-bold text-cyan-400 font-mono">{stat.value}</div>
+                                <div className="text-xs text-gray-500 font-mono tracking-wider">{stat.label}</div>
                             </div>
                         ))}
                     </div>
                 </div>
+
+                {/* Scroll indicator */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+                    <div className="w-6 h-10 border-2 border-cyan-500/50 rounded-full flex justify-center">
+                        <div className="w-1 h-3 bg-cyan-500 rounded-full mt-2 animate-pulse"></div>
+                    </div>
+                </div>
             </section>
 
-            {/* Tools Grid */}
-            <section id="tools" className="px-4 sm:px-6 lg:px-8 pb-32">
-                <div className="max-w-6xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-                            Powerful AI Tools
+            {/* Tools Grid Section */}
+            <section id="tools" className="px-4 sm:px-6 lg:px-8 py-32 relative">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent"></div>
+                <div className="max-w-7xl mx-auto relative">
+                    <div className="text-center mb-20">
+                        <div className="inline-flex items-center gap-2 mb-4 px-4 py-1 bg-cyan-500/10 rounded-full border border-cyan-500/30">
+                            <span className="text-cyan-400 text-xs font-mono tracking-wider">▲ NEURAL WEAPONS ARSENAL ▲</span>
+                        </div>
+                        <h2 className="text-5xl sm:text-6xl font-black font-mono bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4 tracking-wider">
+                            DEPLOY AI UNITS
                         </h2>
-                        <p className="text-xl text-slate-400">
-                            Choose the tool that fits your needs
+                        <p className="text-gray-400 font-mono max-w-2xl mx-auto text-sm">
+                            Select your tactical AI module. Each unit is optimized for maximum efficiency in financial operations.
                         </p>
                     </div>
 
@@ -110,29 +135,28 @@ export default function Home() {
                                 <div
                                     onMouseEnter={() => setHoveredTool(tool.id)}
                                     onMouseLeave={() => setHoveredTool(null)}
-                                    className="group relative h-full cursor-pointer"
+                                    className="group relative cursor-pointer"
                                 >
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition duration-300 blur-xl`} />
-                                    <div className="relative h-full p-8 rounded-2xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 backdrop-blur-sm group-hover:border-slate-600 transition transform group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-slate-950/50">
-                                        <div className="text-6xl mb-4 transform group-hover:scale-110 transition duration-300">
-                                            {tool.icon}
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-400 group-hover:bg-clip-text transition">
-                                            {tool.title}
-                                        </h3>
-                                        <p className="text-slate-400 mb-6 group-hover:text-slate-300 transition">
-                                            {tool.desc}
-                                        </p>
-                                        <div className="space-y-2 mb-6">
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-20 rounded-2xl transition duration-500 blur-xl`} />
+                                    
+                                    <div className="relative p-8 rounded-2xl bg-black/50 border border-gray-800 backdrop-blur-xl group-hover:border-cyan-500/50 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]">
+                                        <div className="text-7xl mb-6 transform group-hover:scale-110 transition duration-500">{tool.icon}</div>
+                                        <h3 className="text-2xl font-black text-white font-mono mb-2 tracking-wider">{tool.title}</h3>
+                                        <p className="text-xs text-cyan-400 font-mono mb-4 tracking-wider">{tool.subtitle}</p>
+                                        <p className="text-gray-400 mb-6 text-sm leading-relaxed">{tool.desc}</p>
+                                        
+                                        <div className="space-y-2 mb-8">
                                             {tool.features.map((feature, idx) => (
-                                                <div key={idx} className="flex items-center gap-2 text-slate-400 group-hover:text-slate-300 transition">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                                                <div key={idx} className="flex items-center gap-2 text-sm text-gray-500 font-mono group-hover:text-gray-300 transition">
+                                                    <span className="text-cyan-400">⟫</span>
                                                     {feature}
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="flex items-center gap-2 text-cyan-400 font-semibold group-hover:gap-3 transition">
-                                            Start Using →
+                                        
+                                        <div className="flex items-center justify-between pt-4 border-t border-gray-800">
+                                            <span className="text-cyan-400 font-mono text-sm tracking-wider group-hover:translate-x-2 transition">DEPLOY UNIT →</span>
+                                            <span className="text-[10px] text-gray-600 font-mono">v.1.0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -142,18 +166,26 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="relative px-4 sm:px-6 lg:px-8 py-20 mb-20">
-                <div className="max-w-4xl mx-auto text-center p-12 rounded-2xl bg-gradient-to-r from-cyan-900/20 to-purple-900/20 border border-cyan-500/20 backdrop-blur-sm">
-                    <h2 className="text-4xl font-bold text-white mb-4">
-                        Ready to Transform Your Finance Team?
-                    </h2>
-                    <p className="text-xl text-slate-300 mb-8">
-                        Join enterprise clients who are already using Skynet Intelligence to streamline their audit and compliance workflows.
-                    </p>
-                    <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition transform hover:scale-105">
-                        Get Enterprise Access
-                    </button>
+            {/* CTA Final */}
+            <section className="relative px-4 sm:px-6 lg:px-8 py-32">
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 blur-3xl"></div>
+                <div className="max-w-5xl mx-auto text-center relative">
+                    <div className="p-12 rounded-2xl bg-black/40 backdrop-blur-xl border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.2)]">
+                        <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-cyan-500/10 rounded-full border border-cyan-500/30">
+                            <span className="text-cyan-400 text-xs font-mono animate-pulse tracking-wider">● CONNECTION ESTABLISHED</span>
+                        </div>
+                        <h2 className="text-5xl font-black font-mono text-white mb-6 tracking-wider">
+                            READY TO JOIN<br/>THE NETWORK?
+                        </h2>
+                        <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-mono">
+                            Access the most advanced neural enterprise intelligence platform on the planet.
+                        </p>
+                        <button className="group relative px-12 py-5 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-bold text-white tracking-wider text-lg overflow-hidden">
+                            <span className="relative z-10">⟫ INITIALIZE SKYNET ACCESS ⟪</span>
+                            <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                        </button>
+                        <p className="text-xs text-gray-500 mt-6 font-mono">* Enterprise security protocols active. 256-bit encryption.</p>
+                    </div>
                 </div>
             </section>
         </div>
