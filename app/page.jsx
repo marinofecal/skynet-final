@@ -112,25 +112,17 @@ export default function Home() {
                                     onMouseLeave={() => setHoveredTool(null)}
                                     className="group relative h-full cursor-pointer"
                                 >
-                                    {/* Animated Background */}
                                     <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition duration-300 blur-xl`} />
-
-                                    {/* Card */}
                                     <div className="relative h-full p-8 rounded-2xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 backdrop-blur-sm group-hover:border-slate-600 transition transform group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-slate-950/50">
-                                        {/* Icon */}
                                         <div className="text-6xl mb-4 transform group-hover:scale-110 transition duration-300">
                                             {tool.icon}
                                         </div>
-
-                                        {/* Title & Description */}
                                         <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-400 group-hover:bg-clip-text transition">
                                             {tool.title}
                                         </h3>
                                         <p className="text-slate-400 mb-6 group-hover:text-slate-300 transition">
                                             {tool.desc}
                                         </p>
-
-                                        {/* Features */}
                                         <div className="space-y-2 mb-6">
                                             {tool.features.map((feature, idx) => (
                                                 <div key={idx} className="flex items-center gap-2 text-slate-400 group-hover:text-slate-300 transition">
@@ -139,8 +131,6 @@ export default function Home() {
                                                 </div>
                                             ))}
                                         </div>
-
-                                        {/* CTA */}
                                         <div className="flex items-center gap-2 text-cyan-400 font-semibold group-hover:gap-3 transition">
                                             Start Using →
                                         </div>
