@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,28 +17,36 @@ html {
 body {
     font-family: 'Poppins', sans-serif;
     overflow-x: hidden;
+    background: black;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar cyberpunk */
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.5);
+    background: rgba(0, 0, 0, 0.8);
+    border-left: 1px solid rgba(6, 182, 212, 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(6, 182, 212, 0.6);
-    border-radius: 5px;
+    background: linear-gradient(to bottom, #06b6d4, #3b82f6);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(6, 182, 212, 0.9);
+    background: linear-gradient(to bottom, #22d3ee, #60a5fa);
 }
-/* ===== ANIMACIONES FUTURISTAS (agregar al final) ===== */
 
+/* Selección de texto cyberpunk */
+::selection {
+    background: rgba(6, 182, 212, 0.3);
+    color: #06b6d4;
+}
+
+/* Animaciones */
 @keyframes gradient-x {
     0%, 100% {
         opacity: 0.3;
@@ -73,6 +83,14 @@ body {
     }
 }
 
+@keyframes glitch {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+}
+
 .animate-gradient-x {
     animation: gradient-x 8s ease infinite;
 }
@@ -87,6 +105,10 @@ body {
 
 .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-glitch {
+    animation: glitch 0.3s infinite;
 }
 
 /* Glassmorphism effect */
