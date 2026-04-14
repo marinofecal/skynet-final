@@ -41,8 +41,8 @@ export default function Home() {
 
     return (
         <div className="min-h-screen">
-            {/* Hero Section ÉPICA */}
-            <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
+            {/* Hero Section */}
+            <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20 overflow-hidden">
                 {/* Efecto de fondo */}
                 <div className="absolute inset-0 -z-10">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500 rounded-full blur-[150px] opacity-20 animate-pulse"></div>
@@ -63,29 +63,29 @@ export default function Home() {
 
                     {/* SKYNET gigante */}
                     <div className="relative mb-8">
-                        <h1 className="text-8xl sm:text-9xl font-black font-mono tracking-wider bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent animate-pulse">
+                        <h1 className="text-7xl sm:text-8xl lg:text-9xl font-black font-mono tracking-wider bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent animate-pulse">
                             SKYNET
                         </h1>
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent blur-2xl"></div>
                     </div>
 
                     {/* Tagline */}
-                    <p className="text-2xl sm:text-3xl font-mono text-gray-300 mb-4 tracking-wider">
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-mono text-gray-300 mb-4 tracking-wider">
                         Neural Enterprise Intelligence
                     </p>
                     
                     {/* Descripción */}
-                    <p className="text-lg text-gray-400 mb-12 max-w-3xl mx-auto font-mono leading-relaxed">
-                        {">"} INITIALIZING NEXT-GEN AI PROTOCOLS FOR FINANCIAL DOMINANCE.{">"} AUTONOMOUS AUDIT, QUANTUM COMPLIANCE, NEURAL DATA FORGE.
+                    <p className="text-base sm:text-lg text-gray-400 mb-12 max-w-3xl mx-auto font-mono leading-relaxed">
+                        {">"} INITIALIZING NEXT-GEN AI PROTOCOLS FOR FINANCIAL DOMINANCE. {">"} AUTONOMOUS AUDIT, QUANTUM COMPLIANCE, NEURAL DATA FORGE.
                     </p>
 
                     {/* Botones CTA */}
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                        <a href="#tools" className="group relative px-10 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-bold text-white tracking-wider overflow-hidden">
+                        <a href="#tools" className="group relative px-8 sm:px-10 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-bold text-white tracking-wider overflow-hidden">
                             <span className="relative z-10">⟫ INITIALIZE SYSTEMS ⟪</span>
                             <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition duration-300"></span>
                         </a>
-                        <button className="px-10 py-4 border-2 border-cyan-500/50 rounded-lg font-mono text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all duration-300 tracking-wider">
+                        <button className="px-8 sm:px-10 py-4 border-2 border-cyan-500/50 rounded-lg font-mono text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all duration-300 tracking-wider">
                             ⟫ REQUEST ACCESS ⟪
                         </button>
                     </div>
@@ -94,7 +94,7 @@ export default function Home() {
                     <div className="grid grid-cols-3 gap-8 mt-20 pt-10 border-t border-cyan-500/20 max-w-2xl mx-auto">
                         {[
                             { value: "99.9%", label: "UPTIME" },
-                            { value: "<1ms", label: "LATENCY" },
+                            { value: "&lt;1ms", label: "LATENCY" },
                             { value: "256bit", label: "ENCRYPTION" }
                         ].map((stat, idx) => (
                             <div key={idx} className="text-center">
@@ -121,7 +121,7 @@ export default function Home() {
                         <div className="inline-flex items-center gap-2 mb-4 px-4 py-1 bg-cyan-500/10 rounded-full border border-cyan-500/30">
                             <span className="text-cyan-400 text-xs font-mono tracking-wider">▲ NEURAL WEAPONS ARSENAL ▲</span>
                         </div>
-                        <h2 className="text-5xl sm:text-6xl font-black font-mono bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4 tracking-wider">
+                        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black font-mono bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4 tracking-wider">
                             DEPLOY AI UNITS
                         </h2>
                         <p className="text-gray-400 font-mono max-w-2xl mx-auto text-sm">
@@ -139,15 +139,15 @@ export default function Home() {
                                 >
                                     <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-20 rounded-2xl transition duration-500 blur-xl`} />
                                     
-                                    <div className="relative p-8 rounded-2xl bg-black/50 border border-gray-800 backdrop-blur-xl group-hover:border-cyan-500/50 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]">
-                                        <div className="text-7xl mb-6 transform group-hover:scale-110 transition duration-500">{tool.icon}</div>
-                                        <h3 className="text-2xl font-black text-white font-mono mb-2 tracking-wider">{tool.title}</h3>
+                                    <div className="relative p-6 sm:p-8 rounded-2xl bg-black/50 border border-gray-800 backdrop-blur-xl group-hover:border-cyan-500/50 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]">
+                                        <div className="text-6xl sm:text-7xl mb-6 transform group-hover:scale-110 transition duration-500">{tool.icon}</div>
+                                        <h3 className="text-xl sm:text-2xl font-black text-white font-mono mb-2 tracking-wider">{tool.title}</h3>
                                         <p className="text-xs text-cyan-400 font-mono mb-4 tracking-wider">{tool.subtitle}</p>
                                         <p className="text-gray-400 mb-6 text-sm leading-relaxed">{tool.desc}</p>
                                         
                                         <div className="space-y-2 mb-8">
                                             {tool.features.map((feature, idx) => (
-                                                <div key={idx} className="flex items-center gap-2 text-sm text-gray-500 font-mono group-hover:text-gray-300 transition">
+                                                <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 font-mono group-hover:text-gray-300 transition">
                                                     <span className="text-cyan-400">⟫</span>
                                                     {feature}
                                                 </div>
@@ -167,20 +167,20 @@ export default function Home() {
             </section>
 
             {/* CTA Final */}
-            <section className="relative px-4 sm:px-6 lg:px-8 py-32">
+            <section className="relative px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 blur-3xl"></div>
                 <div className="max-w-5xl mx-auto text-center relative">
-                    <div className="p-12 rounded-2xl bg-black/40 backdrop-blur-xl border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.2)]">
+                    <div className="p-8 sm:p-12 rounded-2xl bg-black/40 backdrop-blur-xl border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.2)]">
                         <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-cyan-500/10 rounded-full border border-cyan-500/30">
                             <span className="text-cyan-400 text-xs font-mono animate-pulse tracking-wider">● CONNECTION ESTABLISHED</span>
                         </div>
-                        <h2 className="text-5xl font-black font-mono text-white mb-6 tracking-wider">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-mono text-white mb-6 tracking-wider">
                             READY TO JOIN<br/>THE NETWORK?
                         </h2>
-                        <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-mono">
+                        <p className="text-lg sm:text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-mono">
                             Access the most advanced neural enterprise intelligence platform on the planet.
                         </p>
-                        <button className="group relative px-12 py-5 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-bold text-white tracking-wider text-lg overflow-hidden">
+                        <button className="group relative px-8 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-bold text-white tracking-wider text-base sm:text-lg overflow-hidden">
                             <span className="relative z-10">⟫ INITIALIZE SKYNET ACCESS ⟪</span>
                             <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition duration-300"></span>
                         </button>
