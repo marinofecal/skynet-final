@@ -62,7 +62,7 @@ export default function Home() {
                     </div>
 
                     {/* SKYNET gigante */}
-                    <div className="relative mb-8">
+                    <div className="relative mb-6">
                         <h1 className="text-7xl sm:text-8xl lg:text-9xl font-black font-mono tracking-wider bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent animate-pulse">
                             SKYNET
                         </h1>
@@ -70,16 +70,16 @@ export default function Home() {
                     </div>
 
                     {/* Tagline */}
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-mono text-gray-300 mb-4 tracking-wider">
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-mono text-gray-300 mb-6 tracking-wider">
                         Neural Enterprise Intelligence
                     </p>
                     
-                    {/* Descripción */}
+                    {/* Descripción - Corregida para que los > estén bien espaciados */}
                     <p className="text-base sm:text-lg text-gray-400 mb-12 max-w-3xl mx-auto font-mono leading-relaxed">
-                        {">"} INITIALIZING NEXT-GEN AI PROTOCOLS FOR FINANCIAL DOMINANCE. {">"} AUTONOMOUS AUDIT, QUANTUM COMPLIANCE, NEURAL DATA FORGE.
+                        <span className="text-cyan-400">⟫</span> INITIALIZING NEXT-GEN AI PROTOCOLS FOR FINANCIAL DOMINANCE. <span className="text-cyan-400">⟫</span> AUTONOMOUS AUDIT, QUANTUM COMPLIANCE, NEURAL DATA FORGE.
                     </p>
 
-                    {/* Botones CTA */}
+                    {/* Botones CTA - Separados correctamente */}
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
                         <a href="#tools" className="group relative px-8 sm:px-10 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-bold text-white tracking-wider overflow-hidden">
                             <span className="relative z-10">⟫ INITIALIZE SYSTEMS ⟪</span>
@@ -92,16 +92,18 @@ export default function Home() {
 
                     {/* Stats futuristas */}
                     <div className="grid grid-cols-3 gap-8 mt-20 pt-10 border-t border-cyan-500/20 max-w-2xl mx-auto">
-                        {[
-                            { value: "99.9%", label: "UPTIME" },
-                            { value: "&lt;1ms", label: "LATENCY" },
-                            { value: "256bit", label: "ENCRYPTION" }
-                        ].map((stat, idx) => (
-                            <div key={idx} className="text-center">
-                                <div className="text-2xl font-bold text-cyan-400 font-mono">{stat.value}</div>
-                                <div className="text-xs text-gray-500 font-mono tracking-wider">{stat.label}</div>
-                            </div>
-                        ))}
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-cyan-400 font-mono">99.9%</div>
+                            <div className="text-xs text-gray-500 font-mono tracking-wider">UPTIME</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-cyan-400 font-mono">&lt;1ms</div>
+                            <div className="text-xs text-gray-500 font-mono tracking-wider">LATENCY</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-cyan-400 font-mono">256bit</div>
+                            <div className="text-xs text-gray-500 font-mono tracking-wider">ENCRYPTION</div>
+                        </div>
                     </div>
                 </div>
 
