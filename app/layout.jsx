@@ -18,13 +18,13 @@ export default function RootLayout({ children }) {
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f] via-[#0f0f1a] to-[#0a0a0f]"></div>
                     <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-[120px] opacity-10"></div>
                     <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600 rounded-full blur-[120px] opacity-10"></div>
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"%3E%3Cpath d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(0,212,255,0.03)" stroke-width="1"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100%" height="100%" fill="url(%23grid)"/%3E%3C/svg%3E')] opacity-40"></div>
+                    {/* FIXED: using CSS class instead of inline SVG */}
+                    <div className="absolute inset-0 bg-grid-pattern opacity-40"></div>
                 </div>
 
-                {/* Header SKYNET */}
+                {/* Header */}
                 <header className="sticky top-0 z-50 glass-dark border-b border-cyan-500/20">
                     <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                        {/* Logo */}
                         <div className="flex items-center space-x-3">
                             <div className="relative">
                                 <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-xl rotate-45"></div>
@@ -40,7 +40,6 @@ export default function RootLayout({ children }) {
                             </div>
                         </div>
 
-                        {/* Navegación simple */}
                         <nav className="flex space-x-6">
                             <Link href="/" className="text-gray-300 hover:text-cyan-400 transition text-sm font-medium">HOME</Link>
                             <Link href="/tools/audit" className="text-gray-300 hover:text-cyan-400 transition text-sm font-medium">AUDIT</Link>
@@ -48,7 +47,6 @@ export default function RootLayout({ children }) {
                             <Link href="/tools/excel" className="text-gray-300 hover:text-cyan-400 transition text-sm font-medium">EXCEL</Link>
                         </nav>
 
-                        {/* LinkedIn link */}
                         <a 
                             href="https://linkedin.com/in/marinofecal" 
                             target="_blank"
@@ -64,15 +62,10 @@ export default function RootLayout({ children }) {
                     {children}
                 </main>
 
-                {/* Footer simple */}
                 <footer className="relative z-10 border-t border-cyan-500/10 py-8 mt-20">
                     <div className="max-w-7xl mx-auto px-6 text-center">
-                        <p className="text-gray-500 text-sm font-mono">
-                            SKYNET — Intelligent Automation Framework
-                        </p>
-                        <p className="text-gray-600 text-xs mt-2">
-                            Built with Next.js • Tailwind CSS • OpenAI API
-                        </p>
+                        <p className="text-gray-500 text-sm font-mono">SKYNET — Intelligent Automation Framework</p>
+                        <p className="text-gray-600 text-xs mt-2">Built with Next.js • Tailwind CSS • OpenAI API</p>
                     </div>
                 </footer>
             </body>
