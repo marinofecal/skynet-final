@@ -1,12 +1,7 @@
 import './globals.css'
-import { Inter, Orbitron } from 'next/font/google'
+import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
-const orbitron = Orbitron({ 
-    subsets: ['latin'], 
-    variable: '--font-orbitron',
-    weight: ['400', '500', '600', '700', '800', '900']
-})
 
 export const metadata = {
     title: 'SKYNET | Neural Enterprise Intelligence',
@@ -16,22 +11,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body className={`${inter.className} ${orbitron.variable} bg-black`}>
+            <body className={inter.className}>
                 {/* Fondo Matrix/Cyberpunk */}
                 <div className="fixed inset-0 -z-20">
-                    {/* Gradiente base */}
                     <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-950 to-black"></div>
-                    
-                    {/* Luces de neón */}
                     <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-[150px] opacity-20 animate-pulse"></div>
                     <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600 rounded-full blur-[150px] opacity-20 animate-pulse delay-1000"></div>
                     <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-blue-600 rounded-full blur-[150px] opacity-10 animate-pulse delay-700"></div>
-                    
-                    {/* Grid futurista */}
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="80" height="80" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"%3E%3Cpath d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(6,182,212,0.03)" stroke-width="1"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100%" height="100%" fill="url(%23grid)"/%3E%3C/svg%3E')] opacity-50"></div>
-                    
-                    {/* Líneas de escaneo */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-transparent via-cyan-500/5 to-transparent animate-pulse"></div>
                 </div>
 
                 {/* Navbar SKYNET */}
@@ -43,11 +30,11 @@ export default function RootLayout({ children }) {
                                 <div className="relative">
                                     <div className="absolute inset-0 bg-cyan-500 rounded-lg blur-md opacity-50 group-hover:opacity-100 transition duration-300"></div>
                                     <div className="relative w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-700 rounded-lg flex items-center justify-center">
-                                        <span className="text-white font-black text-2xl font-['Orbitron']">S</span>
+                                        <span className="text-white font-black text-2xl font-mono">S</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent font-['Orbitron'] tracking-wider">
+                                    <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent font-mono tracking-wider">
                                         SKYNET
                                     </span>
                                     <div className="text-[10px] text-cyan-400/80 font-mono tracking-widest">NEURAL NETWORK v4.0</div>
@@ -97,10 +84,10 @@ export default function RootLayout({ children }) {
                             <div>
                                 <div className="flex items-center space-x-2 mb-4">
                                     <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-700 rounded-lg flex items-center justify-center">
-                                        <span className="text-white font-bold">S</span>
+                                        <span className="text-white font-bold text-sm font-mono">S</span>
                                     </div>
                                     <div>
-                                        <span className="text-lg font-bold text-white font-['Orbitron']">SKYNET</span>
+                                        <span className="text-lg font-bold text-white font-mono tracking-wider">SKYNET</span>
                                         <p className="text-[8px] text-cyan-400 font-mono">© 2026 NEURAL ENTERPRISE</p>
                                     </div>
                                 </div>
@@ -151,9 +138,9 @@ export default function RootLayout({ children }) {
                                     <span>▲</span> CONNECTION
                                 </h4>
                                 <div className="flex space-x-3 mb-4">
-                                    {['LINKEDIN', 'GITHUB', 'DISCORD', 'X'].map((social) => (
+                                    {['IN', 'GH', 'DC', 'X'].map((social) => (
                                         <div key={social} className="w-10 h-10 border border-cyan-500/30 rounded-lg flex items-center justify-center hover:border-cyan-500 hover:shadow-[0_0_15px_cyan] transition-all cursor-pointer group bg-black/50">
-                                            <span className="text-gray-400 group-hover:text-cyan-400 text-xs font-mono">{social[0]}</span>
+                                            <span className="text-gray-400 group-hover:text-cyan-400 text-xs font-mono font-bold">{social}</span>
                                         </div>
                                     ))}
                                 </div>
