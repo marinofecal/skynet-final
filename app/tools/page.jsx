@@ -1,44 +1,60 @@
+import Link from "next/link";
+
 export default function ToolsPage() {
   return (
-    <div style={{
-      background: "#0a0a0a",
-      color: "white",
-      minHeight: "100vh",
-      padding: "60px",
-      fontFamily: "Arial"
-    }}>
+    <div className="min-h-screen bg-gradient-to-b from-black to-[#0a0f1c] text-white px-10 py-16">
       
-      <h1 style={{ fontSize: "36px", marginBottom: "10px" }}>
-        AI Systems for Finance
-      </h1>
+      {/* HEADER */}
+      <div className="max-w-6xl mx-auto mb-16">
+        <h1 className="text-5xl font-bold mb-4 tracking-tight">
+          AI Systems for Finance & Compliance
+        </h1>
+        <p className="text-gray-400 text-lg max-w-2xl">
+          Enterprise-grade AI copilots for reporting, audit, IFRS interpretation and financial workflows.
+        </p>
+      </div>
 
-      <p style={{ opacity: 0.6, marginBottom: "40px" }}>
-        Internal tools for analysis, reporting and decision-making
-      </p>
+      {/* GRID */}
+      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+        
+        <ToolCard 
+          title="Excel AI Copilot"
+          description="Automate financial models, analysis and reporting workflows"
+          link="/tools/excel"
+        />
 
-      <div style={{ display: "flex", gap: "20px" }}>
+        <ToolCard 
+          title="IFRS AI Advisor"
+          description="Interpret accounting standards and generate compliant outputs"
+          link="/tools/ifrs"
+        />
 
-        <a href="/tools/excel" style={card}>
-          <h3>Excel AI</h3>
-          <p>Explain formulas & data structures</p>
-        </a>
-
-        <a href="/bot" style={card}>
-          <h3>IFRS / Audit</h3>
-          <p>Generate financial reports</p>
-        </a>
+        <ToolCard 
+          title="Audit AI Assistant"
+          description="Support internal controls, audit testing and documentation"
+          link="/tools/audit"
+        />
 
       </div>
     </div>
   );
 }
 
-const card = {
-  padding: "20px",
-  border: "1px solid #222",
-  borderRadius: "10px",
-  width: "220px",
-  textDecoration: "none",
-  color: "white",
-  transition: "0.2s"
-};
+function ToolCard({ title, description, link }) {
+  return (
+    <Link href={link}>
+      <div className="group cursor-pointer rounded-2xl p-[1px] bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 hover:scale-105 transition">
+        
+        <div className="bg-[#0b0f1a] rounded-2xl p-6 h-full">
+          <h2 className="text-xl font-semibold mb-3 group-hover:text-cyan-400">
+            {title}
+          </h2>
+          <p className="text-gray-400 text-sm">
+            {description}
+          </p>
+        </div>
+
+      </div>
+    </Link>
+  );
+}
