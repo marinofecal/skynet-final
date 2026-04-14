@@ -20,38 +20,25 @@ export default function IFRSPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prompt: input,
+          prompt: `
+You are an IFRS expert.
+
+Provide a structured answer including:
+
+1. EXPLANATION
+2. ACCOUNTING TREATMENT
+3. JOURNAL ENTRIES (if applicable)
+4. PRACTICAL INSIGHT
+
+Scenario:
+${input}
+          `,
         }),
       });
 
       const data = await res.json();
       setOutput(data.result);
-    } catch (error) {
-      setOutput("Error generating response.");
-    }
-
-    setLoading(false);
-  };
-
-  const handleQuick = async (text) => {
-    setInput(text);
-    setLoading(true);
-    setOutput("");
-
-    try {
-      const res = await fetch("/api/bot", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: text,
-        }),
-      });
-
-      const data = await res.json();
-      setOutput(data.result);
-    } catch (error) {
+    } catch {
       setOutput("Error generating response.");
     }
 
@@ -59,74 +46,59 @@ export default function IFRSPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-[#0a0f1c] text-white p-10">
-      
-      {/* HEADER */}
-      <h1 className="text-4xl font-bold mb-4">
+    <div style={{
+      minHeight: "100vh",
+      background: "black",
+      color: "white",
+      padding: "60px"
+    }}>
+      <h1 style={{ fontSize: "36px", marginBottom: "10px" }}>
         IFRS AI Advisor
       </h1>
 
-      <p className="text-gray-400 mb-8 max-w-xl">
-        Generate IFRS-compliant explanations, journal entries and financial reporting insights.
+      <p style={{ color: "#aaa", marginBottom: "20px" }}>
+        Generate IFRS-compliant explanations and accounting treatments.
       </p>
 
-      {/* SELECTOR */}
-      <select className="bg-[#111] border border-gray-700 p-3 rounded mb-6">
-        <option>IAS 36 – Impairment of Assets</option>
-        <option>IFRS 15 – Revenue Recognition</option>
-        <option>IFRS 9 – Financial Instruments</option>
-      </select>
-
-      {/* QUICK ACTIONS */}
-      <div className="flex gap-3 mb-4 flex-wrap">
-        <button 
-          onClick={() => handleQuick("Explain IAS 36 impairment test with example")}
-          className="bg-gray-800 px-3 py-1 rounded text-sm hover:bg-gray-700"
-        >
-          IAS 36 example
+      {/* QUICK CASES */}
+      <div style={{ marginBottom: "20px" }}>
+        <button onClick={() => setInput("IFRS 15 revenue recognition example with journal entries")}>
+          IFRS 15
         </button>
 
-        <button 
-          onClick={() => handleQuick("Provide IFRS 15 revenue recognition example with journal entries")}
-          className="bg-gray-800 px-3 py-1 rounded text-sm hover:bg-gray-700"
-        >
-          IFRS 15 scenario
+        <button onClick={() => setInput("IAS 36 impairment test example")}>
+          IAS 36
         </button>
 
-        <button 
-          onClick={() => handleQuick("Summarize IFRS 9 financial instruments classification")}
-          className="bg-gray-800 px-3 py-1 rounded text-sm hover:bg-gray-700"
-        >
-          IFRS 9 summary
+        <button onClick={() => setInput("IFRS 9 financial instruments classification example")}>
+          IFRS 9
         </button>
       </div>
 
       {/* INPUT */}
-      <textarea 
+      <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        className="w-full h-40 bg-[#111] border border-gray-700 p-4 rounded mb-4"
-        placeholder="Ask about IFRS (e.g. impairment test, revenue recognition, journal entries...)"
+        placeholder="Describe IFRS scenario..."
+        style={{
+          width: "100%",
+          height: "120px",
+          marginBottom: "20px"
+        }}
       />
 
-      {/* BUTTON */}
-      <button 
-        onClick={handleGenerate}
-        className="px-6 py-3 bg-blue-600 rounded hover:bg-blue-500 disabled:opacity-50"
-        disabled={loading}
-      >
+      <button onClick={handleGenerate}>
         {loading ? "Generating..." : "Generate Answer"}
       </button>
 
       {/* OUTPUT */}
-      <div className="mt-6 p-6 bg-[#0b0f1a] border border-gray-800 rounded-xl">
-        <p className="text-sm text-gray-400 mb-3">AI Output</p>
+      <div style={{ marginTop: "40px" }}>
+        <h3>AI Output</h3>
 
-        <div className="text-sm whitespace-pre-line leading-relaxed">
-          {output || "Your AI-generated answer will appear here."}
+        <div style={{ whiteSpace: "pre-line", marginTop: "10px" }}>
+          {output || "No response"}
         </div>
       </div>
-
     </div>
   );
 }
