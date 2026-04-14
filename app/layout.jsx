@@ -1,196 +1,171 @@
-'use client';
+import './globals.css'
+import { Inter, Orbitron } from 'next/font/google'
 
-import Link from "next/link";
-import { useState, useEffect } from "react";
+const inter = Inter({ subsets: ['latin'] })
+const orbitron = Orbitron({ 
+    subsets: ['latin'], 
+    variable: '--font-orbitron',
+    weight: ['400', '500', '600', '700', '800', '900']
+})
 
-export default function Home() {
-    const [hoveredTool, setHoveredTool] = useState(null);
-    const [glitchText, setGlitchText] = useState("SKYNET");
+export const metadata = {
+    title: 'SKYNET | Neural Enterprise Intelligence',
+    description: 'Next-generation AI platform for financial dominance',
+}
 
-    const tools = [
-        {
-            id: "audit",
-            title: "AUDIT AI",
-            subtitle: "SENTINEL PROTOCOL",
-            desc: "Neural risk assessment & autonomous audit execution",
-            icon: "🔍",
-            link: "/tools/audit",
-            gradient: "from-cyan-500 to-blue-600",
-            features: ["REAL-TIME SCAN", "RISK MATRIX", "AUTO-REPORT"]
-        },
-        {
-            id: "ifrs",
-            title: "IFRS CORE",
-            subtitle: "COMPLIANCE ENGINE",
-            desc: "Quantum interpretation of global accounting standards",
-            icon: "⚡",
-            link: "/tools/ifrs",
-            gradient: "from-purple-600 to-pink-600",
-            features: ["STANDARDS AI", "COMPLIANCE CHECK", "SMART DOCS"]
-        },
-        {
-            id: "excel",
-            title: "EXCEL FORGE",
-            subtitle: "DATA WEAPON",
-            desc: "Turn complex data into tactical financial intelligence",
-            icon: "📊",
-            link: "/tools/excel",
-            gradient: "from-emerald-500 to-teal-600",
-            features: ["FORMULA CANNON", "DATA MINING", "OPTIMIZATION"]
-        },
-    ];
-
+export default function RootLayout({ children }) {
     return (
-        <div className="min-h-screen">
-            {/* Hero Section ÉPICA */}
-            <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
-                {/* Efecto de glitch en el fondo */}
-                <div className="absolute inset-0 -z-10">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500 rounded-full blur-[150px] opacity-20 animate-pulse"></div>
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600 rounded-full blur-[120px] opacity-20 animate-pulse delay-1000"></div>
-                    <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-600 rounded-full blur-[130px] opacity-10 animate-pulse delay-700"></div>
-                </div>
-
-                <div className="max-w-6xl mx-auto text-center relative z-10">
-                    {/* Badge futurista */}
-                    <div className="inline-flex items-center gap-3 mb-8 px-5 py-2 bg-black/50 rounded-full border border-cyan-500/30 backdrop-blur-xl shadow-[0_0_20px_rgba(6,182,212,0.2)]">
-                        <span className="relative flex h-3 w-3">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
-                        </span>
-                        <span className="text-sm font-mono text-cyan-400 tracking-wider">▲ SYSTEM ONLINE ▲</span>
-                        <span className="text-xs text-cyan-500/70 font-mono">v.4.0</span>
-                    </div>
-
-                    {/* SKYNET gigante con efecto glitch */}
-                    <div className="relative mb-8">
-                        <h1 className="text-8xl sm:text-9xl font-bold font-['Orbitron'] tracking-wider bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent animate-pulse">
-                            SKYNET
-                        </h1>
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent blur-2xl"></div>
-                    </div>
-
-                    {/* Tagline */}
-                    <p className="text-2xl sm:text-3xl font-mono text-gray-300 mb-4 tracking-wider">
-                        Neural Enterprise Intelligence
-                    </p>
+        <html lang="en">
+            <body className={`${inter.className} ${orbitron.variable} bg-black`}>
+                {/* Fondo Matrix/Cyberpunk */}
+                <div className="fixed inset-0 -z-20">
+                    {/* Gradiente base */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-950 to-black"></div>
                     
-                    {/* Descripción */}
-                    <p className="text-lg text-gray-400 mb-12 max-w-3xl mx-auto font-mono leading-relaxed">
-                        {">"} INITIALIZING NEXT-GEN AI PROTOCOLS FOR FINANCIAL DOMINANCE.{">"} AUTONOMOUS AUDIT, QUANTUM COMPLIANCE, NEURAL DATA FORGE.
-                    </p>
-
-                    {/* Botones CTA */}
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                        <a href="#tools" className="group relative px-10 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-semibold text-white tracking-wider overflow-hidden">
-                            <span className="relative z-10">⟫ INITIALIZE SYSTEMS ⟪</span>
-                            <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition duration-300"></span>
-                        </a>
-                        <button className="px-10 py-4 border-2 border-cyan-500/50 rounded-lg font-mono text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all duration-300 tracking-wider">
-                            ⟫ REQUEST ACCESS ⟪
-                        </button>
-                    </div>
-
-                    {/* Stats futuristas */}
-                    <div className="grid grid-cols-3 gap-8 mt-20 pt-10 border-t border-cyan-500/20 max-w-2xl mx-auto">
-                        {[
-                            { value: "99.9%", label: "UPTIME" },
-                            { value: "<1ms", label: "LATENCY" },
-                            { value: "256bit", label: "ENCRYPTION" }
-                        ].map((stat, idx) => (
-                            <div key={idx} className="text-center">
-                                <div className="text-2xl font-bold text-cyan-400 font-mono">{stat.value}</div>
-                                <div className="text-xs text-gray-500 font-mono tracking-wider">{stat.label}</div>
-                            </div>
-                        ))}
-                    </div>
+                    {/* Luces de neón */}
+                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-[150px] opacity-20 animate-pulse"></div>
+                    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600 rounded-full blur-[150px] opacity-20 animate-pulse delay-1000"></div>
+                    <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-blue-600 rounded-full blur-[150px] opacity-10 animate-pulse delay-700"></div>
+                    
+                    {/* Grid futurista */}
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="80" height="80" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"%3E%3Cpath d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(6,182,212,0.03)" stroke-width="1"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100%" height="100%" fill="url(%23grid)"/%3E%3C/svg%3E')] opacity-50"></div>
+                    
+                    {/* Líneas de escaneo */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-transparent via-cyan-500/5 to-transparent animate-pulse"></div>
                 </div>
 
-                {/* Scroll indicator */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-                    <div className="w-6 h-10 border-2 border-cyan-500/50 rounded-full flex justify-center">
-                        <div className="w-1 h-3 bg-cyan-500 rounded-full mt-2 animate-pulse"></div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Tools Grid Section */}
-            <section id="tools" className="px-4 sm:px-6 lg:px-8 py-32 relative">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent"></div>
-                <div className="max-w-7xl mx-auto relative">
-                    <div className="text-center mb-20">
-                        <div className="inline-flex items-center gap-2 mb-4 px-4 py-1 bg-cyan-500/10 rounded-full border border-cyan-500/30">
-                            <span className="text-cyan-400 text-xs font-mono tracking-wider">▲ NEURAL WEAPONS ARSENAL ▲</span>
-                        </div>
-                        <h2 className="text-5xl sm:text-6xl font-bold font-['Orbitron'] bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4">
-                            DEPLOY AI UNITS
-                        </h2>
-                        <p className="text-gray-400 font-mono max-w-2xl mx-auto">
-                            Select your tactical AI module. Each unit is optimized for maximum destructive efficiency in financial operations.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {tools.map((tool) => (
-                            <Link key={tool.id} href={tool.link}>
-                                <div
-                                    onMouseEnter={() => setHoveredTool(tool.id)}
-                                    onMouseLeave={() => setHoveredTool(null)}
-                                    className="group relative cursor-pointer"
-                                >
-                                    {/* Background glow */}
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-20 rounded-2xl transition duration-500 blur-xl`} />
-                                    
-                                    {/* Card */}
-                                    <div className="relative p-8 rounded-2xl bg-black/50 border border-gray-800 backdrop-blur-xl group-hover:border-cyan-500/50 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]">
-                                        <div className="text-7xl mb-6 transform group-hover:scale-110 transition duration-500">{tool.icon}</div>
-                                        <h3 className="text-2xl font-bold text-white font-['Orbitron'] mb-2">{tool.title}</h3>
-                                        <p className="text-xs text-cyan-400 font-mono mb-4 tracking-wider">{tool.subtitle}</p>
-                                        <p className="text-gray-400 mb-6 text-sm leading-relaxed">{tool.desc}</p>
-                                        
-                                        <div className="space-y-2 mb-8">
-                                            {tool.features.map((feature, idx) => (
-                                                <div key={idx} className="flex items-center gap-2 text-sm text-gray-500 font-mono group-hover:text-gray-300 transition">
-                                                    <span className="text-cyan-400">⟫</span>
-                                                    {feature}
-                                                </div>
-                                            ))}
-                                        </div>
-                                        
-                                        <div className="flex items-center justify-between pt-4 border-t border-gray-800">
-                                            <span className="text-cyan-400 font-mono text-sm tracking-wider group-hover:translate-x-2 transition">DEPLOY UNIT →</span>
-                                            <span className="text-[10px] text-gray-600 font-mono">v.1.0</span>
-                                        </div>
+                {/* Navbar SKYNET */}
+                <nav className="sticky top-0 z-50 backdrop-blur-2xl bg-black/60 border-b border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between items-center h-20">
+                            {/* Logo SKYNET */}
+                            <div className="flex items-center space-x-3 group cursor-pointer">
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-cyan-500 rounded-lg blur-md opacity-50 group-hover:opacity-100 transition duration-300"></div>
+                                    <div className="relative w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-700 rounded-lg flex items-center justify-center">
+                                        <span className="text-white font-black text-2xl font-['Orbitron']">S</span>
                                     </div>
                                 </div>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
+                                <div>
+                                    <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent font-['Orbitron'] tracking-wider">
+                                        SKYNET
+                                    </span>
+                                    <div className="text-[10px] text-cyan-400/80 font-mono tracking-widest">NEURAL NETWORK v4.0</div>
+                                </div>
+                            </div>
 
-            {/* CTA Final */}
-            <section className="relative px-4 sm:px-6 lg:px-8 py-32">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 blur-3xl"></div>
-                <div className="max-w-5xl mx-auto text-center relative">
-                    <div className="p-12 rounded-2xl bg-black/40 backdrop-blur-xl border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.2)]">
-                        <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-cyan-500/10 rounded-full border border-cyan-500/30">
-                            <span className="text-cyan-400 text-xs font-mono animate-pulse">● CONNECTION ESTABLISHED</span>
+                            {/* Menú futurista */}
+                            <div className="hidden md:flex space-x-1">
+                                {['CORE', 'WEAPONS', 'SENTINEL', 'LABS', 'ACCESS'].map((item) => (
+                                    <a key={item} href="#" className="relative px-5 py-2 text-gray-400 hover:text-cyan-400 transition group font-mono text-sm tracking-wider">
+                                        <span className="relative z-10">{item}</span>
+                                        <span className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition rounded-lg"></span>
+                                    </a>
+                                ))}
+                            </div>
+
+                            {/* Botón MAINFRAME */}
+                            <button className="relative px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-mono text-sm font-bold tracking-wider hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] transition-all duration-300 hover:scale-105 overflow-hidden group">
+                                <span className="relative z-10 flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                    ACCESS MAINFRAME
+                                </span>
+                                <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                            </button>
                         </div>
-                        <h2 className="text-5xl font-bold font-['Orbitron'] text-white mb-6">
-                            READY TO JOIN<br/>THE NETWORK?
-                        </h2>
-                        <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-mono">
-                            Access the most advanced neural enterprise intelligence platform on the planet.
-                        </p>
-                        <button className="group relative px-12 py-5 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-lg font-mono font-bold text-white tracking-wider text-lg overflow-hidden">
-                            <span className="relative z-10">⟫ INITIALIZE SKYNET ACCESS ⟪</span>
-                            <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition duration-300"></span>
-                        </button>
-                        <p className="text-xs text-gray-500 mt-6 font-mono">* Enterprise security protocols active. 256-bit encryption.</p>
                     </div>
-                </div>
-            </section>
-        </div>
-    );
+                    
+                    {/* Barra de estado futurista */}
+                    <div className="h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+                    <div className="flex justify-between items-center px-8 py-1 bg-black/30 text-[10px] font-mono">
+                        <span className="text-cyan-400">▲ SYSTEM STATUS: OPERATIONAL</span>
+                        <span className="text-gray-500">ENCRYPTION: 256-BIT QUANTUM</span>
+                        <span className="text-cyan-400">NEURAL LINK: ACTIVE</span>
+                    </div>
+                </nav>
+
+                {/* Contenido principal */}
+                <main className="relative z-10">
+                    {children}
+                </main>
+
+                {/* Footer SKYNET */}
+                <footer className="relative z-10 mt-32 border-t border-cyan-500/20 bg-black/80 backdrop-blur-xl">
+                    <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/5 to-transparent"></div>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+                            <div>
+                                <div className="flex items-center space-x-2 mb-4">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-700 rounded-lg flex items-center justify-center">
+                                        <span className="text-white font-bold">S</span>
+                                    </div>
+                                    <div>
+                                        <span className="text-lg font-bold text-white font-['Orbitron']">SKYNET</span>
+                                        <p className="text-[8px] text-cyan-400 font-mono">© 2026 NEURAL ENTERPRISE</p>
+                                    </div>
+                                </div>
+                                <p className="text-gray-500 text-xs font-mono leading-relaxed">
+                                    Next-generation AI platform for financial dominance.
+                                </p>
+                                <div className="mt-4 p-2 bg-cyan-500/5 border border-cyan-500/20 rounded">
+                                    <p className="text-[8px] text-cyan-400 font-mono">API STATUS: ████████ 100%</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 className="text-cyan-400 font-mono text-xs mb-4 tracking-wider flex items-center gap-2">
+                                    <span>▲</span> NEURAL LINKS
+                                </h4>
+                                <ul className="space-y-2 text-gray-500 text-xs font-mono">
+                                    <li className="hover:text-cyan-400 transition cursor-pointer flex items-center gap-2">
+                                        <span className="text-cyan-400">⟫</span> SYSTEM STATUS
+                                    </li>
+                                    <li className="hover:text-cyan-400 transition cursor-pointer flex items-center gap-2">
+                                        <span className="text-cyan-400">⟫</span> API DOCS
+                                    </li>
+                                    <li className="hover:text-cyan-400 transition cursor-pointer flex items-center gap-2">
+                                        <span className="text-cyan-400">⟫</span> NETWORK MAP
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h4 className="text-cyan-400 font-mono text-xs mb-4 tracking-wider flex items-center gap-2">
+                                    <span>▲</span> RESOURCES
+                                </h4>
+                                <ul className="space-y-2 text-gray-500 text-xs font-mono">
+                                    <li className="hover:text-cyan-400 transition cursor-pointer flex items-center gap-2">
+                                        <span className="text-cyan-400">⟫</span> SECURITY PROTOCOL
+                                    </li>
+                                    <li className="hover:text-cyan-400 transition cursor-pointer flex items-center gap-2">
+                                        <span className="text-cyan-400">⟫</span> COMPLIANCE
+                                    </li>
+                                    <li className="hover:text-cyan-400 transition cursor-pointer flex items-center gap-2">
+                                        <span className="text-cyan-400">⟫</span> SUPPORT
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h4 className="text-cyan-400 font-mono text-xs mb-4 tracking-wider flex items-center gap-2">
+                                    <span>▲</span> CONNECTION
+                                </h4>
+                                <div className="flex space-x-3 mb-4">
+                                    {['LINKEDIN', 'GITHUB', 'DISCORD', 'X'].map((social) => (
+                                        <div key={social} className="w-10 h-10 border border-cyan-500/30 rounded-lg flex items-center justify-center hover:border-cyan-500 hover:shadow-[0_0_15px_cyan] transition-all cursor-pointer group bg-black/50">
+                                            <span className="text-gray-400 group-hover:text-cyan-400 text-xs font-mono">{social[0]}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="mt-4 p-3 bg-cyan-500/5 border border-cyan-500/20 rounded-lg">
+                                    <p className="text-[9px] text-cyan-400 font-mono tracking-wider">● NEURAL SYNC: ACTIVE</p>
+                                    <p className="text-[8px] text-gray-600 font-mono mt-1">UPTIME: 99.99%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </body>
+        </html>
+    )
 }
