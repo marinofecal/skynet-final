@@ -16,113 +16,81 @@ html {
 
 body {
     font-family: 'Inter', sans-serif;
-    background: #05050a;
+    background: #010105;
     color: #ffffff;
 }
 
-/* Scrollbar cyberpunk */
+/* Scrollbar */
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #0f0f1a;
+    background: #111118;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(#00d4ff, #8b5cf6);
+    background: #00d4ff;
     border-radius: 10px;
 }
 
-/* Animaciones épicas */
-@keyframes neonPulse {
-    0%, 100% { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
-    50% { text-shadow: 0 0 20px #00d4ff, 0 0 40px #8b5cf6; }
+/* Animaciones principales */
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
 }
 
-@keyframes borderFlow {
-    0% { border-color: #00d4ff; box-shadow: 0 0 5px #00d4ff; }
-    50% { border-color: #8b5cf6; box-shadow: 0 0 20px #8b5cf6; }
-    100% { border-color: #00d4ff; box-shadow: 0 0 5px #00d4ff; }
-}
-
-@keyframes float {
+@keyframes floatSlow {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-20px); }
 }
 
-@keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
+@keyframes borderGlow {
+    0%, 100% { border-color: rgba(0, 212, 255, 0.3); box-shadow: 0 0 0px rgba(0, 212, 255, 0); }
+    50% { border-color: rgba(0, 212, 255, 0.8); box-shadow: 0 0 30px rgba(0, 212, 255, 0.2); }
 }
 
-@keyframes scan {
-    0% { top: -100%; }
-    100% { top: 200%; }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-neon {
-    animation: neonPulse 2s ease-in-out infinite;
+.animate-glow-pulse {
+    animation: glowPulse 4s ease-in-out infinite;
 }
 
-.animate-border-flow {
-    animation: borderFlow 3s ease-in-out infinite;
+.animate-float-slow {
+    animation: floatSlow 6s ease-in-out infinite;
 }
 
-.animate-float {
-    animation: float 4s ease-in-out infinite;
+.animate-border-glow {
+    animation: borderGlow 3s ease-in-out infinite;
 }
 
-.animate-glitch {
-    animation: glitch 0.2s infinite;
+.animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
 }
 
-/* Efecto de escaneo */
-.scan-line {
-    position: fixed;
-    top: -100%;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: linear-gradient(to bottom, transparent, rgba(0, 212, 255, 0.2), transparent);
-    pointer-events: none;
-    z-index: 9999;
-    animation: scan 8s linear infinite;
+/* Gradientes y efectos */
+.gradient-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(0, 212, 255, 0.15), transparent 70%);
 }
 
-/* Grid futurista */
-.bg-cyber-grid {
-    background-image: 
-        linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
-}
-
-/* Glassmorphism cyberpunk */
-.glass-cyber {
-    background: rgba(10, 10, 20, 0.7);
+.glass-premium {
+    background: rgba(8, 8, 18, 0.7);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 212, 255, 0.3);
-}
-
-.glass-cyber:hover {
-    border-color: rgba(0, 212, 255, 0.8);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-}
-
-/* Tarjetas de bots */
-.bot-card {
-    background: linear-gradient(135deg, rgba(20, 20, 40, 0.8), rgba(10, 10, 20, 0.9));
     border: 1px solid rgba(0, 212, 255, 0.2);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.bot-card:hover {
-    transform: translateY(-8px);
-    border-color: #00d4ff;
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+.glass-premium:hover {
+    border-color: rgba(0, 212, 255, 0.6);
+    background: rgba(10, 10, 22, 0.8);
+}
+
+/* Grid elegante */
+.grid-elegant {
+    background-image: 
+        linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
 }
