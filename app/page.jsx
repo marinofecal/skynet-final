@@ -7,44 +7,44 @@ export default function Home() {
         {
             id: "audit",
             name: "AUDIT AI",
-            tagline: "Sentinel Protocol",
+            tagline: "SENTINEL PROTOCOL",
             description: "Autonomous risk assessment and audit procedure generation with real-time analysis.",
             icon: "🔍",
             gradient: "from-cyan-500 to-blue-600",
             capabilities: ["Risk Analysis", "Control Mapping", "Audit Planning"],
             link: "/tools/audit",
-            stats: "99.9% accuracy"
+            badge: "99.9% ACCURACY"
         },
         {
             id: "ifrs",
             name: "IFRS AI",
-            tagline: "Compliance Engine",
+            tagline: "COMPLIANCE ENGINE",
             description: "Accounting standards interpreter with intelligent documentation and compliance checking.",
             icon: "📊",
             gradient: "from-purple-500 to-pink-600",
             capabilities: ["Standards Mapping", "Compliance Check", "Smart Reports"],
             link: "/tools/ifrs",
-            stats: "IFRS 1-17 ready"
+            badge: "IFRS 1-17 READY"
         },
         {
             id: "excel",
             name: "EXCEL AI",
-            tagline: "Data Forge",
+            tagline: "DATA FORGE",
             description: "Convert complex financial logic into production-ready Excel formulas instantly.",
             icon: "⚡",
             gradient: "from-emerald-500 to-teal-600",
             capabilities: ["Formula Generation", "Data Analysis", "Optimization"],
             link: "/tools/excel",
-            stats: "<1ms response"
+            badge: "&lt;1ms RESPONSE"
         }
     ];
 
     return (
         <div>
-            {/* Hero - Impactante y espacioso */}
-            <section className="relative min-h-[90vh] flex items-center px-8 overflow-hidden">
+            {/* Hero Section */}
+            <section className="relative min-h-screen flex items-center px-8 overflow-hidden">
                 <div className="max-w-7xl mx-auto w-full">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="grid lg:grid-cols-2 gap-20 items-center">
                         {/* Left */}
                         <div className="animate-slide-up">
                             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-8">
@@ -52,36 +52,36 @@ export default function Home() {
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
                                 </span>
-                                <span className="text-cyan-400 text-xs font-mono tracking-wider">SYSTEM ACTIVE</span>
+                                <span className="text-cyan-400 text-xs font-mono tracking-wider">SYSTEM ONLINE</span>
                             </div>
 
-                            <h1 className="text-7xl sm:text-8xl lg:text-9xl font-black tracking-tighter leading-[1.1] mb-6">
-                                <span className="bg-gradient-to-r from-cyan-400 via-white to-purple-400 bg-clip-text text-transparent">
+                            <h1 className="text-8xl sm:text-9xl font-black tracking-tighter leading-[0.9] mb-8">
+                                <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
                                     SKYNET
                                 </span>
                             </h1>
                             
-                            <p className="text-2xl text-gray-300 mb-6 font-light tracking-wide">
+                            <p className="text-3xl text-gray-300 mb-6 font-light tracking-wide">
                                 AI Intelligence Framework
                             </p>
                             
-                            <p className="text-gray-400 mb-10 leading-relaxed text-lg max-w-lg">
+                            <p className="text-gray-400 mb-12 leading-relaxed text-lg max-w-lg">
                                 Next-generation automation for audit, compliance, and financial analysis.
                                 Built to demonstrate advanced AI integration capabilities.
                             </p>
 
-                            {/* Stats cards */}
+                            {/* Stats */}
                             <div className="flex gap-6 mb-12">
-                                <div className="glass-premium rounded-xl p-4 text-center min-w-[100px]">
-                                    <div className="text-3xl font-black text-cyan-400">3</div>
+                                <div className="glass-card rounded-xl p-5 text-center min-w-[110px]">
+                                    <div className="text-4xl font-black text-cyan-400">3</div>
                                     <div className="text-[10px] text-gray-500 font-mono mt-1">AI MODULES</div>
                                 </div>
-                                <div className="glass-premium rounded-xl p-4 text-center min-w-[100px]">
-                                    <div className="text-3xl font-black text-cyan-400">&lt;1s</div>
+                                <div className="glass-card rounded-xl p-5 text-center min-w-[110px]">
+                                    <div className="text-4xl font-black text-cyan-400">&lt;1s</div>
                                     <div className="text-[10px] text-gray-500 font-mono mt-1">RESPONSE</div>
                                 </div>
-                                <div className="glass-premium rounded-xl p-4 text-center min-w-[100px]">
-                                    <div className="text-3xl font-black text-cyan-400">24/7</div>
+                                <div className="glass-card rounded-xl p-5 text-center min-w-[110px]">
+                                    <div className="text-4xl font-black text-cyan-400">24/7</div>
                                     <div className="text-[10px] text-gray-500 font-mono mt-1">AVAILABLE</div>
                                 </div>
                             </div>
@@ -89,42 +89,41 @@ export default function Home() {
                             <div className="flex gap-4">
                                 <a 
                                     href="#bots" 
-                                    className="group px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl font-bold text-white hover:shadow-[0_0_30px_rgba(0,212,255,0.4)] transition-all duration-300 inline-flex items-center gap-2"
+                                    className="group px-10 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl font-bold text-white hover:shadow-[0_0_40px_rgba(0,212,255,0.4)] transition-all duration-300 inline-flex items-center gap-2 text-lg"
                                 >
                                     EXPLORE BOTS 
-                                    <span className="group-hover:translate-x-1 transition">→</span>
+                                    <span className="group-hover:translate-x-2 transition">→</span>
                                 </a>
                             </div>
                         </div>
 
-                        {/* Right - Orbital visual */}
+                        {/* Right - Visual */}
                         <div className="hidden lg:flex justify-center items-center relative">
                             <div className="relative w-96 h-96">
-                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full blur-[80px] opacity-30 animate-glow-pulse"></div>
-                                <div className="absolute inset-10 bg-gradient-to-br from-cyan-400/20 to-purple-500/20 rounded-full animate-float-slow"></div>
+                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full blur-[100px] opacity-30 animate-glow-pulse"></div>
+                                <div className="absolute inset-10 bg-gradient-to-br from-cyan-400/10 to-purple-500/10 rounded-full animate-float-slow"></div>
                                 <div className="absolute inset-20 flex items-center justify-center">
                                     <div className="text-center">
-                                        <div className="text-7xl mb-2">🧠</div>
-                                        <div className="text-cyan-400 text-xs font-mono">NEURAL CORE</div>
+                                        <div className="text-8xl mb-3">🧠</div>
+                                        <div className="text-cyan-400 text-xs font-mono tracking-wider">NEURAL CORE</div>
                                     </div>
                                 </div>
-                                {/* Orbital rings */}
-                                <div className="absolute -inset-4 border border-cyan-500/30 rounded-full animate-spin-slow" style={{ animationDuration: '20s' }}></div>
-                                <div className="absolute -inset-8 border border-purple-500/20 rounded-full animate-spin-slow" style={{ animationDuration: '25s', animationDirection: 'reverse' }}></div>
+                                <div className="absolute -inset-4 border border-cyan-500/30 rounded-full animate-spin-slow"></div>
+                                <div className="absolute -inset-8 border border-purple-500/20 rounded-full animate-spin-slow" style={{ animationDirection: 'reverse', animationDuration: '25s' }}></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Bots Section - Tarjetas que respiran */}
-            <section id="bots" className="py-28 px-8">
+            {/* Bots Section */}
+            <section id="bots" className="py-32 px-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-20">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-5">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6">
                             <span className="text-cyan-400 text-xs font-mono tracking-wider">⟫ AVAILABLE MODULES ⟪</span>
                         </div>
-                        <h2 className="text-5xl sm:text-6xl font-bold mb-5 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                        <h2 className="text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
                             Intelligent Bots
                         </h2>
                         <p className="text-gray-400 max-w-2xl mx-auto text-lg">
@@ -136,41 +135,33 @@ export default function Home() {
                         {bots.map((bot) => (
                             <Link key={bot.id} href={bot.link}>
                                 <div className="group relative">
-                                    {/* Background glow on hover */}
-                                    <div className={`absolute -inset-0.5 bg-gradient-to-r ${bot.gradient} rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition duration-500`}></div>
+                                    <div className={`absolute -inset-0.5 bg-gradient-to-r ${bot.gradient} rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition duration-500`}></div>
                                     
-                                    {/* Card */}
-                                    <div className="relative glass-premium rounded-2xl p-8 cursor-pointer transition-all duration-500 group-hover:-translate-y-2 group-hover:border-cyan-500/50 h-full">
-                                        {/* Icon */}
-                                        <div className="text-7xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                                    <div className="relative glass-card rounded-2xl p-8 cursor-pointer h-full">
+                                        <div className="text-8xl mb-6 group-hover:scale-110 transition-transform duration-300">
                                             {bot.icon}
                                         </div>
                                         
-                                        {/* Title */}
-                                        <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">{bot.name}</h3>
+                                        <h3 className="text-3xl font-bold text-white mb-2 tracking-tight">{bot.name}</h3>
                                         <p className="text-cyan-400 text-xs font-mono mb-4 tracking-wider">{bot.tagline}</p>
                                         
-                                        {/* Description */}
                                         <p className="text-gray-400 text-sm mb-6 leading-relaxed">{bot.description}</p>
                                         
-                                        {/* Stats badge */}
-                                        <div className="inline-block px-2 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[9px] font-mono mb-4">
-                                            {bot.stats}
+                                        <div className="inline-block px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[9px] font-mono mb-5">
+                                            {bot.badge}
                                         </div>
                                         
-                                        {/* Capabilities */}
                                         <div className="flex flex-wrap gap-2 mb-6">
                                             {bot.capabilities.map((cap, i) => (
-                                                <span key={i} className="text-[10px] px-2 py-1 rounded-full bg-gray-800/80 text-gray-300 font-mono">
+                                                <span key={i} className="text-[10px] px-2 py-1 rounded-full bg-gray-800 text-gray-300 font-mono">
                                                     {cap}
                                                 </span>
                                             ))}
                                         </div>
                                         
-                                        {/* CTA */}
-                                        <div className="flex items-center gap-2 text-cyan-400 text-sm font-mono group-hover:gap-3 transition-all duration-300 pt-4 border-t border-white/10">
+                                        <div className="flex items-center gap-2 text-cyan-400 text-sm font-mono group-hover:gap-3 transition-all duration-300 pt-5 border-t border-white/10">
                                             <span>LAUNCH BOT</span>
-                                            <span className="text-lg group-hover:translate-x-1 transition">→</span>
+                                            <span className="text-xl group-hover:translate-x-1 transition">→</span>
                                         </div>
                                     </div>
                                 </div>
@@ -180,13 +171,13 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Tech Stack - Elegante */}
+            {/* Tech Stack */}
             <section className="py-20 px-8">
                 <div className="max-w-4xl mx-auto">
-                    <div className="glass-premium rounded-2xl p-10 text-center border border-cyan-500/20">
-                        <div className="inline-flex items-center gap-2 mb-6">
-                            <span className="text-cyan-400 text-2xl">⚡</span>
-                            <span className="text-gray-400 font-mono text-sm">BUILT WITH MODERN TECH</span>
+                    <div className="glass-card rounded-2xl p-12 text-center border border-cyan-500/20">
+                        <div className="inline-flex items-center gap-2 mb-8">
+                            <span className="text-cyan-400 text-3xl">⚡</span>
+                            <span className="text-gray-400 font-mono text-sm tracking-wider">BUILT WITH MODERN TECH</span>
                         </div>
                         <div className="flex flex-wrap justify-center gap-3">
                             {['Next.js 14', 'Tailwind CSS', 'OpenAI API', 'Vercel', 'TypeScript'].map((tech) => (
