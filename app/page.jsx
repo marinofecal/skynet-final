@@ -2,88 +2,225 @@
 import Link from 'next/link';
 
 export default function Home() {
-  const bots = [
-    { id: 'audit', name: 'AUDIT AI', tagline: 'SENTINEL PROTOCOL', desc: 'Evaluación de riesgos autónoma y generación de procedimientos de auditoría.', icon: '🔍', badge: '99.9% ACCURACY', capabilities: ['Risk Analysis', 'Control Mapping', 'Audit Planning'], link: '/tools/audit', gradient: 'from-cyan-500 to-blue-600' },
-    { id: 'ifrs', name: 'IFRS AI', tagline: 'COMPLIANCE ENGINE', desc: 'Interpretación de normas contables con documentación inteligente.', icon: '📊', badge: 'IFRS 1-17 READY', capabilities: ['Standards Mapping', 'Compliance Check', 'Smart Reports'], link: '/tools/ifrs', gradient: 'from-purple-500 to-pink-600' },
-    { id: 'excel', name: 'EXCEL AI', tagline: 'DATA FORGE', desc: 'Convierte lógica financiera compleja en fórmulas de Excel listas para producción.', icon: '⚡', badge: '<1ms RESPONSE', capabilities: ['Formula Generation', 'Data Analysis', 'Optimization'], link: '/tools/excel', gradient: 'from-emerald-500 to-teal-600' },
-  ];
+    const bots = [
+      { id: 'audit', name: 'AUDIT AI', tagline: 'SENTINEL PROTOCOL', desc: 'Evaluación de riesgos autónoma y generación de procedimientos de auditoría' },
+      { id: 'ifrs', name: 'IFRS AI', tagline: 'COMPLIANCE ENGINE', desc: 'Interpretación de normas contables y generación de informes de cumplimiento' },
+      { id: 'excel', name: 'EXCEL AI', tagline: 'DATA FORGE', desc: 'Conversión lógica financiera con análisis predictivo' },
+        ];
 
   return (
-    <div>
-      {/* Sección Hero */}
-      <section className="min-h-[85vh] flex items-center px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6">
-                <span className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></span>
-                <span className="text-cyan-400 text-xs font-mono">SYSTEM ONLINE</span>
-              </div>
-              <h1 className="text-7xl sm:text-8xl font-black tracking-tighter mb-4 bg-gradient-to-r from-cyan-400 via-white to-purple-400 bg-clip-text text-transparent">SKYNET</h1>
-              <p className="text-2xl text-gray-300 mb-4">AI Intelligence Framework</p>
-              <p className="text-gray-400 mb-8 max-w-lg">Automatización de última generación para auditoría, cumplimiento IFRS y análisis financiero.</p>
-              <div className="flex gap-4 mb-8">
-                <div className="bg-white/5 rounded-xl p-3 text-center w-24"><div className="text-2xl font-bold text-cyan-400">3</div><div className="text-[10px] text-gray-500">MODULES</div></div>
-                <div className="bg-white/5 rounded-xl p-3 text-center w-24"><div className="text-2xl font-bold text-cyan-400">&lt;1s</div><div className="text-[10px] text-gray-500">RESPONSE</div></div>
-                <div className="bg-white/5 rounded-xl p-3 text-center w-24"><div className="text-2xl font-bold text-cyan-400">24/7</div><div className="text-[10px] text-gray-500">AVAILABLE</div></div>
-              </div>
-              <a href="#bots" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-lg font-bold hover:shadow-[0_0_25px_cyan] transition">EXPLORE BOTS →</a>
-            </div>
-            <div className="hidden lg:flex justify-center">
-              <div className="relative w-80 h-80">
-                <div className="absolute inset-0 bg-cyan-500 rounded-full blur-3xl opacity-30 animate-pulse"></div>
-                <div className="absolute inset-10 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-full animate-float flex items-center justify-center">
-                  <span className="text-7xl">🧠</span>
-                </div>
-                <div className="absolute -inset-4 border border-cyan-500/30 rounded-full animate-spin-slow"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sección de Bots */}
-      <section id="bots" className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-4">
-              <span className="text-cyan-400 text-xs font-mono">⟫ AVAILABLE MODULES ⟪</span>
-            </div>
-            <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">Intelligent Bots</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">Agentes de IA listos para producción para operaciones financieras del mundo real</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {bots.map((bot) => (
-              <Link key={bot.id} href={bot.link}>
-                <div className="group glass-card rounded-2xl p-6 cursor-pointer">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${bot.gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition`}></div>
-                  <div className="text-6xl mb-4">{bot.icon}</div>
-                  <h3 className="text-2xl font-bold mb-1">{bot.name}</h3>
-                  <p className="text-cyan-400 text-xs font-mono mb-3">{bot.tagline}</p>
-                  <p className="text-gray-400 text-sm mb-4">{bot.desc}</p>
-                  <span className="inline-block px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-[10px] font-mono mb-4">{bot.badge}</span>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {bot.capabilities.map((c, i) => <span key={i} className="text-[10px] px-2 py-1 rounded-full bg-gray-800 text-gray-300">{c}</span>)}
-                  </div>
-                  <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm group-hover:gap-3 transition">LAUNCH BOT <span>→</span></div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Sección de Tecnología */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto text-center bg-white/5 rounded-2xl p-8 border border-cyan-500/20">
-          <div className="text-2xl mb-4">⚡</div>
-          <h3 className="text-xl font-bold mb-4">BUILT WITH MODERN TECH</h3>
-          <div className="flex flex-wrap justify-center gap-3 mb-6">
-            {['Next.js 14', 'Tailwind CSS', 'OpenAI API', 'Vercel', 'TypeScript'].map(t => <span key={t} className="px-3 py-1 rounded-lg bg-gray-800 text-sm">{t}</span>)}
-          </div>
-          <p className="text-gray-500 text-sm">Desarrollo activo · Listo para producción · Arquitectura impulsada por IA</p>
-        </div>
-      </section>
-    </div>
-  );
-}
+        <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-black">
+          {/* Hero Section */}
+              <section className="hero">
+                      <div className="container mx-auto px-4 py-20 md:py-32">
+                                <div className="hero-content">
+                                            <div className="mb-6">
+                                                          <span className="badge">AI INTELLIGENCE FRAMEWORK</span>span>
+                                            </div>div>
+                                            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+                                                          <span className="text-white">SKYNET</span>span>
+                                                          <br />
+                                                          <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Intelligence Framework</span>span>
+                                            </h1>h1>
+                                            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
+                                                          Automatización de última generación para auditoría, cumplimiento IFRS y análisis financiero con inteligencia artificial avanzada.
+                                            </p>p>
+                                            <div className="flex flex-wrap gap-4">
+                                                          <button className="btn btn-primary btn-lg">Explorar Bots</button>button>
+                                                          <button className="btn btn-secondary btn-lg">Documentación</button>button>
+                                            </div>div>
+                                </div>div>
+                      </div>div>
+              </section>section>
+        
+          {/* Stats Section */}
+              <section className="py-16 border-t border-cyan-500/20">
+                      <div className="container mx-auto px-4">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                            <div className="text-center">
+                                                          <div className="text-4xl font-bold text-cyan-400 mb-2">3</div>div>
+                                                          <p className="text-gray-400">MÓDULOS INTELIGENTES</p>p>
+                                            </div>div>
+                                            <div className="text-center">
+                                                          <div className="text-4xl font-bold text-cyan-400 mb-2">&lt;1s</div>div>
+                                                          <p className="text-gray-400">TIEMPO DE RESPUESTA</p>p>
+                                            </div>div>
+                                            <div className="text-center">
+                                                          <div className="text-4xl font-bold text-cyan-400 mb-2">24/7</div>div>
+                                                          <p className="text-gray-400">DISPONIBILIDAD</p>p>
+                                            </div>div>
+                                </div>div>
+                      </div>div>
+              </section>section>
+        
+          {/* Bots Section */}
+              <section className="py-20">
+                      <div className="container mx-auto px-4">
+                                <div className="mb-16">
+                                            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+                                                          Intelligent Bots
+                                            </h2>h2>
+                                            <p className="text-xl text-gray-400">
+                                                          Agentes de IA listos para producción en operaciones financieras del mundo real
+                                            </p>p>
+                                </div>div>
+                      
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                  {bots.map((bot) => (
+                        <Link key={bot.id} href={`/tools/${bot.id}`}>
+                                        <div className="card cursor-pointer group h-full">
+                                                          <div className="card-header mb-6">
+                                                                              <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center text-2xl">
+                                                                                                    🤖
+                                                                              </div>div>
+                                                                              <div>
+                                                                                                    <h3 className="card-title text-2xl">{bot.name}</h3>h3>
+                                                                                                    <p className="card-subtitle text-sm font-semibold text-cyan-400">{bot.tagline}</p>p>
+                                                                              </div>div>
+                                                          </div>div>
+                                                          <p className="card-body mb-6 text-base">
+                                                            {bot.desc}
+                                                          </p>p>
+                                                          <div className="flex items-center text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                                                                              <span className="font-semibold">Acceder</span>span>
+                                                                              <span className="ml-2">→</span>span>
+                                                          </div>div>
+                                        </div>div>
+                        </Link>Link>
+                      ))}
+                                </div>div>
+                      </div>div>
+              </section>section>
+        
+          {/* Features Section */}
+              <section className="py-20 border-t border-cyan-500/20">
+                      <div className="container mx-auto px-4">
+                                <h2 className="text-4xl md:text-5xl font-bold mb-16 text-white">
+                                            Características Principales
+                                </h2>h2>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                                            <div>
+                                                          <div className="flex items-start gap-4 mb-6">
+                                                                          <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                            <span className="text-cyan-400 font-bold">⚡</span>span>
+                                                                          </div>div>
+                                                                          <div>
+                                                                                            <h3 className="text-xl font-bold mb-2">Procesamiento Ultra-Rápido</h3>h3>
+                                                                                            <p className="text-gray-400">Análisis y generación de reportes en menos de 1 segundo</p>p>
+                                                                          </div>div>
+                                                          </div>div>
+                                            
+                                                          <div className="flex items-start gap-4 mb-6">
+                                                                          <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                            <span className="text-cyan-400 font-bold">🔒</span>span>
+                                                                          </div>div>
+                                                                          <div>
+                                                                                            <h3 className="text-xl font-bold mb-2">Seguridad Empresarial</h3>h3>
+                                                                                            <p className="text-gray-400">Cifrado end-to-end y cumplimiento de regulaciones internacionales</p>p>
+                                                                          </div>div>
+                                                          </div>div>
+                                            
+                                                          <div className="flex items-start gap-4">
+                                                                          <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                            <span className="text-cyan-400 font-bold">📊</span>span>
+                                                                          </div>div>
+                                                                          <div>
+                                                                                            <h3 className="text-xl font-bold mb-2">Analytics Avanzado</h3>h3>
+                                                                                            <p className="text-gray-400">Visualizaciones interactivas y reportes predictivos</p>p>
+                                                                          </div>div>
+                                                          </div>div>
+                                            </div>div>
+                                
+                                            <div>
+                                                          <div className="flex items-start gap-4 mb-6">
+                                                                          <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                            <span className="text-cyan-400 font-bold">🔄</span>span>
+                                                                          </div>div>
+                                                                          <div>
+                                                                                            <h3 className="text-xl font-bold mb-2">Integración Continua</h3>h3>
+                                                                                            <p className="text-gray-400">Compatible con sistemas ERP y plataformas contables</p>p>
+                                                                          </div>div>
+                                                          </div>div>
+                                            
+                                                          <div className="flex items-start gap-4 mb-6">
+                                                                          <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                            <span className="text-cyan-400 font-bold">🎯</span>span>
+                                                                          </div>div>
+                                                                          <div>
+                                                                                            <h3 className="text-xl font-bold mb-2">Precisión IFRS</h3>h3>
+                                                                                            <p className="text-gray-400">100% conforme con normas internacionales de contabilidad</p>p>
+                                                                          </div>div>
+                                                          </div>div>
+                                            
+                                                          <div className="flex items-start gap-4">
+                                                                          <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                            <span className="text-cyan-400 font-bold">🚀</span>span>
+                                                                          </div>div>
+                                                                          <div>
+                                                                                            <h3 className="text-xl font-bold mb-2">Escalable</h3>h3>
+                                                                                            <p className="text-gray-400">Desde startups hasta empresas Fortune 500</p>p>
+                                                                          </div>div>
+                                                          </div>div>
+                                            </div>div>
+                                </div>div>
+                      </div>div>
+              </section>section>
+        
+          {/* CTA Section */}
+              <section className="py-20 border-t border-cyan-500/20">
+                      <div className="container mx-auto px-4 text-center">
+                                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                                            ¿Listo para transformar tu negocio?
+                                </h2>h2>
+                                <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                                            Comienza a utilizar SKYNET Intelligence Framework hoy y experimenta la próxima generación de automatización financiera.
+                                </p>p>
+                                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                            <button className="btn btn-primary btn-lg">Comenzar Ahora</button>button>
+                                            <button className="btn btn-secondary btn-lg">Ver Demostración</button>button>
+                                </div>div>
+                      </div>div>
+              </section>section>
+        
+          {/* Footer */}
+              <footer className="border-t border-cyan-500/20 py-12 mt-20">
+                      <div className="container mx-auto px-4">
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                                            <div>
+                                                          <h4 className="font-bold text-white mb-4">SKYNET</h4>h4>
+                                                          <p className="text-gray-400 text-sm">Intelligence Framework para el futuro de las finanzas</p>p>
+                                            </div>div>
+                                            <div>
+                                                          <h5 className="font-semibold text-white mb-4">Producto</h5>h5>
+                                                          <ul className="space-y-2 text-gray-400 text-sm">
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Características</Link>Link></li>li>
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Precios</Link>Link></li>li>
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Documentación</Link>Link></li>li>
+                                                          </ul>ul>
+                                            </div>div>
+                                            <div>
+                                                          <h5 className="font-semibold text-white mb-4">Empresa</h5>h5>
+                                                          <ul className="space-y-2 text-gray-400 text-sm">
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Acerca de</Link>Link></li>li>
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Blog</Link>Link></li>li>
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Contacto</Link>Link></li>li>
+                                                          </ul>ul>
+                                            </div>div>
+                                            <div>
+                                                          <h5 className="font-semibold text-white mb-4">Legal</h5>h5>
+                                                          <ul className="space-y-2 text-gray-400 text-sm">
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Privacidad</Link>Link></li>li>
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Términos</Link>Link></li>li>
+                                                                          <li><Link href="#" className="hover:text-cyan-400">Cookies</Link>Link></li>li>
+                                                          </ul>ul>
+                                            </div>div>
+                                </div>div>
+                                <div className="border-t border-cyan-500/20 pt-8 text-center text-gray-500 text-sm">
+                                            <p>&copy; 2026 SKYNET Intelligence Framework. Todos los derechos reservados.</p>p>
+                                </div>div>
+                      </div>div>
+              </footer>footer>
+        </div>div>
+      );
+}</div>
