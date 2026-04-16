@@ -1,97 +1,305 @@
 'use client';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
-export default function Home() {
-              const bots = [
-                          { id: 'audit', name: 'AUDIT AI', icon: '🔍', tagline: 'Risk Intelligence', desc: 'Advanced compliance monitoring and risk detection' },
-                          { id: 'ifrs', name: 'IFRS AI', icon: '📋', tagline: 'Compliance Engine', desc: 'Automated IFRS standard compliance tracking' },
-                          { id: 'excel', name: 'EXCEL AI', icon: '📊', tagline: 'Data Forge', desc: 'Intelligent spreadsheet automation and analysis' },
-                            ];
+const BOTS = [
+  {
+    id: 'audit',
+    code: '01',
+    name: 'AUDIT AI',
+    sub: 'SENTINEL PROTOCOL',
+    icon: '⬡',
+    desc: 'Real-time risk detection, control mapping, and audit documentation across P2P, R2R, and O2C cycles.',
+    tags: ['RISK SCORING', 'CONTROL MAPPING', 'SOX/COSO'],
+    color: 'var(--cyan)',
+  },
+  {
+    id: 'ifrs',
+    code: '02',
+    name: 'IFRS AI',
+    sub: 'COMPLIANCE ENGINE',
+    icon: '◈',
+    desc: 'Automated IFRS 9, 15, 16, 17 interpretation. Standard gap analysis, disclosure checklists, and policy generation.',
+    tags: ['IFRS 9/15/16/17', 'DISCLOSURE', 'GAP ANALYSIS'],
+    color: 'var(--purple)',
+  },
+  {
+    id: 'excel',
+    code: '03',
+    name: 'EXCEL AI',
+    sub: 'DATA FORGE',
+    icon: '◰',
+    desc: 'Transform financial problems into formula logic. XLOOKUP, dynamic arrays, Power Query, and VBA automation.',
+    tags: ['FORMULAS', 'POWER QUERY', 'VBA'],
+    color: 'var(--green)',
+  },
+];
+
+const STATS = [
+  { value: '3', label: 'AI AGENTS ACTIVE' },
+  { value: '15+', label: 'YRS FINANCE EXP' },
+  { value: '∞', label: 'QUERIES / MONTH' },
+  { value: '99%', label: 'UPTIME SLA' },
+];
+
+function TypewriterText({ text, speed = 40, className = '' }) {
+  const [displayed, setDisplayed] = useState('');
+  useEffect(() => {
+    setDisplayed('');
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        setDisplayed(text.slice(0, i + 1));
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, speed);
+    return () => clearInterval(interval);
+  }, [text, speed]);
 
   return (
-                  <main className="w-full bg-black text-white overflow-hidden">
-                        <div className="fixed inset-0 -z-10">
-                                <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>div>
-                                <div className="absolute top-1/3 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>div>
-                                <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '0.5s'}}></div>div>
-                        </div>div>
-                  
-                        <section className="relative z-10 min-h-screen flex items-center justify-center px-4">
-                                <div className="w-full max-w-4xl text-center">
-                                          <p className="text-cyan-400 text-sm font-semibold tracking-widest mb-6">⚡ AI INTELLIGENCE PLATFORM</p>p>
-                                          <h1 className="text-7xl md:text-8xl font-black tracking-tighter mb-6">
-                                                      <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">SKYNET</span>span>
-                                          </h1>h1>
-                                          <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">Automatización financiera con IA de próxima generación</p>p>
-                                          <div className="flex gap-4 justify-center flex-wrap">
-                                                      <button className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold rounded-lg hover:scale-105 transition-transform">Comenzar</button>button>
-                                                      <button className="px-8 py-3 border-2 border-cyan-400 text-cyan-400 font-bold rounded-lg hover:bg-cyan-400/10 transition-colors">Explorar</button>button>
-                                          </div>div>
-                                </div>div>
-                        </section>section>
-                  
-                        <section className="relative z-10 py-24 px-4">
-                                <div className="max-w-6xl mx-auto">
-                                          <h2 className="text-5xl font-black text-center mb-16 text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text">Agentes Inteligentes</h2>h2>
-                                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                                      {bots.map((bot) => (
-                                            <Link key={bot.id} href={`/tools/${bot.id}`}>
-                                                            <div className="group p-8 rounded-2xl bg-gray-900/30 border border-cyan-500/20 hover:border-cyan-400/60 cursor-pointer transition-all">
-                                                                              <div className="text-6xl mb-4">{bot.icon}</div>div>
-                                                                              <h3 className="text-2xl font-black text-cyan-400 mb-2">{bot.name}</h3>h3>
-                                                                              <p className="text-sm text-gray-500 mb-3 uppercase">{bot.tagline}</p>p>
-                                                                              <p className="text-gray-300 mb-4">{bot.desc}</p>p>
-                                                                              <div className="text-cyan-400 font-semibold group-hover:translate-x-2 transition-transform">Acceder →</div>div>
-                                                            </div>div>
-                                            </Link>Link>
-                                          ))}
-                                          </div>div>
-                                </div>div>
-                        </section>section>
-                  
-                        <section className="relative z-10 py-24 px-4 bg-gradient-to-b from-transparent to-cyan-950/10">
-                                <div className="max-w-4xl mx-auto text-center">
-                                          <h2 className="text-5xl font-black mb-8 text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text">Transforma tu Negocio</h2>h2>
-                                          <p className="text-xl text-gray-300 mb-10">Soluciones de IA empresarial diseñadas para modernizar tus operaciones financieras</p>p>
-                                          <div className="flex gap-4 justify-center flex-wrap">
-                                                      <button className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold rounded-lg hover:scale-105 transition-transform">Comenzar Ahora</button>button>
-                                                      <button className="px-8 py-3 border-2 border-cyan-400 text-cyan-400 font-bold rounded-lg hover:bg-cyan-400/10 transition-colors">Contactar</button>button>
-                                          </div>div>
-                                </div>div>
-                        </section>section>
-                  
-                        <footer className="relative z-10 border-t border-cyan-500/20 py-12 px-4">
-                                <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-                                          <div>
-                                                      <h4 className="font-black text-lg text-cyan-400 mb-4">SKYNET</h4>h4>
-                                                      <p className="text-sm text-gray-500">Plataforma de IA empresarial</p>p>
-                                          </div>div>
-                                          <div>
-                                                      <h5 className="font-bold text-cyan-400 mb-4">Producto</h5>h5>
-                                                      <ul className="space-y-2 text-sm text-gray-400">
-                                                                    <li><a href="#" className="hover:text-cyan-400 transition">Características</a>a></li>li>
-                                                                    <li><a href="#" className="hover:text-cyan-400 transition">Precios</a>a></li>li>
-                                                      </ul>ul>
-                                          </div>div>
-                                          <div>
-                                                      <h5 className="font-bold text-cyan-400 mb-4">Empresa</h5>h5>
-                                                      <ul className="space-y-2 text-sm text-gray-400">
-                                                                    <li><a href="#" className="hover:text-cyan-400 transition">Sobre</a>a></li>li>
-                                                                    <li><a href="#" className="hover:text-cyan-400 transition">Blog</a>a></li>li>
-                                                      </ul>ul>
-                                          </div>div>
-                                          <div>
-                                                      <h5 className="font-bold text-cyan-400 mb-4">Legal</h5>h5>
-                                                      <ul className="space-y-2 text-sm text-gray-400">
-                                                                    <li><a href="#" className="hover:text-cyan-400 transition">Privacidad</a>a></li>li>
-                                                                    <li><a href="#" className="hover:text-cyan-400 transition">Términos</a>a></li>li>
-                                                      </ul>ul>
-                                          </div>div>
-                                </div>div>
-                                <div className="border-t border-cyan-500/20 mt-8 pt-8 text-center text-sm text-gray-500">
-                                          <p>&copy; 2024 SKYNET. Todos los derechos reservados.</p>p>
-                                </div>div>
-                        </footer>footer>
-                  </main>main>
-                );
-}</main>
+    <span className={className}>
+      {displayed}
+      <span style={{ color: 'var(--cyan)', animation: 'cursor-blink 1s steps(1) infinite' }}>█</span>
+    </span>
+  );
+}
+
+export default function Home() {
+  const [activeBot, setActiveBot] = useState(null);
+
+  return (
+    <div className="relative min-h-screen">
+
+      {/* ── HERO ──────────────────────────────────────── */}
+      <section className="relative min-h-screen flex flex-col justify-center px-6 pt-12 pb-24 max-w-7xl mx-auto">
+
+        {/* Top row: coordinates */}
+        <div className="flex justify-between items-center mb-16 animate-fade-up" style={{ animationDelay: '0.1s', opacity: 0 }}>
+          <div className="section-label">
+            SYS:INIT → <span style={{ color: 'var(--green)' }}>READY</span>
+          </div>
+          <div className="section-label hidden sm:block">
+            LAT:50.8503°N — LON:4.3517°E — BRUSSELS
+          </div>
+        </div>
+
+        {/* Main headline */}
+        <div className="max-w-5xl">
+          <div className="section-label mb-6 animate-fade-up" style={{ animationDelay: '0.2s', opacity: 0 }}>
+            ⚡ NEXT-GENERATION FINANCIAL INTELLIGENCE
+          </div>
+
+          <h1
+            className="display-heading mb-6 animate-fade-up"
+            style={{
+              fontSize: 'clamp(4rem, 12vw, 10rem)',
+              animationDelay: '0.3s',
+              opacity: 0,
+              fontFamily: 'var(--font-display)',
+            }}
+          >
+            <span style={{ color: 'var(--cyan)' }}>NEURAL</span>
+            <br />
+            <span style={{ color: 'white' }}>FINANCE</span>
+            <br />
+            <span style={{
+              WebkitTextStroke: '1px rgba(0,229,255,0.4)',
+              color: 'transparent',
+            }}>
+              COMMAND
+            </span>
+          </h1>
+
+          <p
+            className="animate-fade-up"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.9rem',
+              color: 'var(--muted)',
+              maxWidth: '520px',
+              lineHeight: 1.8,
+              animationDelay: '0.5s',
+              opacity: 0,
+            }}
+          >
+            <TypewriterText
+              text="AI-powered audit, IFRS compliance, and financial automation. Built by a finance professional for finance professionals."
+              speed={25}
+            />
+          </p>
+
+          {/* CTA row */}
+          <div className="flex flex-wrap gap-4 mt-10 animate-fade-up" style={{ animationDelay: '0.7s', opacity: 0 }}>
+            <a href="#agents" className="btn-primary">LAUNCH AGENTS →</a>
+            <a
+              href="https://linkedin.com/in/crtizgar"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-execute"
+            >
+              VIEW PROFILE
+            </a>
+          </div>
+        </div>
+
+        {/* Stats row */}
+        <div
+          className="grid grid-cols-2 md:grid-cols-4 gap-px mt-20 animate-fade-up"
+          style={{
+            border: '1px solid rgba(0,229,255,0.1)',
+            animationDelay: '0.9s',
+            opacity: 0,
+          }}
+        >
+          {STATS.map(({ value, label }) => (
+            <div
+              key={label}
+              className="flex flex-col items-center justify-center py-6 px-4"
+              style={{ borderRight: '1px solid rgba(0,229,255,0.08)', background: 'rgba(0,229,255,0.02)' }}
+            >
+              <div
+                className="display-heading"
+                style={{ fontSize: '2.5rem', color: 'var(--cyan)', fontFamily: 'var(--font-display)' }}
+              >
+                {value}
+              </div>
+              <div className="section-label mt-1" style={{ fontSize: '0.55rem' }}>{label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── AGENTS GRID ───────────────────────────────── */}
+      <section id="agents" className="px-6 pb-32 max-w-7xl mx-auto">
+
+        <div className="flex items-center gap-4 mb-12">
+          <div style={{ width: '40px', height: '1px', background: 'var(--cyan)' }} />
+          <div className="section-label">DEPLOYED AGENTS</div>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(0,229,255,0.12)' }} />
+          <div className="section-label" style={{ color: 'var(--green)' }}>3 ONLINE</div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {BOTS.map((bot, i) => (
+            <Link key={bot.id} href={`/tools/${bot.id}`}>
+              <div
+                className="bracket-card rounded-none p-8 cursor-pointer group h-full flex flex-col"
+                style={{ animationDelay: `${i * 0.15}s` }}
+                onMouseEnter={() => setActiveBot(bot.id)}
+                onMouseLeave={() => setActiveBot(null)}
+              >
+                {/* Header row */}
+                <div className="flex justify-between items-start mb-6">
+                  <div
+                    className="display-heading"
+                    style={{ fontSize: '3.5rem', color: bot.color, fontFamily: 'var(--font-display)', opacity: 0.9 }}
+                  >
+                    {bot.icon}
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="section-label" style={{ color: 'var(--muted)' }}>AGT-{bot.code}</span>
+                    <span className="status-dot" style={{ background: bot.color, boxShadow: `0 0 8px ${bot.color}` }} />
+                  </div>
+                </div>
+
+                {/* Name */}
+                <div
+                  className="display-heading mb-1 glitch"
+                  data-text={bot.name}
+                  style={{ fontSize: '1.8rem', color: 'white', fontFamily: 'var(--font-display)' }}
+                >
+                  {bot.name}
+                </div>
+                <div className="section-label mb-4" style={{ color: bot.color }}>{bot.sub}</div>
+
+                {/* Description */}
+                <p
+                  className="flex-1 mb-6"
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.78rem',
+                    color: 'var(--muted)',
+                    lineHeight: 1.8,
+                  }}
+                >
+                  {bot.desc}
+                </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {bot.tags.map(tag => (
+                    <span
+                      key={tag}
+                      className="section-label px-2 py-1"
+                      style={{
+                        fontSize: '0.55rem',
+                        border: `1px solid ${bot.color}30`,
+                        color: bot.color,
+                        background: `${bot.color}08`,
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div
+                  className="flex items-center gap-2 section-label group-hover:gap-4 transition-all"
+                  style={{ color: bot.color }}
+                >
+                  <span>INITIALIZE AGENT</span>
+                  <span>→</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ── ABOUT STRIP ───────────────────────────────── */}
+      <section
+        className="px-6 py-20"
+        style={{ borderTop: '1px solid rgba(0,229,255,0.08)', borderBottom: '1px solid rgba(0,229,255,0.08)', background: 'rgba(0,229,255,0.015)' }}
+      >
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 items-start">
+          <div className="flex-1">
+            <div className="section-label mb-4">// WHO BUILT THIS</div>
+            <h2
+              className="display-heading mb-4"
+              style={{ fontSize: '2.5rem', fontFamily: 'var(--font-display)', color: 'white' }}
+            >
+              Finance Professional.<br />
+              <span style={{ color: 'var(--cyan)' }}>AI Builder.</span>
+            </h2>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--muted)', lineHeight: 2, maxWidth: '480px' }}>
+              15+ years spanning external audit (EC, BDO), internal controls (GHX Europe), and FP&A. 
+              Now building AI systems that automate the workflows I spent a decade doing manually.
+              CISRCP · DORATPro · AML/KYC · MBA Finance
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 min-w-[280px]">
+            {[
+              { label: 'DOMAIN', value: 'GRC / FP&A / IFRS' },
+              { label: 'CERTIFICATIONS', value: 'CISRCP · DORA · AML' },
+              { label: 'DEPLOYMENT', value: 'VERCEL EDGE NETWORK' },
+              { label: 'AI ENGINE', value: 'GROQ LLaMA 3.3 70B' },
+            ].map(({ label, value }) => (
+              <div
+                key={label}
+                className="flex justify-between items-center py-3 px-4"
+                style={{ borderBottom: '1px solid rgba(0,229,255,0.08)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}
+              >
+                <span style={{ color: 'var(--muted)' }}>{label}</span>
+                <span style={{ color: 'var(--cyan)' }}>{value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+    </div>
+  );
+}
