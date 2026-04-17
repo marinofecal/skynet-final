@@ -3,12 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-function parseInline(text) {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#c4983a">$1</strong>')
-    .replace(/\*(.+?)\*/g, '<code style="background:rgba(232,160,20,.1);color:#E8A020;padding:1px">$1</code>');
-}
-
 function ReportRenderer({ text }) {
   if (!text) return null;
 
@@ -31,8 +25,16 @@ function ReportRenderer({ text }) {
       const content = trimmed.replace(/^[\+\-]\s/, '');
       elements.push(
         <div key={'n' + i} style={{ display: 'flex', gap: '10px', marginLeft: '8px', marginBottom: '10px' }}>
-          <span style={{ color: '#888', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
-          <span dangerouslySetInnerHTML={{ __html: parseInline(content) }} />
+          <span style={{ color: '#c4983a', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
+          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
+            {content.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
+              part.startsWith('**') && part.endsWith('**') ? (
+                <strong key={idx} style={{ color: '#c4983a' }}>{part.slice(2, -2)}</strong>
+              ) : (
+                part
+              )
+            )}
+          </span>
         </div>
       );
       i++;
@@ -40,15 +42,43 @@ function ReportRenderer({ text }) {
     }
 
     // SUB-BULLET
-    if (/^\+\s/.test(trimmed) || /^\s{3,}\+\s/.test(line)) {
-      const content = trimmed.replace(/^\+\s/, '');
+    if (/^\s{2,}\-\s/.test(line)) {
+      const content = trimmed.replace(/^\-\s/, '');
       elements.push(
         <div key={'s' + i} style={{ display: 'flex', gap: '8px', marginLeft: '28px', marginBottom: '8px' }}>
-          <span style={{ color: 'rgba(232,160,32,0.35)', flexShrink: 0, marginTop: '2px', fontSize: '0.6rem', letterSpacing: '1px' }}>
-            ▴
+          <span style={{ color: 'rgba(196,152,58,0.5)', flexShrink: 0, marginTop: '2px', fontSize: '0.6rem' }}>▴</span>
+          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
+            {content.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
+              part.startsWith('**') && part.endsWith('**') ? (
+                <strong key={idx} style={{ color: '#c4983a' }}>{part.slice(2, -2)}</strong>
+              ) : (
+                part
+              )
+            )}
           </span>
-          <span dangerouslySetInnerHTML={{ __html: parseInline(content) }} />
         </div>
+      );
+      i++;
+      continue;
+    }
+
+    // HEADERS (numbered sections)
+    if (/^\d+\.\s/.test(trimmed)) {
+      elements.push(
+        <h3
+          key={'h' + i}
+          style={{
+            fontSize: '1rem',
+            fontWeight: '700',
+            color: '#c4983a',
+            marginTop: '16px',
+            marginBottom: '12px',
+            borderBottom: '1px solid #404040',
+            paddingBottom: '8px',
+          }}
+        >
+          {trimmed}
+        </h3>
       );
       i++;
       continue;
@@ -63,21 +93,21 @@ function ReportRenderer({ text }) {
           lineHeight: '1.6',
           marginBottom: '12px',
           color: '#b8b8b8',
-          margin: '0 0 12px 0',
         }}
-        dangerouslySetInnerHTML={{
-          __html: parseInline(trimmed),
-        }}
-      />
+      >
+        {trimmed.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
+          part.startsWith('**') && part.endsWith('**') ? (
+            <strong key={idx} style={{ color: '#c4983a' }}>{part.slice(2, -2)}</strong>
+          ) : (
+            part
+          )
+        )}
+      </p>
     );
     i++;
   }
 
-  return (
-    <div>
-      {elements.map((el) => el)}
-    </div>
-  );
+  return <div>{elements.map((el) => el)}</div>;
 }
 
 export default function AuditPage() {
@@ -92,8 +122,8 @@ export default function AuditPage() {
     'Risk assessment on revenue recognition under IFRS 15 for a SaaS company',
   ];
 
-  const handleQuickLoad = (text) => {
-    document.querySelector('textarea').value = text;
+  const handleQuickLoad = (idx) => {
+    document.querySelector('textarea').value = quickLoads[idx];
   };
 
   const handleSubmit = async (e) => {
@@ -182,7 +212,7 @@ export default function AuditPage() {
           {quickLoads.map((load, idx) => (
             <button
               key={idx}
-              onClick={() => handleQuickLoad(load)}
+              onClick={() => handleQuickLoad(idx)}
               style={{
                 background: 'transparent',
                 border: '1px solid #404040',
@@ -210,6 +240,7 @@ export default function AuditPage() {
         <p style={{ color: '#666', fontSize: '0.75rem', marginBottom: '12px' }}>
           GROQ LLaMA 3.3 70B · 4096 TOKENS
         </p>
+
         <textarea
           placeholder="// Describe the process, department, or control environment to audit..."
           style={{
@@ -225,6 +256,7 @@ export default function AuditPage() {
             boxSizing: 'border-box',
           }}
         />
+
         <button
           type="submit"
           disabled={loading}
