@@ -10,11 +10,12 @@ function ReportRenderer({ text }) {
     <div>
       {text.split('\n').map((line, idx) => {
         const trimmed = line.trim();
+
         if (!trimmed) {
           return <div key={idx} style={{ height: '0.5rem' }} />;
         }
 
-        if (line.startsWith('    ')) {
+        if (line.startsWith(' ')) {
           return (
             <pre
               key={idx}
@@ -89,7 +90,7 @@ export default function ExcelPage() {
 
     try {
       const res = await fetch('/api/bot', {
-h        method: 'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt, bot: 'excel' }),
       });
@@ -287,6 +288,4 @@ h        method: 'POST',
       )}
     </main>
   );
-
-  // Retrigger build for Vercel deployment
 }
