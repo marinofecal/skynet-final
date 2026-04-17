@@ -1,303 +1,99 @@
-'use client';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import './globals.css';
 
-const BOTS = [
-  {
-    id: 'audit',
-    code: '01',
-    name: 'AUDIT AI',
-    sub: 'SENTINEL PROTOCOL',
-    icon: '⬡',
-    desc: 'Risk detection, control mapping, and audit documentation for P2P, R2R, and O2C cycles.',
-    tags: ['RISK SCORING', 'CONTROL MAPPING', 'SOX / COSO'],
-    color: '#00e5ff',
-  },
-  {
-    id: 'ifrs',
-    code: '02',
-    name: 'IFRS AI',
-    sub: 'COMPLIANCE ENGINE',
-    icon: '◈',
-    desc: 'IFRS 9, 15, 16, 17 interpretation. Gap analysis, disclosure checklists, and policy generation.',
-    tags: ['IFRS 9/15/16/17', 'DISCLOSURE', 'GAP ANALYSIS'],
-    color: '#a855f7',
-  },
-  {
-    id: 'excel',
-    code: '03',
-    name: 'EXCEL AI',
-    sub: 'DATA FORGE',
-    icon: '◰',
-    desc: 'Financial formula generation, Power Query automation, and spreadsheet engineering.',
-    tags: ['FORMULAS', 'POWER QUERY', 'VBA'],
-    color: '#39ff14',
-  },
-];
+export const metadata = {
+  title: 'SKYNET | AI Command Center',
+  description: 'AI automation for audit, IFRS compliance, and financial analysis',
+};
 
-const STATS = [
-  { value: '3', label: 'AI AGENTS' },
-  { value: '15+', label: 'YRS EXPERIENCE' },
-  { value: '24/7', label: 'AVAILABILITY' },
-  { value: '99%', label: 'UPTIME' },
-];
-
-function TypewriterText({ text, speed = 30 }) {
-  const [displayed, setDisplayed] = useState('');
-  useEffect(() => {
-    setDisplayed('');
-    let i = 0;
-    const iv = setInterval(() => {
-      if (i < text.length) { setDisplayed(text.slice(0, i + 1)); i++; }
-      else clearInterval(iv);
-    }, speed);
-    return () => clearInterval(iv);
-  }, [text, speed]);
+export default function RootLayout({ children }) {
   return (
-    <span>
-      {displayed}
-      <span style={{ color: '#00e5ff', animation: 'cursor-blink 1s steps(1) infinite' }}>█</span>
-    </span>
-  );
-}
+    <html lang="en">
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
+      </head>
+      <body style={{ background: '#000000', color: '#8a7d6a', fontFamily: "'JetBrains Mono', monospace", margin: 0, padding: 0, overflowX: 'hidden' }}>
 
-export default function Home() {
-  return (
-    <div style={{ minHeight: '100vh' }}>
-
-      {/* ══ HERO ══════════════════════════════════════════ */}
-      <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px 60px' }}>
-
-        {/* Top status bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '60px', flexWrap: 'wrap', gap: '12px' }}>
-          <div className="section-label">
-            SYS:INIT → <span style={{ color: '#39ff14' }}>READY</span>
-          </div>
-          <div className="section-label" style={{ color: '#4a5568' }}>
-            BRUSSELS · GRC / IFRS / FP&A
-          </div>
+        {/* Background */}
+        <div style={{ position: 'fixed', inset: 0, zIndex: -10, background: '#000000' }}>
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(232,160,32,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(232,160,32,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          <div style={{ position: 'absolute', top: 0, left: '30%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(232,160,32,0.04) 0%, transparent 70%)', filter: 'blur(40px)', animation: 'float 8s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', bottom: 0, right: '20%', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(14,165,233,0.03) 0%, transparent 70%)', filter: 'blur(60px)' }} />
         </div>
 
-        {/* Main title */}
-        <div style={{ marginBottom: '32px' }}>
-          <div className="section-label" style={{ marginBottom: '20px' }}>
-            ⚡ AI-POWERED FINANCIAL INTELLIGENCE
-          </div>
+        {/* Header */}
+        <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(232,160,32,0.12)' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '14px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '24px' }}>
 
-          <h1
-            className="display-heading"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(3.5rem, 10vw, 8rem)',
-              lineHeight: 0.92,
-              letterSpacing: '-0.02em',
-              marginBottom: '24px',
-            }}
-          >
-            <span style={{ color: '#00e5ff', display: 'block' }}>SKYNET</span>
-            <span style={{ color: 'white', display: 'block', fontSize: '55%', fontWeight: 500, letterSpacing: '0.05em', marginTop: '8px' }}>
-              AUDIT · IFRS · EXCEL
-            </span>
-          </h1>
-
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', color: '#4a5568', maxWidth: '520px', lineHeight: 1.9 }}>
-            <TypewriterText text="AI automation for finance professionals. Built by a senior GRC/IFRS expert — not a developer." />
-          </p>
-        </div>
-
-        {/* CTAs */}
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '64px' }}>
-          <a href="#agents" className="btn-primary">LAUNCH AGENTS →</a>
-          <a href="https://linkedin.com/in/crtizgar" target="_blank" rel="noreferrer" className="btn-execute">
-            VIEW PROFILE
-          </a>
-        </div>
-
-        {/* Stats row */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          border: '1px solid rgba(0,229,255,0.12)',
-          background: 'rgba(0,229,255,0.02)',
-          overflow: 'hidden',
-        }}>
-          {STATS.map(({ value, label }, i) => (
-            <div
-              key={label}
-              style={{
-                padding: '24px 16px',
-                textAlign: 'center',
-                borderRight: i < 3 ? '1px solid rgba(0,229,255,0.08)' : 'none',
-              }}
-            >
-              <div
-                className="display-heading"
-                style={{ fontSize: '2.2rem', color: '#00e5ff', fontFamily: 'var(--font-display)', lineHeight: 1 }}
-              >
-                {value}
+            {/* Logo */}
+            <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+              <div style={{ position: 'relative', width: '28px', height: '28px', flexShrink: 0 }}>
+                <div style={{ position: 'absolute', inset: 0, border: '2px solid #E8A020', transform: 'rotate(45deg)', transition: 'transform 0.4s' }} />
+                <div style={{ position: 'absolute', inset: '6px', background: '#E8A020', transform: 'rotate(45deg)' }} />
               </div>
-              <div className="section-label" style={{ marginTop: '6px', fontSize: '0.55rem' }}>{label}</div>
+              <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.2rem', letterSpacing: '0.12em', color: '#E8A020' }}>
+                SKYNET
+              </span>
+            </a>
+
+            {/* Nav */}
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <a href="/" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', letterSpacing: '0.2em', color: 'rgba(232,160,32,0.45)', padding: '8px 12px', textDecoration: 'none' }}>
+                HOME
+              </a>
+              <span style={{ color: 'rgba(232,160,32,0.15)', fontSize: '0.5rem' }}>|</span>
+              {[
+                { href: '/tools/audit', label: 'AUDIT AI', color: '#E8A020' },
+                { href: '/tools/ifrs',  label: 'IFRS AI',  color: '#0EA5E9' },
+                { href: '/tools/excel', label: 'EXCEL AI', color: '#22C55E' },
+              ].map(({ href, label, color }, i, arr) => (
+                <span key={href} style={{ display: 'flex', alignItems: 'center' }}>
+                  <a href={href} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', letterSpacing: '0.15em', color: 'rgba(150,150,150,0.6)', padding: '8px 12px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: color, boxShadow: `0 0 6px ${color}`, display: 'inline-block', flexShrink: 0 }} />
+                    {label}
+                  </a>
+                  {i < arr.length - 1 && <span style={{ color: 'rgba(232,160,32,0.1)', fontSize: '0.5rem' }}>·</span>}
+                </span>
+              ))}
+            </nav>
+
+            {/* Right */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 7px #22C55E', display: 'inline-block', animation: 'blink 2s ease-in-out infinite' }} />
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.55rem', letterSpacing: '0.18em', color: '#22C55E' }}>3 ONLINE</span>
+              </div>
+              <a href="https://linkedin.com/in/crtizgar" target="_blank" rel="noreferrer" style={{
+                fontFamily: "'JetBrains Mono', monospace", fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.14em',
+                padding: '0.55rem 1.2rem', background: 'rgba(232,160,32,0.08)', color: '#E8A020',
+                border: '1px solid rgba(232,160,32,0.4)', textDecoration: 'none',
+                clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)',
+              }}>
+                LINKEDIN
+              </a>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══ AGENTS ════════════════════════════════════════ */}
-      <section id="agents" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 80px' }}>
-
-        {/* Section header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '40px' }}>
-          <div style={{ width: '32px', height: '1px', background: '#00e5ff' }} />
-          <div className="section-label">DEPLOYED AGENTS</div>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(0,229,255,0.1)' }} />
-          <div className="section-label" style={{ color: '#39ff14' }}>● 3 ONLINE</div>
-        </div>
-
-        {/* 3-column grid — inline styles to guarantee layout */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '20px',
-        }}>
-          {BOTS.map((bot) => (
-            <Link key={bot.id} href={`/tools/${bot.id}`} style={{ textDecoration: 'none' }}>
-              <div
-                style={{
-                  background: '#080810',
-                  border: `1px solid rgba(${bot.color === '#00e5ff' ? '0,229,255' : bot.color === '#a855f7' ? '168,85,247' : '57,255,20'},0.2)`,
-                  padding: '32px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: '100%',
-                  position: 'relative',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = bot.color;
-                  e.currentTarget.style.boxShadow = `0 0 30px ${bot.color}15`;
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = `rgba(${bot.color === '#00e5ff' ? '0,229,255' : bot.color === '#a855f7' ? '168,85,247' : '57,255,20'},0.2)`;
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                {/* Corner brackets */}
-                <div style={{ position: 'absolute', top: '-1px', left: '-1px', width: '16px', height: '16px', borderTop: `2px solid ${bot.color}`, borderLeft: `2px solid ${bot.color}` }} />
-                <div style={{ position: 'absolute', bottom: '-1px', right: '-1px', width: '16px', height: '16px', borderBottom: `2px solid ${bot.color}`, borderRight: `2px solid ${bot.color}` }} />
-
-                {/* Icon + code */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                  <div style={{ fontSize: '3rem', color: bot.color, lineHeight: 1, fontFamily: 'var(--font-display)' }}>
-                    {bot.icon}
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div className="section-label" style={{ color: '#4a5568', fontSize: '0.58rem' }}>AGT-{bot.code}</div>
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: bot.color, boxShadow: `0 0 8px ${bot.color}`, marginTop: '6px', marginLeft: 'auto', animation: 'blink 2s ease-in-out infinite' }} />
-                  </div>
-                </div>
-
-                {/* Name */}
-                <div
-                  className="display-heading"
-                  style={{ fontSize: '1.7rem', color: 'white', fontFamily: 'var(--font-display)', marginBottom: '4px' }}
-                >
-                  {bot.name}
-                </div>
-                <div className="section-label" style={{ color: bot.color, marginBottom: '16px' }}>{bot.sub}</div>
-
-                {/* Description */}
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#4a5568', lineHeight: 1.9, flex: 1, marginBottom: '20px' }}>
-                  {bot.desc}
-                </p>
-
-                {/* Tags */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '20px' }}>
-                  {bot.tags.map(tag => (
-                    <span
-                      key={tag}
-                      style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: '0.55rem',
-                        fontWeight: 600,
-                        letterSpacing: '0.1em',
-                        padding: '3px 8px',
-                        border: `1px solid ${bot.color}30`,
-                        color: bot.color,
-                        background: `${bot.color}08`,
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* CTA */}
-                <div className="section-label" style={{ color: bot.color, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  INITIALIZE AGENT <span>→</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ══ ABOUT STRIP ═══════════════════════════════════ */}
-      <section style={{
-        borderTop: '1px solid rgba(0,229,255,0.08)',
-        borderBottom: '1px solid rgba(0,229,255,0.08)',
-        background: 'rgba(0,229,255,0.015)',
-        padding: '64px 24px',
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr auto', gap: '48px', alignItems: 'start' }}>
-
-          <div>
-            <div className="section-label" style={{ marginBottom: '16px' }}>// WHO BUILT THIS</div>
-            <h2
-              className="display-heading"
-              style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', color: 'white', marginBottom: '16px', lineHeight: 1.1 }}
-            >
-              Finance Professional.<br />
-              <span style={{ color: '#00e5ff' }}>AI Builder.</span>
-            </h2>
-            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: '#4a5568', lineHeight: 2, maxWidth: '480px' }}>
-              15+ years spanning external audit (EC, BDO), internal controls (GHX Europe), and FP&A.
-              Now building AI systems that automate the workflows I spent a decade doing manually.
-            </p>
           </div>
+        </header>
 
-          <div style={{ minWidth: '260px' }}>
-            {[
-              { label: 'DOMAIN', value: 'GRC / FP&A / IFRS' },
-              { label: 'CERTS', value: 'CISRCP · DORA · AML' },
-              { label: 'ENGINE', value: 'GROQ LLaMA 3.3 70B' },
-              { label: 'DEPLOY', value: 'VERCEL EDGE' },
-            ].map(({ label, value }) => (
-              <div
-                key={label}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '12px 0',
-                  borderBottom: '1px solid rgba(0,229,255,0.07)',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.72rem',
-                  gap: '24px',
-                }}
-              >
-                <span style={{ color: '#4a5568' }}>{label}</span>
-                <span style={{ color: '#00e5ff' }}>{value}</span>
-              </div>
-            ))}
+        <main>{children}</main>
+
+        {/* Footer */}
+        <footer style={{ marginTop: '80px', borderTop: '1px solid rgba(232,160,32,0.08)', background: '#000' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.58rem', letterSpacing: '0.18em', color: 'rgba(232,160,32,0.3)' }}>
+              SKYNET © 2025 — ALL RIGHTS RESERVED
+            </span>
+            <div style={{ display: 'flex', gap: '20px' }}>
+              {[['AUDIT AI','#E8A020'], ['IFRS AI','#0EA5E9'], ['EXCEL AI','#22C55E']].map(([label, color]) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: color, display: 'inline-block' }} />
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.55rem', letterSpacing: '0.15em', color }}>{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
+        </footer>
 
-        </div>
-      </section>
-
-    </div>
+      </body>
+    </html>
   );
 }
