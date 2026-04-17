@@ -26,57 +26,12 @@ function ReportRenderer({ text }) {
       continue;
     }
 
-    // TABLE
-    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
-      const tableLines = [];
-      while (i < lines.length && lines[i].trim().startsWith('|')) {
-        tableLines.push(lines[i].trim());
-        i++;
-      }
-
-      const rows = tableLines.map((l) => {
-        return l
-          .split('|')
-          .filter((cell) => cell.trim())
-          .map((cell) => cell.trim());
-      });
-
-      elements.push(
-        <div key={'t' + i} style={{ display: 'flex', gap: '10px', marginLeft: '8px', marginBottom: '10px' }}>
-          <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.72rem' }}>
-            <tbody>
-              {rows.map((row, idx) => (
-                <tr key={idx} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
-                  {row.map((cell, cellIdx) => (
-                    <td
-                      key={cellIdx}
-                      style={{
-                        padding: '8px 12px',
-                        color: '#d8d8d8',
-                        border: '1px solid #404040',
-                        flex: 1,
-                      }}
-                    >
-                      <span style={{ color: 'A', fontWeight: '700', fontSize: '0.72rem', minWidth: '28px', flex: '0 0 28px' }}>
-                        {trimmed.replace(/[\d+\s\+]/g, '')}
-                      </span>
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      );
-      continue;
-    }
-
     // BULLET
     if (/^[\+\-]\s/.test(trimmed)) {
       const content = trimmed.replace(/^[\+\-]\s/, '');
       elements.push(
         <div key={'n' + i} style={{ display: 'flex', gap: '10px', marginLeft: '8px', marginBottom: '10px' }}>
-          <span style={{ color: 'A', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
+          <span style={{ color: '#888', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
           <span dangerouslySetInnerHTML={{ __html: parseInline(content) }} />
         </div>
       );
@@ -84,29 +39,15 @@ function ReportRenderer({ text }) {
       continue;
     }
 
-    // SUB-BULLET +
+    // SUB-BULLET
     if (/^\+\s/.test(trimmed) || /^\s{3,}\+\s/.test(line)) {
       const content = trimmed.replace(/^\+\s/, '');
       elements.push(
         <div key={'s' + i} style={{ display: 'flex', gap: '8px', marginLeft: '28px', marginBottom: '8px' }}>
-          <span style={{ color: 'rgba(232,160,32,0.35)', flexShrink: 0, marginTop: '2px', fontSize: '0.6rem', marginTop: '2px', letterSpacing: '1px' }}>
+          <span style={{ color: 'rgba(232,160,32,0.35)', flexShrink: 0, marginTop: '2px', fontSize: '0.6rem', letterSpacing: '1px' }}>
             ▴
           </span>
           <span dangerouslySetInnerHTML={{ __html: parseInline(content) }} />
-        </div>
-      );
-      i++;
-      continue;
-    }
-
-    // FINDING header
-    if (/^(FINDING|RISK|CONTROL|AUDIT|PROCESS)/.test(trimmed)) {
-      const content = trimmed;
-      elements.push(
-        <div key={'n' + i} style={{ display: 'flex', gap: '10px', marginLeft: '8px', marginBottom: '8px' }}>
-          <span style={{ color: '#7a6a4a', fontWeight: '700', fontSize: '0.8rem', minWidth: '80px', flex: '0 0 80px' }}>
-            {trimmed.replace(/\s\+.*/, '')}
-          </span>
         </div>
       );
       i++;
@@ -125,7 +66,7 @@ function ReportRenderer({ text }) {
           margin: '0 0 12px 0',
         }}
         dangerouslySetInnerHTML={{
-          __html: parseInline(content),
+          __html: parseInline(trimmed),
         }}
       />
     );
@@ -170,7 +111,7 @@ export default function AuditPage() {
     setResponse('');
 
     try {
-      const res = await fetch('/api/bot/route', {
+      const res = await fetch('/api/bot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: input, bot: 'audit' }),
