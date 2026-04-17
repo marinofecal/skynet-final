@@ -1,4 +1,4 @@
-hGROQ_API_KEY  XAI_API_KEYexport async function POST(req) {
+export async function POST(req) {
   try {
     const body = await req.json();
     const { prompt, systemPrompt } = body;
@@ -13,18 +13,18 @@ CRITICAL FORMATTING RULES — always follow exactly:
 - Start with a one-line executive summary
 - Use numbered sections: 1. SECTION TITLE, 2. SECTION TITLE, etc.
 - Under each section use bullet points starting with •
-- Use sub-bullets with  - for details
+- Use sub-bullets with - for details
 - Bold key terms with **term**
 - End with a CONCLUSION section with clear recommendations
 - Be comprehensive, detailed, and professional — minimum 400 words
 - Write as if this is a deliverable for a CFO or Board of Directors
 - Never use casual language`;
 
-    const response = await fetch('https://api.x.ai/openai/v1/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.XAI_API_KEY}`,
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
