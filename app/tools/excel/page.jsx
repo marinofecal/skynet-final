@@ -6,217 +6,201 @@ import Link from 'next/link';
 function ReportRenderer({ text }) {
   if (!text) return null;
 
-  // Clean escaped characters
-  const cleanText = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
-
-  // Parse bold text (**text**)
-  const parseBold = (line) => {
-    const parts = line.split(/(\*\*[^*]+\*\*)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return (
-          <strong key={i} style={{ color: '#ffb347', fontWeight: '700' }}>
-            {part.slice(2, -2)}
-          </strong>
-        );
-      }
-      return <span key={i}>{part}</span>;
-    });
-  };
-
-  const lines = cleanText.split('\n');
+  const lines = text.split('\n');
   const elements = [];
+  let i = 0;
 
-  lines.forEach((line, idx) => {
+  while (i < lines.length) {
+    const line = lines[i];
     const trimmed = line.trim();
 
-    // Empty line
     if (!trimmed) {
-      elements.push(<div key={idx} style={{ height: '0.75rem' }} />);
-      return;
+      elements.push(<div key={i} style={{ height: '0.5rem' }} />);
+      i++;
+      continue;
     }
 
-    // Numbered section header (e.g., "1. Audit Planning")
-    if (/^\d+\.\s+[A-Z]/.test(trimmed)) {
+    // CODE BLOCKS
+    if (trimmed.startsWith('```')) {
+      const codeLines = [];
+      i++;
+      while (i < lines.length && !lines[i].trim().startsWith('```')) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      if (i < lines.length) i++;
+
       elements.push(
-        <h2
-          key={idx}
+        <pre
+          key={'code' + i}
           style={{
-            color: '#ffb347',
-            fontSize: '1.15rem',
-            fontWeight: '700',
-            marginTop: '28px',
-            marginBottom: '14px',
-            paddingBottom: '8px',
-            borderBottom: '1px solid #3a2a1a',
-            letterSpacing: '0.5px',
+            background: 'rgba(100,208,123,.08)',
+            border: '1px solid #2d5a3d',
+            color: '#64d07b',
+            padding: '12px',
+            fontSize: '0.85rem',
+            overflow: 'auto',
+            marginBottom: '12px',
+            fontFamily: 'monospace',
+            borderRadius: '4px',
           }}
         >
-          {parseBold(trimmed)}
-        </h2>
+          {codeLines.join('\n')}
+        </pre>
       );
-      return;
+      continue;
     }
 
-    // Executive Summary or main section headers (e.g., "Executive summary:")
-    if (/^(Executive summary|Summary|Conclusion|Recommendations?|Findings?|Overview):/i.test(trimmed)) {
-      const [heading, ...rest] = trimmed.split(':');
-      elements.push(
-        <div key={idx} style={{ marginTop: '20px', marginBottom: '12px' }}>
-          <h3
+    // TABLES
+    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+      const tableLines = [];
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        tableLines.push(lines[i].trim());
+        i++;
+      }
+
+      // Filter out separator lines (|----|----|)
+      const rows = tableLines
+        .filter(l => !/^\|[\s\-:|]+\|$/.test(l))
+        .map(l => l.split('|').filter(c => c.trim() !== '').map(c => c.trim()));
+
+      if (rows.length > 0) {
+        elements.push(
+          <div
+            key={'table' + i}
             style={{
-              color: '#ffb347',
-              fontSize: '1rem',
-              fontWeight: '700',
-              marginBottom: '8px',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
+              overflowX: 'auto',
+              marginBottom: '16px',
+              border: '1px solid #2d5a3d',
+              borderRadius: '4px',
             }}
           >
-            {heading}
-          </h3>
-          <p
-            style={{
-              fontSize: '0.9rem',
-              lineHeight: '1.7',
-              color: '#cfcfcf',
-              margin: 0,
-            }}
-          >
-            {parseBold(rest.join(':').trim())}
-          </p>
-        </div>
-      );
-      return;
+            <table
+              style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                fontSize: '0.8rem',
+                color: '#64d07b',
+              }}
+            >
+              <tbody>
+                {rows.map((row, rowIdx) => (
+                  <tr
+                    key={rowIdx}
+                    style={{
+                      background: rowIdx === 0 ? 'rgba(100,208,123,.15)' : 'rgba(100,208,123,.02)',
+                      borderBottom: '1px solid #2d5a3d',
+                    }}
+                  >
+                    {row.map((cell, cellIdx) => (
+                      <td
+                        key={cellIdx}
+                        style={{
+                          padding: '10px 12px',
+                          textAlign: cellIdx === 0 ? 'left' : 'center',
+                          borderRight: cellIdx < row.length - 1 ? '1px solid #2d5a3d' : 'none',
+                          fontWeight: rowIdx === 0 ? '700' : '400',
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+      continue;
     }
 
-    // Headers with colon at end (e.g., "Key Controls:")
-    if (/^[A-Z][A-Za-z\s&]+:$/.test(trimmed) && trimmed.length < 60) {
+    // HEADERS
+    if (/^\d+\.\s/.test(trimmed)) {
       elements.push(
         <h3
-          key={idx}
+          key={'h' + i}
           style={{
-            color: '#e89b3a',
-            fontSize: '0.95rem',
+            fontSize: '1rem',
             fontWeight: '700',
-            marginTop: '18px',
+            color: '#64d07b',
+            marginTop: '20px',
             marginBottom: '10px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px',
+            borderBottom: '1px solid #404040',
+            paddingBottom: '8px',
           }}
         >
-          {trimmed.replace(':', '')}
+          {trimmed}
         </h3>
       );
-      return;
+      i++;
+      continue;
     }
 
-    // Bullet points (- or • or *)
-    if (/^[-•*]\s+/.test(trimmed)) {
-      const content = trimmed.replace(/^[-•*]\s+/, '');
+    // BULLETS
+    if (/^[-•*]\s/.test(trimmed)) {
+      const content = trimmed.replace(/^[-•*]\s/, '');
       elements.push(
-        <div
-          key={idx}
-          style={{
-            display: 'flex',
-            gap: '12px',
-            marginBottom: '8px',
-            paddingLeft: '8px',
-          }}
-        >
-          <span style={{ color: '#ffb347', fontWeight: '700', flexShrink: 0 }}>
-            ▸
-          </span>
-          <p
-            style={{
-              fontSize: '0.88rem',
-              lineHeight: '1.6',
-              color: '#cfcfcf',
-              margin: 0,
-              flex: 1,
-            }}
-          >
-            {parseBold(content)}
-          </p>
+        <div key={'bullet' + i} style={{ display: 'flex', gap: '10px', marginLeft: '16px', marginBottom: '6px' }}>
+          <span style={{ color: '#64d07b', flexShrink: 0, marginTop: '2px' }}>▪</span>
+          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>{content}</span>
         </div>
       );
-      return;
+      i++;
+      continue;
     }
 
-    // Numbered list items (e.g., "1) Something" or "1. Something" without capital start)
-    if (/^\d+[\.\)]\s+/.test(trimmed) && !/^\d+\.\s+[A-Z]/.test(trimmed)) {
-      const content = trimmed.replace(/^\d+[\.\)]\s+/, '');
-      elements.push(
-        <div
-          key={idx}
-          style={{
-            display: 'flex',
-            gap: '12px',
-            marginBottom: '10px',
-            paddingLeft: '8px',
-          }}
-        >
-          <span style={{ color: '#ffb347', fontWeight: '700', flexShrink: 0 }}>
-            {trimmed.match(/^\d+/)[0]}.
-          </span>
-          <p
-            style={{
-              fontSize: '0.88rem',
-              lineHeight: '1.6',
-              color: '#cfcfcf',
-              margin: 0,
-              flex: 1,
-            }}
-          >
-            {parseBold(content)}
-          </p>
-        </div>
-      );
-      return;
-    }
-
-    // Regular paragraph
+    // DEFAULT
     elements.push(
       <p
-        key={idx}
+        key={'p' + i}
         style={{
-          fontSize: '0.88rem',
-          lineHeight: '1.7',
-          color: '#cfcfcf',
-          marginBottom: '12px',
+          fontSize: '0.85rem',
+          lineHeight: '1.6',
+          marginBottom: '8px',
+          color: '#b8b8b8',
         }}
       >
-        {parseBold(trimmed)}
+        {trimmed}
       </p>
     );
-  });
+    i++;
+  }
 
-  return <div>{elements}</div>;
+  return <div>{elements.map((el) => el)}</div>;
 }
 
-export default function AuditPage() {
+export default function ExcelPage() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState('');
   const [error, setError] = useState('');
-  const [input, setInput] = useState('');
 
   const quickLoads = [
-    'Assess internal controls for the P2P (Procure-to-Pay) cycle in a manufacturing company',
-    'Evaluate revenue recognition risks under IFRS 15 for a SaaS company',
-    'Design audit procedures for inventory valuation at year-end',
-    'Identify key controls for cash and treasury management in a multinational',
+    'Build a dynamic 3-statement financial model with scenario analysis',
+    'XLOOKUP with multiple criteria to consolidate monthly P&L data',
+    'Power Query: clean and merge 5 years of transaction data',
+    'WACC sensitivity table varying cost of equity and debt',
   ];
 
   const handleQuickLoad = (idx) => {
-    setInput(quickLoads[idx]);
+    const textarea = document.querySelectorAll('textarea')[0];
+    textarea.value = quickLoads[idx];
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!input.trim()) {
-      setError('Please describe your audit challenge');
+    const textareas = document.querySelectorAll('textarea');
+    const problem = textareas[0].value.trim();
+    const columns = textareas[1].value.trim();
+    const output = textareas[2].value.trim();
+
+    if (!problem) {
+      setError('Please describe your Excel challenge');
       return;
     }
+
+    const prompt = `Problem: ${problem}\nColumns: ${columns || 'Not specified'}\nDesired Output: ${output || 'Not specified'}`;
 
     setLoading(true);
     setError('');
@@ -226,13 +210,17 @@ export default function AuditPage() {
       const res = await fetch('/api/bot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: input, bot: 'audit' }),
+        body: JSON.stringify({ prompt, bot: 'excel' }),
       });
 
-      if (!res.ok) throw new Error('Failed to execute audit');
+      if (!res.ok) throw new Error('Failed to generate solution');
 
       const data = await res.json();
-      const text = data.result || data.response || JSON.stringify(data);
+      let text = data.result || '';
+
+      // Clean up escaped characters
+      text = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+
       setResponse(text);
     } catch (err) {
       setError(err.message || 'An error occurred');
@@ -243,44 +231,32 @@ export default function AuditPage() {
 
   return (
     <main style={{ padding: '60px 40px', maxWidth: '1000px', margin: '0 auto' }}>
-      {/* Back Link */}
-      <Link href="/" style={{ color: '#7a5a3a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
-        ← RETURN TO BASE
+      <Link href="/">
+        <a style={{ color: '#3a7a3a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
+          ← RETURN TO BASE
+        </a>
       </Link>
 
-      {/* Header */}
       <div style={{ marginBottom: '60px' }}>
-        <p style={{ color: '#7a5a3a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-01 / ACTIVE</p>
+        <p style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-03 / ACTIVE</p>
         <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: '0 0 8px 0', color: '#fff' }}>
-          AUDIT AI
+          EXCEL AI
         </h1>
-        <p style={{ color: '#ffb347', fontSize: '0.9rem', fontWeight: '700', margin: '0 0 16px 0' }}>
-          RISK ASSESSMENT
+        <p style={{ color: '#64d07b', fontSize: '0.9rem', fontWeight: '700', margin: '0 0 16px 0' }}>
+          DATA FORGE
         </p>
         <p style={{ color: '#888', fontSize: '1rem', lineHeight: '1.6', maxWidth: '600px', margin: '0' }}>
-          Comprehensive audit procedures, internal control assessments, risk identification, and IFRS-compliant reporting—built for modern audit professionals.
+          3-statement models, sensitivity analysis, XLOOKUP consolidations, and dynamic dashboards—complete with step-by-step implementation.
         </p>
       </div>
 
-      {/* Status Badge */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '40px' }}>
-        <span
-          style={{
-            width: '8px',
-            height: '8px',
-            background: '#ffb347',
-            borderRadius: '50%',
-            display: 'inline-block',
-          }}
-        ></span>
-        <span style={{ color: '#ffb347', fontSize: '0.8rem' }}>ONLINE</span>
+        <span style={{ width: '8px', height: '8px', background: '#64d07b', borderRadius: '50%', display: 'inline-block' }}></span>
+        <span style={{ color: '#64d07b', fontSize: '0.8rem' }}>ONLINE</span>
       </div>
 
-      {/* Quick Load */}
       <div style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#7a5a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
-          // QUICK LOAD
-        </h3>
+        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>// QUICK LOAD</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {quickLoads.map((load, idx) => (
             <button
@@ -289,12 +265,84 @@ export default function AuditPage() {
               style={{
                 background: 'transparent',
                 border: '1px solid #404040',
-                color: '#ffb347',
+                color: '#64d07b',
                 padding: '12px 16px',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
                 textAlign: 'left',
                 transition: 'all 0.2s',
               }}
-              onMouseEnter={(e) => (e.target.style.borderColor = '#ffb347')}
-              onMouseLeave={(e) => (e.target
+              onMouseEnter={(e) => (e.target.style.borderColor = '#64d07b')}
+              onMouseLeave={(e) => (e.target.style.borderColor = '#404040')}
+            >
+              {load}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
+        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>// DEFINE YOUR PROBLEM</h3>
+
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+            01 / PROBLEM OR QUESTION *
+          </label>
+          <textarea
+            placeholder="// Describe your Excel challenge..."
+            style={{ width: '100%', minHeight: '120px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+            02 / COLUMNS / DATA STRUCTURE (optional)
+          </label>
+          <textarea
+            placeholder="// e.g. Date, Revenue, COGS..."
+            style={{ width: '100%', minHeight: '80px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+            03 / DESIRED OUTPUT (optional)
+          </label>
+          <textarea
+            placeholder="// What should the formula produce?"
+            style={{ width: '100%', minHeight: '80px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            background: 'transparent',
+            border: '1px solid #64d07b',
+            color: '#64d07b',
+            padding: '12px 24px',
+            fontSize: '0.85rem',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            fontWeight: '700',
+            opacity: loading ? 0.5 : 1,
+          }}
+        >
+          {loading ? 'GENERATING...' : '⟫ GENERATE SOLUTION'}
+        </button>
+      </form>
+
+      {error && (
+        <div style={{ background: 'rgba(220,53,69,0.1)', border: '1px solid #dc3545', color: '#ff6b6b', padding: '16px', marginBottom: '20px', fontSize: '0.85rem' }}>
+          {error}
+        </div>
+      )}
+
+      {response && (
+        <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '24px' }}>
+          <ReportRenderer text={response} />
+        </div>
+      )}
+    </main>
+  );
+}
