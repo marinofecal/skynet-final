@@ -6,133 +6,215 @@ import Link from 'next/link';
 function ReportRenderer({ text }) {
   if (!text) return null;
 
-  const lines = text.split('\n');
-  const elements = [];
-  let i = 0;
+  // Clean escaped characters
+  const cleanText = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
 
-  while (i < lines.length) {
-    const line = lines[i];
+  // Parse bold text (**text**)
+  const parseBold = (line) => {
+    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <strong key={i} style={{ color: '#ffb347', fontWeight: '700' }}>
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
+
+  const lines = cleanText.split('\n');
+  const elements = [];
+
+  lines.forEach((line, idx) => {
     const trimmed = line.trim();
 
+    // Empty line
     if (!trimmed) {
-      elements.push(<div key={i} style={{ height: '0.5rem' }} />);
-      i++;
-      continue;
+      elements.push(<div key={idx} style={{ height: '0.75rem' }} />);
+      return;
     }
 
-    // BULLET
-    if (/^[\+\-]\s/.test(trimmed)) {
-      const content = trimmed.replace(/^[\+\-]\s/, '');
+    // Numbered section header (e.g., "1. Audit Planning")
+    if (/^\d+\.\s+[A-Z]/.test(trimmed)) {
       elements.push(
-        <div key={'n' + i} style={{ display: 'flex', gap: '10px', marginLeft: '8px', marginBottom: '10px' }}>
-          <span style={{ color: '#c4983a', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
-          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
-            {content.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
-              part.startsWith('**') && part.endsWith('**') ? (
-                <strong key={idx} style={{ color: '#c4983a' }}>{part.slice(2, -2)}</strong>
-              ) : (
-                part
-              )
-            )}
-          </span>
-        </div>
-      );
-      i++;
-      continue;
-    }
-
-    // SUB-BULLET
-    if (/^\s{2,}\-\s/.test(line)) {
-      const content = trimmed.replace(/^\-\s/, '');
-      elements.push(
-        <div key={'s' + i} style={{ display: 'flex', gap: '8px', marginLeft: '28px', marginBottom: '8px' }}>
-          <span style={{ color: 'rgba(196,152,58,0.5)', flexShrink: 0, marginTop: '2px', fontSize: '0.6rem' }}>▴</span>
-          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
-            {content.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
-              part.startsWith('**') && part.endsWith('**') ? (
-                <strong key={idx} style={{ color: '#c4983a' }}>{part.slice(2, -2)}</strong>
-              ) : (
-                part
-              )
-            )}
-          </span>
-        </div>
-      );
-      i++;
-      continue;
-    }
-
-    // HEADERS (numbered sections)
-    if (/^\d+\.\s/.test(trimmed)) {
-      elements.push(
-        <h3
-          key={'h' + i}
+        <h2
+          key={idx}
           style={{
-            fontSize: '1rem',
+            color: '#ffb347',
+            fontSize: '1.15rem',
             fontWeight: '700',
-            color: '#c4983a',
-            marginTop: '16px',
-            marginBottom: '12px',
-            borderBottom: '1px solid #404040',
+            marginTop: '28px',
+            marginBottom: '14px',
             paddingBottom: '8px',
+            borderBottom: '1px solid #3a2a1a',
+            letterSpacing: '0.5px',
           }}
         >
-          {trimmed}
-        </h3>
+          {parseBold(trimmed)}
+        </h2>
       );
-      i++;
-      continue;
+      return;
     }
 
-    // Default paragraph
+    // Executive Summary or main section headers (e.g., "Executive summary:")
+    if (/^(Executive summary|Summary|Conclusion|Recommendations?|Findings?|Overview):/i.test(trimmed)) {
+      const [heading, ...rest] = trimmed.split(':');
+      elements.push(
+        <div key={idx} style={{ marginTop: '20px', marginBottom: '12px' }}>
+          <h3
+            style={{
+              color: '#ffb347',
+              fontSize: '1rem',
+              fontWeight: '700',
+              marginBottom: '8px',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+            }}
+          >
+            {heading}
+          </h3>
+          <p
+            style={{
+              fontSize: '0.9rem',
+              lineHeight: '1.7',
+              color: '#cfcfcf',
+              margin: 0,
+            }}
+          >
+            {parseBold(rest.join(':').trim())}
+          </p>
+        </div>
+      );
+      return;
+    }
+
+    // Headers with colon at end (e.g., "Key Controls:")
+    if (/^[A-Z][A-Za-z\s&]+:$/.test(trimmed) && trimmed.length < 60) {
+      elements.push(
+        <h3
+          key={idx}
+          style={{
+            color: '#e89b3a',
+            fontSize: '0.95rem',
+            fontWeight: '700',
+            marginTop: '18px',
+            marginBottom: '10px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+          }}
+        >
+          {trimmed.replace(':', '')}
+        </h3>
+      );
+      return;
+    }
+
+    // Bullet points (- or • or *)
+    if (/^[-•*]\s+/.test(trimmed)) {
+      const content = trimmed.replace(/^[-•*]\s+/, '');
+      elements.push(
+        <div
+          key={idx}
+          style={{
+            display: 'flex',
+            gap: '12px',
+            marginBottom: '8px',
+            paddingLeft: '8px',
+          }}
+        >
+          <span style={{ color: '#ffb347', fontWeight: '700', flexShrink: 0 }}>
+            ▸
+          </span>
+          <p
+            style={{
+              fontSize: '0.88rem',
+              lineHeight: '1.6',
+              color: '#cfcfcf',
+              margin: 0,
+              flex: 1,
+            }}
+          >
+            {parseBold(content)}
+          </p>
+        </div>
+      );
+      return;
+    }
+
+    // Numbered list items (e.g., "1) Something" or "1. Something" without capital start)
+    if (/^\d+[\.\)]\s+/.test(trimmed) && !/^\d+\.\s+[A-Z]/.test(trimmed)) {
+      const content = trimmed.replace(/^\d+[\.\)]\s+/, '');
+      elements.push(
+        <div
+          key={idx}
+          style={{
+            display: 'flex',
+            gap: '12px',
+            marginBottom: '10px',
+            paddingLeft: '8px',
+          }}
+        >
+          <span style={{ color: '#ffb347', fontWeight: '700', flexShrink: 0 }}>
+            {trimmed.match(/^\d+/)[0]}.
+          </span>
+          <p
+            style={{
+              fontSize: '0.88rem',
+              lineHeight: '1.6',
+              color: '#cfcfcf',
+              margin: 0,
+              flex: 1,
+            }}
+          >
+            {parseBold(content)}
+          </p>
+        </div>
+      );
+      return;
+    }
+
+    // Regular paragraph
     elements.push(
       <p
-        key={'p' + i}
+        key={idx}
         style={{
-          fontSize: '0.85rem',
-          lineHeight: '1.6',
+          fontSize: '0.88rem',
+          lineHeight: '1.7',
+          color: '#cfcfcf',
           marginBottom: '12px',
-          color: '#b8b8b8',
         }}
       >
-        {trimmed.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
-          part.startsWith('**') && part.endsWith('**') ? (
-            <strong key={idx} style={{ color: '#c4983a' }}>{part.slice(2, -2)}</strong>
-          ) : (
-            part
-          )
-        )}
+        {parseBold(trimmed)}
       </p>
     );
-    i++;
-  }
+  });
 
-  return <div>{elements.map((el) => el)}</div>;
+  return <div>{elements}</div>;
 }
 
 export default function AuditPage() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState('');
   const [error, setError] = useState('');
+  const [input, setInput] = useState('');
 
   const quickLoads = [
-    'Assess internal controls over the P2P cycle for a mid-size manufacturing company',
-    'Evaluate segregation of duties in accounts payable with 5 staff members',
-    'Review IT general controls and access management for SOX Section 404 compliance',
-    'Risk assessment on revenue recognition under IFRS 15 for a SaaS company',
+    'Assess internal controls for the P2P (Procure-to-Pay) cycle in a manufacturing company',
+    'Evaluate revenue recognition risks under IFRS 15 for a SaaS company',
+    'Design audit procedures for inventory valuation at year-end',
+    'Identify key controls for cash and treasury management in a multinational',
   ];
 
   const handleQuickLoad = (idx) => {
-    document.querySelector('textarea').value = quickLoads[idx];
+    setInput(quickLoads[idx]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const textarea = document.querySelector('textarea');
-    const input = textarea.value.trim();
-
-    if (!input) {
-      setError('Please describe an audit scenario');
+    if (!input.trim()) {
+      setError('Please describe your audit challenge');
       return;
     }
 
@@ -149,16 +231,9 @@ export default function AuditPage() {
 
       if (!res.ok) throw new Error('Failed to execute audit');
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let text = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        text += decoder.decode(value);
-        setResponse(text);
-      }
+      const data = await res.json();
+      const text = data.result || data.response || JSON.stringify(data);
+      setResponse(text);
     } catch (err) {
       setError(err.message || 'An error occurred');
     } finally {
@@ -169,23 +244,21 @@ export default function AuditPage() {
   return (
     <main style={{ padding: '60px 40px', maxWidth: '1000px', margin: '0 auto' }}>
       {/* Back Link */}
-      <Link href="/">
-        <a style={{ color: '#7a6a4a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
-          ← RETURN TO BASE
-        </a>
+      <Link href="/" style={{ color: '#7a5a3a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
+        ← RETURN TO BASE
       </Link>
 
       {/* Header */}
       <div style={{ marginBottom: '60px' }}>
-        <p style={{ color: '#7a6a4a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-01 / ACTIVE</p>
+        <p style={{ color: '#7a5a3a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-01 / ACTIVE</p>
         <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: '0 0 8px 0', color: '#fff' }}>
           AUDIT AI
         </h1>
-        <p style={{ color: '#c4983a', fontSize: '0.9rem', fontWeight: '700', margin: '0 0 16px 0' }}>
-          SENTINEL PROTOCOL
+        <p style={{ color: '#ffb347', fontSize: '0.9rem', fontWeight: '700', margin: '0 0 16px 0' }}>
+          RISK ASSESSMENT
         </p>
         <p style={{ color: '#888', fontSize: '1rem', lineHeight: '1.6', maxWidth: '600px', margin: '0' }}>
-          Identify control gaps in P2P, R2R, O2C in minutes—not weeks. Risk assessment, control mapping, and audit documentation at Big 4 standard.
+          Comprehensive audit procedures, internal control assessments, risk identification, and IFRS-compliant reporting—built for modern audit professionals.
         </p>
       </div>
 
@@ -195,17 +268,17 @@ export default function AuditPage() {
           style={{
             width: '8px',
             height: '8px',
-            background: '#00c850',
+            background: '#ffb347',
             borderRadius: '50%',
             display: 'inline-block',
           }}
         ></span>
-        <span style={{ color: '#00c850', fontSize: '0.8rem' }}>ONLINE</span>
+        <span style={{ color: '#ffb347', fontSize: '0.8rem' }}>ONLINE</span>
       </div>
 
       {/* Quick Load */}
       <div style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#7a6a4a', fontSize: '0.8rem', marginBottom: '16px' }}>
+        <h3 style={{ color: '#7a5a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
           // QUICK LOAD
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -216,14 +289,14 @@ export default function AuditPage() {
               style={{
                 background: 'transparent',
                 border: '1px solid #404040',
-                color: '#c4983a',
+                color: '#ffb347',
                 padding: '12px 16px',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
                 textAlign: 'left',
                 transition: 'all 0.2s',
               }}
-              onMouseEnter={(e) => (e.target.style.borderColor = '#c4983a')}
+              onMouseEnter={(e) => (e.target.style.borderColor = '#ffb347')}
               onMouseLeave={(e) => (e.target.style.borderColor = '#404040')}
             >
               {load}
@@ -234,36 +307,38 @@ export default function AuditPage() {
 
       {/* Form */}
       <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#7a6a4a', fontSize: '0.8rem', marginBottom: '16px' }}>
-          // AUDIT SCENARIO
+        <h3 style={{ color: '#7a5a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
+          // DEFINE YOUR AUDIT CHALLENGE
         </h3>
-        <p style={{ color: '#666', fontSize: '0.75rem', marginBottom: '12px' }}>
-          GROQ LLaMA 3.3 70B · 4096 TOKENS
-        </p>
-
-        <textarea
-          placeholder="// Describe the process, department, or control environment to audit..."
-          style={{
-            width: '100%',
-            minHeight: '150px',
-            background: '#0a0a0a',
-            border: '1px solid #333',
-            color: '#aaa',
-            padding: '16px',
-            fontSize: '0.9rem',
-            fontFamily: 'monospace',
-            marginBottom: '16px',
-            boxSizing: 'border-box',
-          }}
-        />
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+            AUDIT SCENARIO *
+          </label>
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="// Describe your audit scenario, company context, risks, and procedures needed..."
+            style={{
+              width: '100%',
+              minHeight: '200px',
+              background: '#0a0a0a',
+              border: '1px solid #333',
+              color: '#aaa',
+              padding: '16px',
+              fontSize: '0.9rem',
+              fontFamily: 'monospace',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
 
         <button
           type="submit"
           disabled={loading}
           style={{
             background: 'transparent',
-            border: '1px solid #c4983a',
-            color: '#c4983a',
+            border: '1px solid #ffb347',
+            color: '#ffb347',
             padding: '12px 24px',
             fontSize: '0.85rem',
             cursor: loading ? 'not-allowed' : 'pointer',
@@ -271,7 +346,7 @@ export default function AuditPage() {
             opacity: loading ? 0.5 : 1,
           }}
         >
-          {loading ? 'EXECUTING...' : '⟫ EXECUTE AUDIT'}
+          {loading ? 'ANALYZING...' : '⟫ EXECUTE AUDIT'}
         </button>
       </form>
 
@@ -293,7 +368,7 @@ export default function AuditPage() {
 
       {/* Response */}
       {response && (
-        <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '24px' }}>
+        <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '32px' }}>
           <ReportRenderer text={response} />
         </div>
       )}
