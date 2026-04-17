@@ -6,116 +6,173 @@ import Link from 'next/link';
 function ReportRenderer({ text }) {
   if (!text) return null;
 
-  return (
-    <div>
-      {text.split('\n').map((line, idx) => {
-        const trimmed = line.trim();
+  const lines = text.split('\n');
+  const elements = [];
+  let i = 0;
 
-        // Empty lines
-        if (!trimmed) {
-          return <div key={idx} style={{ height: '0.5rem' }} />;
-        }
+  while (i < lines.length) {
+    const line = lines[i];
+    const trimmed = line.trim();
 
-        // Code blocks (```...```)
-        if (line.includes('```')) {
-          return (
-            <pre
-              key={idx}
+    // Empty lines
+    if (!trimmed) {
+      elements.push(<div key={i} style={{ height: '0.5rem' }} />);
+      i++;
+      continue;
+    }
+
+    // TABLE PROCESSING (markdown tables with |)
+    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+      const tableLines = [];
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        tableLines.push(lines[i].trim());
+        i++;
+      }
+
+      // Parse table
+      const rows = tableLines.map(l =>
+        l.split('|').filter(cell => cell.trim()).map(cell => cell.trim())
+      );
+
+      if (rows.length > 0) {
+        elements.push(
+          <div
+            key={'table' + i}
+            style={{
+              overflowX: 'auto',
+              marginBottom: '16px',
+              border: '1px solid #2d5a3d',
+              borderRadius: '4px',
+            }}
+          >
+            <table
               style={{
-                background: 'rgba(100,208,123,.08)',
-                border: '1px solid #2d5a3d',
-                color: '#64d07b',
-                padding: '12px',
-                fontSize: '0.8rem',
-                overflow: 'auto',
-                marginBottom: '12px',
-                fontFamily: 'monospace',
-                borderRadius: '4px',
-              }}
-            >
-              {line}
-            </pre>
-          );
-        }
-
-        // Table rows (|...|)
-        if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
-          return (
-            <div
-              key={idx}
-              style={{
-                background: 'rgba(100,200,100,.05)',
-                border: '1px solid #2d5a3d',
-                padding: '8px 12px',
-                marginBottom: '8px',
-                fontFamily: 'monospace',
+                width: '100%',
+                borderCollapse: 'collapse',
                 fontSize: '0.75rem',
                 color: '#64d07b',
               }}
             >
-              {trimmed}
-            </div>
-          );
-        }
-
-        // Headers (numbers and dots like "1. SECTION")
-        if (/^\d+\.\s/.test(trimmed)) {
-          return (
-            <h3
-              key={idx}
-              style={{
-                fontSize: '0.95rem',
-                fontWeight: '700',
-                color: '#64d07b',
-                marginTop: '16px',
-                marginBottom: '8px',
-                borderBottom: '1px solid #404040',
-                paddingBottom: '8px',
-              }}
-            >
-              {trimmed}
-            </h3>
-          );
-        }
-
-        // Bullet points (-, •, *)
-        if (/^[-•*]\s/.test(trimmed)) {
-          const content = trimmed.replace(/^[-•*]\s/, '');
-          return (
-            <div
-              key={idx}
-              style={{
-                display: 'flex',
-                gap: '10px',
-                marginLeft: '16px',
-                marginBottom: '6px',
-              }}
-            >
-              <span style={{ color: '#64d07b', flexShrink: 0 }}>▪</span>
-              <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
-                {content}
-              </span>
-            </div>
-          );
-        }
-
-        // Default paragraph
-        return (
-          <p
-            key={idx}
-            style={{
-              fontSize: '0.85rem',
-              lineHeight: '1.6',
-              marginBottom: '8px',
-              color: '#b8b8b8',
-            }}
-          >
-            {trimmed}
-          </p>
+              <tbody>
+                {rows.map((row, rowIdx) => (
+                  <tr
+                    key={rowIdx}
+                    style={{
+                      background:
+                        rowIdx === 0 ? 'rgba(100,208,123,.1)' : 'rgba(100,208,123,.02)',
+                      borderBottom: '1px solid #2d5a3d',
+                    }}
+                  >
+                    {row.map((cell, cellIdx) => (
+                      <td
+                        key={cellIdx}
+                        style={{
+                          padding: '10px 12px',
+                          textAlign: cellIdx === 0 ? 'left' : 'center',
+                          borderRight: cellIdx < row.length - 1 ? '1px solid #2d5a3d' : 'none',
+                          fontWeight: rowIdx === 0 ? '700' : '400',
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         );
-      })}
-    </div>
-  );
+      }
+      continue;
+    }
+
+    // Code blocks (```...```)
+    if (trimmed.startsWith('```')) {
+      const codeLines = [];
+      i++;
+      while (i < lines.length && !lines[i].trim().startsWith('```')) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      i++; // skip closing ```
+
+      elements.push(
+        <pre
+          key={'code' + i}
+          style={{
+            background: 'rgba(100,208,123,.08)',
+            border: '1px solid #2d5a3d',
+            color: '#64d07b',
+            padding: '12px',
+            fontSize: '0.8rem',
+            overflow: 'auto',
+            marginBottom: '12px',
+            fontFamily: 'monospace',
+            borderRadius: '4px',
+          }}
+        >
+          {codeLines.join('\n')}
+        </pre>
+      );
+      continue;
+    }
+
+    // Headers (numbers and dots like "1. SECTION")
+    if (/^\d+\.\s/.test(trimmed)) {
+      elements.push(
+        <h3
+          key={'h' + i}
+          style={{
+            fontSize: '0.95rem',
+            fontWeight: '700',
+            color: '#64d07b',
+            marginTop: '16px',
+            marginBottom: '8px',
+            borderBottom: '1px solid #404040',
+            paddingBottom: '8px',
+          }}
+        >
+          {trimmed}
+        </h3>
+      );
+      i++;
+      continue;
+    }
+
+    // Bullet points (-, •, *)
+    if (/^[-•*]\s/.test(trimmed)) {
+      const content = trimmed.replace(/^[-•*]\s/, '');
+      elements.push(
+        <div key={'bullet' + i} style={{ display: 'flex', gap: '10px', marginLeft: '16px', marginBottom: '6px' }}>
+          <span style={{ color: '#64d07b', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
+          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
+            {content}
+          </span>
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // Default paragraph
+    elements.push(
+      <p
+        key={'p' + i}
+        style={{
+          fontSize: '0.85rem',
+          lineHeight: '1.6',
+          marginBottom: '8px',
+          color: '#b8b8b8',
+        }}
+      >
+        {trimmed}
+      </p>
+    );
+    i++;
+  }
+
+  return <div>{elements.map((el) => el)}</div>;
 }
 
 export default function ExcelPage() {
