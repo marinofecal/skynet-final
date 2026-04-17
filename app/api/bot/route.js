@@ -20,7 +20,7 @@ CRITICAL FORMATTING RULES — always follow exactly:
 - Write as if this is a deliverable for a CFO or Board of Directors
 - Never use casual language`;
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const response = await fetch('https://api.x.ai/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
