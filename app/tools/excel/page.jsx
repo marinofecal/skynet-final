@@ -88,8 +88,8 @@ export default function ExcelPage() {
     setResponse('');
 
     try {
-      const res = await fetch('/api/bot/route', {
-        method: 'POST',
+      const res = await fetch('/api/bot', {
+h        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt, bot: 'excel' }),
       });
