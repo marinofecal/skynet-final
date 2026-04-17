@@ -14,23 +14,21 @@ function ReportRenderer({ text }) {
     const line = lines[i];
     const trimmed = line.trim();
 
-    // Empty lines
     if (!trimmed) {
       elements.push(<div key={i} style={{ height: '0.5rem' }} />);
       i++;
       continue;
     }
 
-    // CODE BLOCKS (```excel ... ```)
+    // CODE BLOCKS
     if (trimmed.startsWith('```')) {
       const codeLines = [];
-      const language = trimmed.slice(3).trim();
       i++;
       while (i < lines.length && !lines[i].trim().startsWith('```')) {
         codeLines.push(lines[i]);
         i++;
       }
-      if (i < lines.length) i++; // skip closing ```
+      if (i < lines.length) i++;
 
       elements.push(
         <pre
@@ -40,7 +38,7 @@ function ReportRenderer({ text }) {
             border: '1px solid #2d5a3d',
             color: '#64d07b',
             padding: '12px',
-            fontSize: '0.8rem',
+            fontSize: '0.85rem',
             overflow: 'auto',
             marginBottom: '12px',
             fontFamily: 'monospace',
@@ -53,7 +51,7 @@ function ReportRenderer({ text }) {
       continue;
     }
 
-    // TABLE PROCESSING (markdown tables with |)
+    // TABLES
     if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
       const tableLines = [];
       while (i < lines.length && lines[i].trim().startsWith('|')) {
@@ -61,10 +59,10 @@ function ReportRenderer({ text }) {
         i++;
       }
 
-      // Parse table
-      const rows = tableLines.map(l =>
-        l.split('|').filter(cell => cell.trim()).map(cell => cell.trim())
-      );
+      // Filter out separator lines (|----|----|)
+      const rows = tableLines
+        .filter(l => !/^\|[\s\-:|]+\|$/.test(l))
+        .map(l => l.split('|').filter(c => c.trim() !== '').map(c => c.trim()));
 
       if (rows.length > 0) {
         elements.push(
@@ -81,7 +79,7 @@ function ReportRenderer({ text }) {
               style={{
                 width: '100%',
                 borderCollapse: 'collapse',
-                fontSize: '0.75rem',
+                fontSize: '0.8rem',
                 color: '#64d07b',
               }}
             >
@@ -90,8 +88,7 @@ function ReportRenderer({ text }) {
                   <tr
                     key={rowIdx}
                     style={{
-                      background:
-                        rowIdx === 0 ? 'rgba(100,208,123,.1)' : 'rgba(100,208,123,.02)',
+                      background: rowIdx === 0 ? 'rgba(100,208,123,.15)' : 'rgba(100,208,123,.02)',
                       borderBottom: '1px solid #2d5a3d',
                     }}
                   >
@@ -119,17 +116,17 @@ function ReportRenderer({ text }) {
       continue;
     }
 
-    // HEADERS (numbers and dots like "1. SECTION")
+    // HEADERS
     if (/^\d+\.\s/.test(trimmed)) {
       elements.push(
         <h3
           key={'h' + i}
           style={{
-            fontSize: '0.95rem',
+            fontSize: '1rem',
             fontWeight: '700',
             color: '#64d07b',
-            marginTop: '16px',
-            marginBottom: '8px',
+            marginTop: '20px',
+            marginBottom: '10px',
             borderBottom: '1px solid #404040',
             paddingBottom: '8px',
           }}
@@ -141,22 +138,20 @@ function ReportRenderer({ text }) {
       continue;
     }
 
-    // BULLET POINTS (-, •, *)
+    // BULLETS
     if (/^[-•*]\s/.test(trimmed)) {
       const content = trimmed.replace(/^[-•*]\s/, '');
       elements.push(
         <div key={'bullet' + i} style={{ display: 'flex', gap: '10px', marginLeft: '16px', marginBottom: '6px' }}>
-          <span style={{ color: '#64d07b', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
-          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
-            {content}
-          </span>
+          <span style={{ color: '#64d07b', flexShrink: 0, marginTop: '2px' }}>▪</span>
+          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>{content}</span>
         </div>
       );
       i++;
       continue;
     }
 
-    // DEFAULT PARAGRAPH
+    // DEFAULT
     elements.push(
       <p
         key={'p' + i}
@@ -220,16 +215,13 @@ export default function ExcelPage() {
 
       if (!res.ok) throw new Error('Failed to generate solution');
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let text = '';
+      const data = await res.json();
+      let text = data.result || '';
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        text += decoder.decode(value);
-        setResponse(text);
-      }
+      // Clean up escaped characters
+      text = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+
+      setResponse(text);
     } catch (err) {
       setError(err.message || 'An error occurred');
     } finally {
@@ -239,14 +231,12 @@ export default function ExcelPage() {
 
   return (
     <main style={{ padding: '60px 40px', maxWidth: '1000px', margin: '0 auto' }}>
-      {/* Back Link */}
       <Link href="/">
         <a style={{ color: '#3a7a3a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
           ← RETURN TO BASE
         </a>
       </Link>
 
-      {/* Header */}
       <div style={{ marginBottom: '60px' }}>
         <p style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-03 / ACTIVE</p>
         <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: '0 0 8px 0', color: '#fff' }}>
@@ -260,25 +250,13 @@ export default function ExcelPage() {
         </p>
       </div>
 
-      {/* Status Badge */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '40px' }}>
-        <span
-          style={{
-            width: '8px',
-            height: '8px',
-            background: '#64d07b',
-            borderRadius: '50%',
-            display: 'inline-block',
-          }}
-        ></span>
+        <span style={{ width: '8px', height: '8px', background: '#64d07b', borderRadius: '50%', display: 'inline-block' }}></span>
         <span style={{ color: '#64d07b', fontSize: '0.8rem' }}>ONLINE</span>
       </div>
 
-      {/* Quick Load */}
       <div style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
-          // QUICK LOAD
-        </h3>
+        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>// QUICK LOAD</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {quickLoads.map((load, idx) => (
             <button
@@ -303,29 +281,16 @@ export default function ExcelPage() {
         </div>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
-          // DEFINE YOUR PROBLEM
-        </h3>
+        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>// DEFINE YOUR PROBLEM</h3>
 
         <div style={{ marginBottom: '24px' }}>
           <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
             01 / PROBLEM OR QUESTION *
           </label>
           <textarea
-            placeholder="// Describe your Excel challenge or financial modelling problem..."
-            style={{
-              width: '100%',
-              minHeight: '120px',
-              background: '#0a0a0a',
-              border: '1px solid #333',
-              color: '#aaa',
-              padding: '16px',
-              fontSize: '0.9rem',
-              fontFamily: 'monospace',
-              boxSizing: 'border-box',
-            }}
+            placeholder="// Describe your Excel challenge..."
+            style={{ width: '100%', minHeight: '120px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
           />
         </div>
 
@@ -334,18 +299,8 @@ export default function ExcelPage() {
             02 / COLUMNS / DATA STRUCTURE (optional)
           </label>
           <textarea
-            placeholder="// e.g. Date, Revenue, COGS, EBITDA, Region..."
-            style={{
-              width: '100%',
-              minHeight: '80px',
-              background: '#0a0a0a',
-              border: '1px solid #333',
-              color: '#aaa',
-              padding: '16px',
-              fontSize: '0.9rem',
-              fontFamily: 'monospace',
-              boxSizing: 'border-box',
-            }}
+            placeholder="// e.g. Date, Revenue, COGS..."
+            style={{ width: '100%', minHeight: '80px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
           />
         </div>
 
@@ -354,18 +309,8 @@ export default function ExcelPage() {
             03 / DESIRED OUTPUT (optional)
           </label>
           <textarea
-            placeholder="// What should the formula or model produce?"
-            style={{
-              width: '100%',
-              minHeight: '80px',
-              background: '#0a0a0a',
-              border: '1px solid #333',
-              color: '#aaa',
-              padding: '16px',
-              fontSize: '0.9rem',
-              fontFamily: 'monospace',
-              boxSizing: 'border-box',
-            }}
+            placeholder="// What should the formula produce?"
+            style={{ width: '100%', minHeight: '80px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
           />
         </div>
 
@@ -387,23 +332,12 @@ export default function ExcelPage() {
         </button>
       </form>
 
-      {/* Error */}
       {error && (
-        <div
-          style={{
-            background: 'rgba(220,53,69,0.1)',
-            border: '1px solid #dc3545',
-            color: '#ff6b6b',
-            padding: '16px',
-            marginBottom: '20px',
-            fontSize: '0.85rem',
-          }}
-        >
+        <div style={{ background: 'rgba(220,53,69,0.1)', border: '1px solid #dc3545', color: '#ff6b6b', padding: '16px', marginBottom: '20px', fontSize: '0.85rem' }}>
           {error}
         </div>
       )}
 
-      {/* Response */}
       {response && (
         <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '24px' }}>
           <ReportRenderer text={response} />
