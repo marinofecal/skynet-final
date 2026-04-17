@@ -6,133 +6,140 @@ import Link from 'next/link';
 function ReportRenderer({ text }) {
   if (!text) return null;
 
-  return (
-    <div>
-      {text.split('\n').map((line, idx) => {
-        const trimmed = line.trim();
+  const lines = text.split('\n');
+  const elements = [];
+  let i = 0;
 
-        if (!trimmed) {
-          return <div key={idx} style={{ height: '0.5rem' }} />;
-        }
+  while (i < lines.length) {
+    const line = lines[i];
+    const trimmed = line.trim();
 
-        // Code blocks
-        if (line.includes('```')) {
-          return (
-            <pre
-              key={idx}
-              style={{
-                background: 'rgba(100,150,200,.08)',
-                border: '1px solid #2d5a7d',
-                color: '#64a7d7',
-                padding: '12px',
-                fontSize: '0.8rem',
-                overflow: 'auto',
-                marginBottom: '12px',
-                fontFamily: 'monospace',
-                borderRadius: '4px',
-              }}
-            >
-              {line}
-            </pre>
-          );
-        }
+    if (!trimmed) {
+      elements.push(<div key={i} style={{ height: '0.5rem' }} />);
+      i++;
+      continue;
+    }
 
-        // Table rows
-        if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
-          return (
-            <div
-              key={idx}
-              style={{
-                background: 'rgba(100,150,200,.05)',
-                border: '1px solid #2d5a7d',
-                padding: '8px 12px',
-                marginBottom: '8px',
-                fontFamily: 'monospace',
-                fontSize: '0.75rem',
-                color: '#64a7d7',
-              }}
-            >
-              {trimmed}
-            </div>
-          );
-        }
+    // Code blocks (```...```)
+    if (trimmed.startsWith('```')) {
+      const codeLines = [];
+      i++;
+      while (i < lines.length && !lines[i].trim().startsWith('```')) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      i++; // skip closing ```
 
-        // Headers
-        if (/^\d+\.\s/.test(trimmed)) {
-          return (
-            <h3
-              key={idx}
-              style={{
-                fontSize: '0.95rem',
-                fontWeight: '700',
-                color: '#64a7d7',
-                marginTop: '16px',
-                marginBottom: '8px',
-                borderBottom: '1px solid #404040',
-                paddingBottom: '8px',
-              }}
-            >
-              {trimmed}
-            </h3>
-          );
-        }
+      elements.push(
+        <pre
+          key={'code' + i}
+          style={{
+            background: 'rgba(100,150,200,.08)',
+            border: '1px solid #2d5a7d',
+            color: '#64a7d7',
+            padding: '12px',
+            fontSize: '0.8rem',
+            overflow: 'auto',
+            marginBottom: '12px',
+            fontFamily: 'monospace',
+            borderRadius: '4px',
+          }}
+        >
+          {codeLines.join('\n')}
+        </pre>
+      );
+      continue;
+    }
 
-        // Bullet points
-        if (/^[-•*]\s/.test(trimmed)) {
-          const content = trimmed.replace(/^[-•*]\s/, '');
-          return (
-            <div
-              key={idx}
-              style={{
-                display: 'flex',
-                gap: '10px',
-                marginLeft: '16px',
-                marginBottom: '6px',
-              }}
-            >
-              <span style={{ color: '#64a7d7', flexShrink: 0 }}>▪</span>
-              <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
-                {content}
-              </span>
-            </div>
-          );
-        }
+    // Table rows (|...|)
+    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+      elements.push(
+        <div
+          key={'table' + i}
+          style={{
+            background: 'rgba(100,150,200,.05)',
+            border: '1px solid #2d5a7d',
+            padding: '8px 12px',
+            marginBottom: '8px',
+            fontFamily: 'monospace',
+            fontSize: '0.75rem',
+            color: '#64a7d7',
+          }}
+        >
+          {trimmed}
+        </div>
+      );
+      i++;
+      continue;
+    }
 
-        // DR/CR lines
-        if (trimmed.includes('DR') || trimmed.includes('CR')) {
-          return (
-            <div
-              key={idx}
-              style={{
-                fontSize: '0.8rem',
-                color: '#64a7d7',
-                fontFamily: 'monospace',
-                marginLeft: '16px',
-                marginBottom: '6px',
-              }}
-            >
-              {trimmed}
-            </div>
-          );
-        }
+    // Headers (numbered sections)
+    if (/^\d+\.\s/.test(trimmed)) {
+      elements.push(
+        <h3
+          key={'h' + i}
+          style={{
+            fontSize: '1rem',
+            fontWeight: '700',
+            color: '#64a7d7',
+            marginTop: '16px',
+            marginBottom: '12px',
+            borderBottom: '1px solid #404040',
+            paddingBottom: '8px',
+          }}
+        >
+          {trimmed}
+        </h3>
+      );
+      i++;
+      continue;
+    }
 
-        // Default paragraph
-        return (
-          <p
-            key={idx}
-            style={{
-              fontSize: '0.85rem',
-              lineHeight: '1.6',
-              marginBottom: '8px',
-              color: '#b8b8b8',
-            }}
-          >
-            {trimmed}
-          </p>
-        );
-      })}
-    </div>
-  );
+    // BULLET points (-, •, *)
+    if (/^[-•*]\s/.test(trimmed)) {
+      const content = trimmed.replace(/^[-•*]\s/, '');
+      elements.push(
+        <div key={'bullet' + i} style={{ display: 'flex', gap: '10px', marginLeft: '16px', marginBottom: '8px' }}>
+          <span style={{ color: '#64a7d7', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
+          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
+            {content.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
+              part.startsWith('**') && part.endsWith('**') ? (
+                <strong key={idx} style={{ color: '#64a7d7' }}>{part.slice(2, -2)}</strong>
+              ) : (
+                part
+              )
+            )}
+          </span>
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // Default paragraph
+    elements.push(
+      <p
+        key={'p' + i}
+        style={{
+          fontSize: '0.85rem',
+          lineHeight: '1.6',
+          marginBottom: '12px',
+          color: '#b8b8b8',
+        }}
+      >
+        {trimmed.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
+          part.startsWith('**') && part.endsWith('**') ? (
+            <strong key={idx} style={{ color: '#64a7d7' }}>{part.slice(2, -2)}</strong>
+          ) : (
+            part
+          )
+        )}
+      </p>
+    );
+    i++;
+  }
+
+  return <div>{elements.map((el) => el)}</div>;
 }
 
 export default function IFRSPage() {
