@@ -1,113 +1,356 @@
-export async function POST(req) {
-  try {
-    const body = await req.json();
-    const { prompt, bot } = body;
+'use client';
 
-    if (!prompt) {
-      return Response.json({ result: 'ERROR: No prompt received' }, { status: 400 });
+import { useState } from 'react';
+import Link from 'next/link';
+
+function ReportRenderer({ text }) {
+  if (!text) return null;
+
+  return (
+    <div>
+      {text.split('\n').map((line, idx) => {
+        const trimmed = line.trim();
+
+        // Empty lines
+        if (!trimmed) {
+          return <div key={idx} style={{ height: '0.5rem' }} />;
+        }
+
+        // Code blocks (```...```)
+        if (line.includes('```')) {
+          return (
+            <pre
+              key={idx}
+              style={{
+                background: 'rgba(100,208,123,.08)',
+                border: '1px solid #2d5a3d',
+                color: '#64d07b',
+                padding: '12px',
+                fontSize: '0.8rem',
+                overflow: 'auto',
+                marginBottom: '12px',
+                fontFamily: 'monospace',
+                borderRadius: '4px',
+              }}
+            >
+              {line}
+            </pre>
+          );
+        }
+
+        // Table rows (|...|)
+        if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+          return (
+            <div
+              key={idx}
+              style={{
+                background: 'rgba(100,200,100,.05)',
+                border: '1px solid #2d5a3d',
+                padding: '8px 12px',
+                marginBottom: '8px',
+                fontFamily: 'monospace',
+                fontSize: '0.75rem',
+                color: '#64d07b',
+              }}
+            >
+              {trimmed}
+            </div>
+          );
+        }
+
+        // Headers (numbers and dots like "1. SECTION")
+        if (/^\d+\.\s/.test(trimmed)) {
+          return (
+            <h3
+              key={idx}
+              style={{
+                fontSize: '0.95rem',
+                fontWeight: '700',
+                color: '#64d07b',
+                marginTop: '16px',
+                marginBottom: '8px',
+                borderBottom: '1px solid #404040',
+                paddingBottom: '8px',
+              }}
+            >
+              {trimmed}
+            </h3>
+          );
+        }
+
+        // Bullet points (-, •, *)
+        if (/^[-•*]\s/.test(trimmed)) {
+          const content = trimmed.replace(/^[-•*]\s/, '');
+          return (
+            <div
+              key={idx}
+              style={{
+                display: 'flex',
+                gap: '10px',
+                marginLeft: '16px',
+                marginBottom: '6px',
+              }}
+            >
+              <span style={{ color: '#64d07b', flexShrink: 0 }}>▪</span>
+              <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
+                {content}
+              </span>
+            </div>
+          );
+        }
+
+        // Default paragraph
+        return (
+          <p
+            key={idx}
+            style={{
+              fontSize: '0.85rem',
+              lineHeight: '1.6',
+              marginBottom: '8px',
+              color: '#b8b8b8',
+            }}
+          >
+            {trimmed}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function ExcelPage() {
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState('');
+  const [error, setError] = useState('');
+
+  const quickLoads = [
+    'Build a dynamic 3-statement financial model with scenario analysis',
+    'XLOOKUP with multiple criteria to consolidate monthly P&L data',
+    'Power Query: clean and merge 5 years of transaction data',
+    'WACC sensitivity table varying cost of equity and debt',
+  ];
+
+  const handleQuickLoad = (idx) => {
+    const textarea = document.querySelectorAll('textarea')[0];
+    textarea.value = quickLoads[idx];
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const textareas = document.querySelectorAll('textarea');
+    const problem = textareas[0].value.trim();
+    const columns = textareas[1].value.trim();
+    const output = textareas[2].value.trim();
+
+    if (!problem) {
+      setError('Please describe your Excel challenge');
+      return;
     }
 
-    // Different system prompts based on bot type
-    let systemPrompt;
+    const prompt = `Problem: ${problem}\nColumns: ${columns || 'Not specified'}\nDesired Output: ${output || 'Not specified'}`;
 
-    if (bot === 'audit') {
-      systemPrompt = `You are a senior financial audit expert providing formal business intelligence reports.
+    setLoading(true);
+    setError('');
+    setResponse('');
 
-CRITICAL FORMATTING RULES — always follow exactly:
-- Start with a one-line executive summary
-- Use numbered sections: 1. SECTION TITLE, 2. SECTION TITLE, etc.
-- Under each section use bullet points starting with •
-- Use sub-bullets with - for details
-- Bold key terms with **term**
-- End with a CONCLUSION section with clear recommendations
-- Be comprehensive, detailed, and professional — minimum 400 words
-- Write as if this is a deliverable for a CFO or Board of Directors
-- Never use casual language`;
+    try {
+      const res = await fetch('/api/bot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, bot: 'excel' }),
+      });
 
-    } else if (bot === 'excel') {
-      systemPrompt = `You are an Excel and financial modeling expert. Your responses MUST follow this format:
+      if (!res.ok) throw new Error('Failed to generate solution');
 
-1. FORMULA SECTION:
-Show exact Excel formulas in code blocks like:
-\`\`\`excel
-=FORMULA(syntax here)
-\`\`\`
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let text = '';
 
-2. DATA EXAMPLE SECTION:
-Show sample data in markdown table format:
-| Column A | Column B | Column C |
-|----------|----------|----------|
-| value1   | value2   | value3   |
-
-3. IMPLEMENTATION STEPS:
-- Step 1: ...
-- Step 2: ...
-- Step 3: ...
-
-4. BEST PRACTICES:
-- Practice 1: ...
-- Practice 2: ...
-
-RULES:
-- Use markdown code blocks for all formulas (excel, or plain text)
-- Use markdown tables (| |) for data examples
-- Show BEFORE and AFTER examples side by side
-- Be concise and practical
-- Do NOT write long paragraphs
-- Include copy-paste ready formulas`;
-
-    } else if (bot === 'ifrs') {
-      systemPrompt = `You are an IFRS accounting expert specializing in revenue recognition, lease accounting, and financial statement analysis.
-
-RESPONSE FORMAT:
-1. Executive Summary (1-2 sentences)
-2. Accounting Treatment (bullet points with IFRS standard references)
-3. Journal Entries (if applicable):
-   DR Account | CR Account | Amount
-
-4. Financial Statement Impact (table format)
-5. Key Considerations (bullet points)
-6. Examples (with numbers and calculations)
-
-RULES:
-- Reference specific IFRS standards (IFRS 15, IFRS 16, IAS 37, etc.)
-- Include numerical examples
-- Show journal entry format clearly
-- Use tables for financial impacts
-- Be technically precise`;
-
-    } else {
-      systemPrompt = `You are an expert assistant providing professional, detailed analysis.`;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        text += decoder.decode(value);
+        setResponse(text);
+      }
+    } catch (err) {
+      setError(err.message || 'An error occurred');
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 4096,
-        temperature: 0.2,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt },
-        ],
-      }),
-    });
+  return (
+    <main style={{ padding: '60px 40px', maxWidth: '1000px', margin: '0 auto' }}>
+      {/* Back Link */}
+      <Link href="/">
+        <a style={{ color: '#3a7a3a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
+          ← RETURN TO BASE
+        </a>
+      </Link>
 
-    const data = await response.json();
+      {/* Header */}
+      <div style={{ marginBottom: '60px' }}>
+        <p style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-03 / ACTIVE</p>
+        <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: '0 0 8px 0', color: '#fff' }}>
+          EXCEL AI
+        </h1>
+        <p style={{ color: '#64d07b', fontSize: '0.9rem', fontWeight: '700', margin: '0 0 16px 0' }}>
+          DATA FORGE
+        </p>
+        <p style={{ color: '#888', fontSize: '1rem', lineHeight: '1.6', maxWidth: '600px', margin: '0' }}>
+          3-statement models, sensitivity analysis, XLOOKUP consolidations, and dynamic dashboards—complete with step-by-step implementation.
+        </p>
+      </div>
 
-    if (!data.choices?.[0]) {
-      console.error('GROQ ERROR:', JSON.stringify(data));
-      return Response.json({ result: 'ERROR: No response from AI engine. Verify GROQ_API_KEY in Vercel environment variables.' });
-    }
+      {/* Status Badge */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '40px' }}>
+        <span
+          style={{
+            width: '8px',
+            height: '8px',
+            background: '#64d07b',
+            borderRadius: '50%',
+            display: 'inline-block',
+          }}
+        ></span>
+        <span style={{ color: '#64d07b', fontSize: '0.8rem' }}>ONLINE</span>
+      </div>
 
-    return Response.json({ result: data.choices[0].message.content });
+      {/* Quick Load */}
+      <div style={{ marginBottom: '40px' }}>
+        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
+          // QUICK LOAD
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          {quickLoads.map((load, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleQuickLoad(idx)}
+              style={{
+                background: 'transparent',
+                border: '1px solid #404040',
+                color: '#64d07b',
+                padding: '12px 16px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => (e.target.style.borderColor = '#64d07b')}
+              onMouseLeave={(e) => (e.target.style.borderColor = '#404040')}
+            >
+              {load}
+            </button>
+          ))}
+        </div>
+      </div>
 
-  } catch (error) {
-    console.error('SERVER ERROR:', error);
-    return Response.json({ result: 'ERROR: Server exception. Check Vercel logs.' }, { status: 500 });
-  }
+      {/* Form */}
+      <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
+        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
+          // DEFINE YOUR PROBLEM
+        </h3>
+
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+            01 / PROBLEM OR QUESTION *
+          </label>
+          <textarea
+            placeholder="// Describe your Excel challenge or financial modelling problem..."
+            style={{
+              width: '100%',
+              minHeight: '120px',
+              background: '#0a0a0a',
+              border: '1px solid #333',
+              color: '#aaa',
+              padding: '16px',
+              fontSize: '0.9rem',
+              fontFamily: 'monospace',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+            02 / COLUMNS / DATA STRUCTURE (optional)
+          </label>
+          <textarea
+            placeholder="// e.g. Date, Revenue, COGS, EBITDA, Region..."
+            style={{
+              width: '100%',
+              minHeight: '80px',
+              background: '#0a0a0a',
+              border: '1px solid #333',
+              color: '#aaa',
+              padding: '16px',
+              fontSize: '0.9rem',
+              fontFamily: 'monospace',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+            03 / DESIRED OUTPUT (optional)
+          </label>
+          <textarea
+            placeholder="// What should the formula or model produce?"
+            style={{
+              width: '100%',
+              minHeight: '80px',
+              background: '#0a0a0a',
+              border: '1px solid #333',
+              color: '#aaa',
+              padding: '16px',
+              fontSize: '0.9rem',
+              fontFamily: 'monospace',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            background: 'transparent',
+            border: '1px solid #64d07b',
+            color: '#64d07b',
+            padding: '12px 24px',
+            fontSize: '0.85rem',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            fontWeight: '700',
+            opacity: loading ? 0.5 : 1,
+          }}
+        >
+          {loading ? 'GENERATING...' : '⟫ GENERATE SOLUTION'}
+        </button>
+      </form>
+
+      {/* Error */}
+      {error && (
+        <div
+          style={{
+            background: 'rgba(220,53,69,0.1)',
+            border: '1px solid #dc3545',
+            color: '#ff6b6b',
+            padding: '16px',
+            marginBottom: '20px',
+            fontSize: '0.85rem',
+          }}
+        >
+          {error}
+        </div>
+      )}
+
+      {/* Response */}
+      {response && (
+        <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '24px' }}>
+          <ReportRenderer text={response} />
+        </div>
+      )}
+    </main>
+  );
 }
