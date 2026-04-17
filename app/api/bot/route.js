@@ -1,4 +1,4 @@
-export async function POST(req) {
+hGROQ_API_KEY  XAI_API_KEYexport async function POST(req) {
   try {
     const body = await req.json();
     const { prompt, systemPrompt } = body;
@@ -24,7 +24,7 @@ CRITICAL FORMATTING RULES — always follow exactly:
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        Authorization: `Bearer ${process.env.XAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
