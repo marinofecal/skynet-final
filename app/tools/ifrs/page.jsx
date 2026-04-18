@@ -6,7 +6,10 @@ import Link from 'next/link';
 function ReportRenderer({ text }) {
   if (!text) return null;
 
-  const cleanText = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+  const cleanText = text
+    .replace(/\\n/g, '\n')
+    .replace(/\\"/g, '"')
+    .replace(/\\t/g, '  ');
 
   const parseBold = (line) => {
     const parts = line.split(/(\*\*[^*]+\*\*)/g);
@@ -33,7 +36,9 @@ function ReportRenderer({ text }) {
       (r) => !/^\|\s*[-:]+[-:|\s]*\|?\s*$/.test(r)
     );
     const parsedRows = rows.map((r) =>
-      r.split('|').map((c) => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''))
+      r.split('|')
+        .map((c) => c.trim())
+        .filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''))
     );
     if (parsedRows.length === 0) {
       tableBuffer = [];
@@ -80,7 +85,6 @@ function ReportRenderer({ text }) {
   };
 
   lines.forEach((line, idx) => {
-    // Table detection
     if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
       tableBuffer.push(line.trim());
       inTable = true;
@@ -97,7 +101,7 @@ function ReportRenderer({ text }) {
       return;
     }
 
-    // Markdown headers (### Section)
+    // ### Markdown headers
     if (/^#{1,3}\s+/.test(trimmed)) {
       const content = trimmed.replace(/^#{1,3}\s+/, '');
       elements.push(
@@ -111,13 +115,13 @@ function ReportRenderer({ text }) {
           borderBottom: '1px solid #1a3a5c',
           letterSpacing: '0.5px',
         }}>
-          {content}
+          {parseBold(content)}
         </h2>
       );
       return;
     }
 
-    // Numbered section headers (e.g., "1. Contract A Revenue Recognition:")
+    // Numbered section headers
     if (/^\d+\.\s+[A-Z]/.test(trimmed)) {
       elements.push(
         <h2 key={idx} style={{
@@ -141,10 +145,11 @@ function ReportRenderer({ text }) {
       elements.push(
         <div key={idx} style={{
           display: 'flex',
-          gap: '12px',
+          gap: '16px',
           marginBottom: '6px',
           paddingLeft: '16px',
           fontFamily: 'monospace',
+          alignItems: 'baseline',
         }}>
           <span style={{
             color: isDR ? '#4db8ff' : '#ff6b9d',
@@ -157,33 +162,6 @@ function ReportRenderer({ text }) {
           <p style={{ fontSize: '0.88rem', lineHeight: '1.6', color: '#cfcfcf', margin: 0, flex: 1 }}>
             {parseBold(trimmed.replace(/^(DR|CR)\s+/i, ''))}
           </p>
-        </div>
-      );
-      return;
-    }
-
-    // Executive Summary and similar intro sections
-    if (/^(Executive Summary|Summary|Conclusion|Key Takeaways?|Overview):/i.test(trimmed)) {
-      const colonIdx = trimmed.indexOf(':');
-      const heading = trimmed.slice(0, colonIdx);
-      const rest = trimmed.slice(colonIdx + 1).trim();
-      elements.push(
-        <div key={idx} style={{ marginTop: '20px', marginBottom: '12px' }}>
-          <h3 style={{
-            color: '#4db8ff',
-            fontSize: '1rem',
-            fontWeight: '700',
-            marginBottom: '8px',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-          }}>
-            {heading}
-          </h3>
-          {rest && (
-            <p style={{ fontSize: '0.9rem', lineHeight: '1.7', color: '#cfcfcf', margin: 0 }}>
-              {parseBold(rest)}
-            </p>
-          )}
         </div>
       );
       return;
