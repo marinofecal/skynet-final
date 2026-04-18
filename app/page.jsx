@@ -1,4 +1,5 @@
 'use client';
+
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
@@ -18,11 +19,20 @@ const SYNE = "'Syne', sans-serif";
 function TypewriterText({ text, speed = 28 }) {
   const [d, setD] = useState('');
   useEffect(() => {
-    setD(''); let i = 0;
-    const iv = setInterval(() => { if (i < text.length) { setD(text.slice(0, ++i)); } else clearInterval(iv); }, speed);
+    setD('');
+    let i = 0;
+    const iv = setInterval(() => {
+      if (i < text.length) { setD(text.slice(0, ++i)); }
+      else clearInterval(iv);
+    }, speed);
     return () => clearInterval(iv);
   }, [text]);
-  return <span>{d}<span style={{ color: A, animation: 'cursor-blink 1s steps(1) infinite' }}>█</span></span>;
+  return (
+    <span>
+      {d}
+      <span style={{ color: A, animation: 'cursor-blink 1s steps(1) infinite' }}>█</span>
+    </span>
+  );
 }
 
 export default function Home() {
@@ -74,7 +84,7 @@ export default function Home() {
           </a>
         </div>
 
-        {/* 2 stats */}
+        {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 180px)', border: '1px solid rgba(232,160,32,0.1)', background: 'rgba(232,160,32,0.02)', overflow: 'hidden', width: 'fit-content' }}>
           {[['3','AI AGENTS ACTIVE'],['15+','YRS FINANCE EXP']].map(([v, l], i) => (
             <div key={l} style={{ padding: '24px 28px', textAlign: 'center', borderRight: i === 0 ? '1px solid rgba(232,160,32,0.08)' : 'none' }}>
@@ -83,10 +93,12 @@ export default function Home() {
             </div>
           ))}
         </div>
+
       </section>
 
       {/* AGENTS */}
       <section id="agents" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 80px' }}>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '36px' }}>
           <div style={{ width: '32px', height: '1px', background: A }} />
           <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.22em', color: 'rgba(232,160,32,0.45)' }}>DEPLOYED AGENTS</span>
@@ -99,8 +111,16 @@ export default function Home() {
             <Link key={bot.id} href={`/tools/${bot.id}`} style={{ textDecoration: 'none' }}>
               <div
                 style={{ background: '#05030c', border: `1px solid rgba(${bot.rgb},0.15)`, padding: '32px', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', transition: 'all 0.3s ease' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = bot.color; e.currentTarget.style.boxShadow = `0 0 30px rgba(${bot.rgb},0.07)`; e.currentTarget.style.transform = 'translateY(-4px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = `rgba(${bot.rgb},0.15)`; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = bot.color;
+                  e.currentTarget.style.boxShadow = `0 0 30px rgba(${bot.rgb},0.07)`;
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = `rgba(${bot.rgb},0.15)`;
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
               >
                 {/* Corner brackets */}
                 <div style={{ position: 'absolute', top: -1, left: -1, width: 14, height: 14, borderTop: `2px solid ${bot.color}`, borderLeft: `2px solid ${bot.color}` }} />
@@ -129,6 +149,7 @@ export default function Home() {
             </Link>
           ))}
         </div>
+
       </section>
 
       {/* ABOUT */}
