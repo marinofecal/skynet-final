@@ -6,10 +6,8 @@ import Link from 'next/link';
 function ReportRenderer({ text }) {
   if (!text) return null;
 
-  // Clean escaped characters
   const cleanText = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
 
-  // Parse bold text (**text**)
   const parseBold = (line) => {
     const parts = line.split(/(\*\*[^*]+\*\*)/g);
     return parts.map((part, i) => {
@@ -30,13 +28,35 @@ function ReportRenderer({ text }) {
   lines.forEach((line, idx) => {
     const trimmed = line.trim();
 
-    // Empty line
     if (!trimmed) {
       elements.push(<div key={idx} style={{ height: '0.75rem' }} />);
       return;
     }
 
-    // Numbered section header (e.g., "1. Audit Planning")
+    // Markdown headers (### Section)
+    if (/^#{1,3}\s+/.test(trimmed)) {
+      const content = trimmed.replace(/^#{1,3}\s+/, '');
+      elements.push(
+        <h2
+          key={idx}
+          style={{
+            color: '#ffb347',
+            fontSize: '1.15rem',
+            fontWeight: '700',
+            marginTop: '28px',
+            marginBottom: '14px',
+            paddingBottom: '8px',
+            borderBottom: '1px solid #3a2a1a',
+            letterSpacing: '0.5px',
+          }}
+        >
+          {content}
+        </h2>
+      );
+      return;
+    }
+
+    // Numbered section headers (e.g., "1. Introduction to Audit Objectives")
     if (/^\d+\.\s+[A-Z]/.test(trimmed)) {
       elements.push(
         <h2
@@ -58,9 +78,11 @@ function ReportRenderer({ text }) {
       return;
     }
 
-    // Executive Summary or main section headers (e.g., "Executive summary:")
+    // Executive Summary and similar intro sections
     if (/^(Executive summary|Summary|Conclusion|Recommendations?|Findings?|Overview):/i.test(trimmed)) {
-      const [heading, ...rest] = trimmed.split(':');
+      const colonIdx = trimmed.indexOf(':');
+      const heading = trimmed.slice(0, colonIdx);
+      const rest = trimmed.slice(colonIdx + 1).trim();
       elements.push(
         <div key={idx} style={{ marginTop: '20px', marginBottom: '12px' }}>
           <h3
@@ -75,22 +97,15 @@ function ReportRenderer({ text }) {
           >
             {heading}
           </h3>
-          <p
-            style={{
-              fontSize: '0.9rem',
-              lineHeight: '1.7',
-              color: '#cfcfcf',
-              margin: 0,
-            }}
-          >
-            {parseBold(rest.join(':').trim())}
+          <p style={{ fontSize: '0.9rem', lineHeight: '1.7', color: '#cfcfcf', margin: 0 }}>
+            {parseBold(rest)}
           </p>
         </div>
       );
       return;
     }
 
-    // Headers with colon at end (e.g., "Key Controls:")
+    // Short headers with colon at end
     if (/^[A-Z][A-Za-z\s&]+:$/.test(trimmed) && trimmed.length < 60) {
       elements.push(
         <h3
@@ -111,7 +126,7 @@ function ReportRenderer({ text }) {
       return;
     }
 
-    // Bullet points (- or • or *)
+    // Bullet points
     if (/^[-•*]\s+/.test(trimmed)) {
       const content = trimmed.replace(/^[-•*]\s+/, '');
       elements.push(
@@ -124,50 +139,8 @@ function ReportRenderer({ text }) {
             paddingLeft: '8px',
           }}
         >
-          <span style={{ color: '#ffb347', fontWeight: '700', flexShrink: 0 }}>
-            ▸
-          </span>
-          <p
-            style={{
-              fontSize: '0.88rem',
-              lineHeight: '1.6',
-              color: '#cfcfcf',
-              margin: 0,
-              flex: 1,
-            }}
-          >
-            {parseBold(content)}
-          </p>
-        </div>
-      );
-      return;
-    }
-
-    // Numbered list items (e.g., "1) Something" or "1. Something" without capital start)
-    if (/^\d+[\.\)]\s+/.test(trimmed) && !/^\d+\.\s+[A-Z]/.test(trimmed)) {
-      const content = trimmed.replace(/^\d+[\.\)]\s+/, '');
-      elements.push(
-        <div
-          key={idx}
-          style={{
-            display: 'flex',
-            gap: '12px',
-            marginBottom: '10px',
-            paddingLeft: '8px',
-          }}
-        >
-          <span style={{ color: '#ffb347', fontWeight: '700', flexShrink: 0 }}>
-            {trimmed.match(/^\d+/)[0]}.
-          </span>
-          <p
-            style={{
-              fontSize: '0.88rem',
-              lineHeight: '1.6',
-              color: '#cfcfcf',
-              margin: 0,
-              flex: 1,
-            }}
-          >
+          <span style={{ color: '#ffb347', fontWeight: '700', flexShrink: 0 }}>▸</span>
+          <p style={{ fontSize: '0.88rem', lineHeight: '1.6', color: '#cfcfcf', margin: 0, flex: 1 }}>
             {parseBold(content)}
           </p>
         </div>
@@ -179,12 +152,7 @@ function ReportRenderer({ text }) {
     elements.push(
       <p
         key={idx}
-        style={{
-          fontSize: '0.88rem',
-          lineHeight: '1.7',
-          color: '#cfcfcf',
-          marginBottom: '12px',
-        }}
+        style={{ fontSize: '0.88rem', lineHeight: '1.7', color: '#cfcfcf', marginBottom: '12px' }}
       >
         {parseBold(trimmed)}
       </p>
@@ -243,12 +211,10 @@ export default function AuditPage() {
 
   return (
     <main style={{ padding: '60px 40px', maxWidth: '1000px', margin: '0 auto' }}>
-      {/* Back Link */}
       <Link href="/" style={{ color: '#7a5a3a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
         ← RETURN TO BASE
       </Link>
 
-      {/* Header */}
       <div style={{ marginBottom: '60px' }}>
         <p style={{ color: '#7a5a3a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-01 / ACTIVE</p>
         <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: '0 0 8px 0', color: '#fff' }}>
@@ -262,21 +228,11 @@ export default function AuditPage() {
         </p>
       </div>
 
-      {/* Status Badge */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '40px' }}>
-        <span
-          style={{
-            width: '8px',
-            height: '8px',
-            background: '#ffb347',
-            borderRadius: '50%',
-            display: 'inline-block',
-          }}
-        ></span>
+        <span style={{ width: '8px', height: '8px', background: '#ffb347', borderRadius: '50%', display: 'inline-block' }}></span>
         <span style={{ color: '#ffb347', fontSize: '0.8rem' }}>ONLINE</span>
       </div>
 
-      {/* Quick Load */}
       <div style={{ marginBottom: '40px' }}>
         <h3 style={{ color: '#7a5a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
           // QUICK LOAD
@@ -305,7 +261,6 @@ export default function AuditPage() {
         </div>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
         <h3 style={{ color: '#7a5a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
           // DEFINE YOUR AUDIT CHALLENGE
@@ -318,17 +273,7 @@ export default function AuditPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="// Describe your audit scenario, company context, risks, and procedures needed..."
-            style={{
-              width: '100%',
-              minHeight: '200px',
-              background: '#0a0a0a',
-              border: '1px solid #333',
-              color: '#aaa',
-              padding: '16px',
-              fontSize: '0.9rem',
-              fontFamily: 'monospace',
-              boxSizing: 'border-box',
-            }}
+            style={{ width: '100%', minHeight: '200px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
           />
         </div>
 
@@ -350,23 +295,12 @@ export default function AuditPage() {
         </button>
       </form>
 
-      {/* Error */}
       {error && (
-        <div
-          style={{
-            background: 'rgba(220,53,69,0.1)',
-            border: '1px solid #dc3545',
-            color: '#ff6b6b',
-            padding: '16px',
-            marginBottom: '20px',
-            fontSize: '0.85rem',
-          }}
-        >
+        <div style={{ background: 'rgba(220,53,69,0.1)', border: '1px solid #dc3545', color: '#ff6b6b', padding: '16px', marginBottom: '20px', fontSize: '0.85rem' }}>
           {error}
         </div>
       )}
 
-      {/* Response */}
       {response && (
         <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '32px' }}>
           <ReportRenderer text={response} />
