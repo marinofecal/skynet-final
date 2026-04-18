@@ -6,165 +6,237 @@ import Link from 'next/link';
 function ReportRenderer({ text }) {
   if (!text) return null;
 
-  const lines = text.split('\n');
-  const elements = [];
-  let i = 0;
+  const cleanText = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
 
-  while (i < lines.length) {
-    const line = lines[i];
+  const parseBold = (line) => {
+    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <strong key={i} style={{ color: '#4db8ff', fontWeight: '700' }}>
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
+
+  const lines = cleanText.split('\n');
+  const elements = [];
+  let tableBuffer = [];
+  let inTable = false;
+
+  const flushTable = (key) => {
+    if (tableBuffer.length === 0) return;
+    const rows = tableBuffer.filter(
+      (r) => !/^\|\s*[-:]+[-:|\s]*\|?\s*$/.test(r)
+    );
+    const parsedRows = rows.map((r) =>
+      r.split('|').map((c) => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''))
+    );
+    if (parsedRows.length === 0) {
+      tableBuffer = [];
+      return;
+    }
+    elements.push(
+      <div key={`table-${key}`} style={{ overflowX: 'auto', marginBottom: '20px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', fontFamily: 'monospace' }}>
+          <thead>
+            <tr>
+              {parsedRows[0].map((cell, i) => (
+                <th key={i} style={{
+                  border: '1px solid #1a3a5c',
+                  padding: '8px 12px',
+                  background: 'rgba(77,184,255,0.1)',
+                  color: '#4db8ff',
+                  textAlign: 'left',
+                  fontWeight: '700',
+                }}>
+                  {cell}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {parsedRows.slice(1).map((row, rIdx) => (
+              <tr key={rIdx}>
+                {row.map((cell, cIdx) => (
+                  <td key={cIdx} style={{
+                    border: '1px solid #1a3a5c',
+                    padding: '8px 12px',
+                    color: '#cfcfcf',
+                  }}>
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+    tableBuffer = [];
+  };
+
+  lines.forEach((line, idx) => {
+    // Table detection
+    if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
+      tableBuffer.push(line.trim());
+      inTable = true;
+      return;
+    } else if (inTable) {
+      flushTable(idx);
+      inTable = false;
+    }
+
     const trimmed = line.trim();
 
     if (!trimmed) {
-      elements.push(<div key={i} style={{ height: '0.5rem' }} />);
-      i++;
-      continue;
+      elements.push(<div key={idx} style={{ height: '0.75rem' }} />);
+      return;
     }
 
-    // Code blocks (```...```)
-    if (trimmed.startsWith('```')) {
-      const codeLines = [];
-      i++;
-      while (i < lines.length && !lines[i].trim().startsWith('```')) {
-        codeLines.push(lines[i]);
-        i++;
-      }
-      i++; // skip closing ```
-
+    // Markdown headers (### Section)
+    if (/^#{1,3}\s+/.test(trimmed)) {
+      const content = trimmed.replace(/^#{1,3}\s+/, '');
       elements.push(
-        <pre
-          key={'code' + i}
-          style={{
-            background: 'rgba(100,150,200,.08)',
-            border: '1px solid #2d5a7d',
-            color: '#64a7d7',
-            padding: '12px',
-            fontSize: '0.8rem',
-            overflow: 'auto',
-            marginBottom: '12px',
-            fontFamily: 'monospace',
-            borderRadius: '4px',
-          }}
-        >
-          {codeLines.join('\n')}
-        </pre>
+        <h2 key={idx} style={{
+          color: '#4db8ff',
+          fontSize: '1.15rem',
+          fontWeight: '700',
+          marginTop: '28px',
+          marginBottom: '14px',
+          paddingBottom: '8px',
+          borderBottom: '1px solid #1a3a5c',
+          letterSpacing: '0.5px',
+        }}>
+          {content}
+        </h2>
       );
-      continue;
+      return;
     }
 
-    // Table rows (|...|)
-    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+    // Numbered section headers (e.g., "1. Contract A Revenue Recognition:")
+    if (/^\d+\.\s+[A-Z]/.test(trimmed)) {
       elements.push(
-        <div
-          key={'table' + i}
-          style={{
-            background: 'rgba(100,150,200,.05)',
-            border: '1px solid #2d5a7d',
-            padding: '8px 12px',
-            marginBottom: '8px',
-            fontFamily: 'monospace',
-            fontSize: '0.75rem',
-            color: '#64a7d7',
-          }}
-        >
-          {trimmed}
+        <h2 key={idx} style={{
+          color: '#4db8ff',
+          fontSize: '1.1rem',
+          fontWeight: '700',
+          marginTop: '24px',
+          marginBottom: '12px',
+          paddingBottom: '6px',
+          borderBottom: '1px solid #1a3a5c',
+        }}>
+          {parseBold(trimmed)}
+        </h2>
+      );
+      return;
+    }
+
+    // DR / CR journal entry lines
+    if (/^(DR|CR)\s+/i.test(trimmed)) {
+      const isDR = /^DR\s+/i.test(trimmed);
+      elements.push(
+        <div key={idx} style={{
+          display: 'flex',
+          gap: '12px',
+          marginBottom: '6px',
+          paddingLeft: '16px',
+          fontFamily: 'monospace',
+        }}>
+          <span style={{
+            color: isDR ? '#4db8ff' : '#ff6b9d',
+            fontWeight: '700',
+            minWidth: '32px',
+            flexShrink: 0,
+          }}>
+            {isDR ? 'DR' : 'CR'}
+          </span>
+          <p style={{ fontSize: '0.88rem', lineHeight: '1.6', color: '#cfcfcf', margin: 0, flex: 1 }}>
+            {parseBold(trimmed.replace(/^(DR|CR)\s+/i, ''))}
+          </p>
         </div>
       );
-      i++;
-      continue;
+      return;
     }
 
-    // Headers (numbered sections)
-    if (/^\d+\.\s/.test(trimmed)) {
+    // Executive Summary and similar intro sections
+    if (/^(Executive Summary|Summary|Conclusion|Key Takeaways?|Overview):/i.test(trimmed)) {
+      const colonIdx = trimmed.indexOf(':');
+      const heading = trimmed.slice(0, colonIdx);
+      const rest = trimmed.slice(colonIdx + 1).trim();
       elements.push(
-        <h3
-          key={'h' + i}
-          style={{
+        <div key={idx} style={{ marginTop: '20px', marginBottom: '12px' }}>
+          <h3 style={{
+            color: '#4db8ff',
             fontSize: '1rem',
             fontWeight: '700',
-            color: '#64a7d7',
-            marginTop: '16px',
-            marginBottom: '12px',
-            borderBottom: '1px solid #404040',
-            paddingBottom: '8px',
-          }}
-        >
-          {trimmed}
-        </h3>
-      );
-      i++;
-      continue;
-    }
-
-    // BULLET points (-, •, *)
-    if (/^[-•*]\s/.test(trimmed)) {
-      const content = trimmed.replace(/^[-•*]\s/, '');
-      elements.push(
-        <div key={'bullet' + i} style={{ display: 'flex', gap: '10px', marginLeft: '16px', marginBottom: '8px' }}>
-          <span style={{ color: '#64a7d7', flexShrink: 0, marginTop: '2px', fontSize: '0.65rem' }}>▪</span>
-          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>
-            {content.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
-              part.startsWith('**') && part.endsWith('**') ? (
-                <strong key={idx} style={{ color: '#64a7d7' }}>{part.slice(2, -2)}</strong>
-              ) : (
-                part
-              )
-            )}
-          </span>
+            marginBottom: '8px',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+          }}>
+            {heading}
+          </h3>
+          {rest && (
+            <p style={{ fontSize: '0.9rem', lineHeight: '1.7', color: '#cfcfcf', margin: 0 }}>
+              {parseBold(rest)}
+            </p>
+          )}
         </div>
       );
-      i++;
-      continue;
+      return;
     }
 
-    // Default paragraph
+    // Bullet points
+    if (/^[-•*]\s+/.test(trimmed)) {
+      const content = trimmed.replace(/^[-•*]\s+/, '');
+      elements.push(
+        <div key={idx} style={{ display: 'flex', gap: '12px', marginBottom: '8px', paddingLeft: '8px' }}>
+          <span style={{ color: '#4db8ff', fontWeight: '700', flexShrink: 0 }}>▸</span>
+          <p style={{ fontSize: '0.88rem', lineHeight: '1.6', color: '#cfcfcf', margin: 0, flex: 1 }}>
+            {parseBold(content)}
+          </p>
+        </div>
+      );
+      return;
+    }
+
+    // Regular paragraph
     elements.push(
-      <p
-        key={'p' + i}
-        style={{
-          fontSize: '0.85rem',
-          lineHeight: '1.6',
-          marginBottom: '12px',
-          color: '#b8b8b8',
-        }}
-      >
-        {trimmed.split(/(\*\*[^*]+\*\*)/).map((part, idx) =>
-          part.startsWith('**') && part.endsWith('**') ? (
-            <strong key={idx} style={{ color: '#64a7d7' }}>{part.slice(2, -2)}</strong>
-          ) : (
-            part
-          )
-        )}
+      <p key={idx} style={{ fontSize: '0.88rem', lineHeight: '1.7', color: '#cfcfcf', marginBottom: '12px' }}>
+        {parseBold(trimmed)}
       </p>
     );
-    i++;
-  }
+  });
 
-  return <div>{elements.map((el) => el)}</div>;
+  if (inTable) flushTable('final');
+
+  return <div>{elements}</div>;
 }
 
 export default function IFRSPage() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState('');
   const [error, setError] = useState('');
+  const [input, setInput] = useState('');
 
   const quickLoads = [
-    'IFRS 15: Revenue recognition for a SaaS subscription business with multi-year contracts',
-    'IFRS 16: Lease accounting for operating leases and its impact on the balance sheet',
-    'IAS 37: Provision recognition for pending litigation and warranty claims',
-    'IFRS 9: Impairment of financial assets and expected credit loss calculations',
+    'IFRS 16: Operating lease for office space - journal entries and amortization schedule',
+    'IFRS 15: Revenue recognition for a multi-element software contract',
+    'IAS 36: Impairment testing for a cash-generating unit with declining margins',
+    'IFRS 9: Expected credit loss (ECL) model for trade receivables',
   ];
 
   const handleQuickLoad = (idx) => {
-    document.querySelector('textarea').value = quickLoads[idx];
+    setInput(quickLoads[idx]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const textarea = document.querySelector('textarea');
-    const input = textarea.value.trim();
-
-    if (!input) {
-      setError('Please describe your IFRS accounting scenario');
+    if (!input.trim()) {
+      setError('Please describe your IFRS scenario');
       return;
     }
 
@@ -179,18 +251,11 @@ export default function IFRSPage() {
         body: JSON.stringify({ prompt: input, bot: 'ifrs' }),
       });
 
-      if (!res.ok) throw new Error('Failed to analyze IFRS scenario');
+      if (!res.ok) throw new Error('Failed to analyze scenario');
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let text = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        text += decoder.decode(value);
-        setResponse(text);
-      }
+      const data = await res.json();
+      const text = data.result || data.response || JSON.stringify(data);
+      setResponse(text);
     } catch (err) {
       setError(err.message || 'An error occurred');
     } finally {
@@ -200,44 +265,30 @@ export default function IFRSPage() {
 
   return (
     <main style={{ padding: '60px 40px', maxWidth: '1000px', margin: '0 auto' }}>
-      {/* Back Link */}
-      <Link href="/">
-        <a style={{ color: '#4a6a7a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
-          ← RETURN TO BASE
-        </a>
+      <Link href="/" style={{ color: '#1a5a8a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
+        ← RETURN TO BASE
       </Link>
 
-      {/* Header */}
       <div style={{ marginBottom: '60px' }}>
-        <p style={{ color: '#4a6a7a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-02 / ACTIVE</p>
+        <p style={{ color: '#1a5a8a', fontSize: '0.8rem', marginBottom: '8px' }}>AGT-02 / ACTIVE</p>
         <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: '0 0 8px 0', color: '#fff' }}>
           IFRS AI
         </h1>
-        <p style={{ color: '#64a7d7', fontSize: '0.9rem', fontWeight: '700', margin: '0 0 16px 0' }}>
-          COMPLIANCE ENGINE
+        <p style={{ color: '#4db8ff', fontSize: '0.9rem', fontWeight: '700', margin: '0 0 16px 0' }}>
+          STANDARDS ENGINE
         </p>
         <p style={{ color: '#888', fontSize: '1rem', lineHeight: '1.6', maxWidth: '600px', margin: '0' }}>
-          Revenue recognition (IFRS 15), lease accounting (IFRS 16), provisions (IAS 37), and financial statement impact analysis.
+          Full IFRS compliance analysis, journal entries, disclosures, and technical accounting treatments—powered by AI trained on international standards.
         </p>
       </div>
 
-      {/* Status Badge */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '40px' }}>
-        <span
-          style={{
-            width: '8px',
-            height: '8px',
-            background: '#64a7d7',
-            borderRadius: '50%',
-            display: 'inline-block',
-          }}
-        ></span>
-        <span style={{ color: '#64a7d7', fontSize: '0.8rem' }}>ONLINE</span>
+        <span style={{ width: '8px', height: '8px', background: '#4db8ff', borderRadius: '50%', display: 'inline-block' }}></span>
+        <span style={{ color: '#4db8ff', fontSize: '0.8rem' }}>ONLINE</span>
       </div>
 
-      {/* Quick Load */}
       <div style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#4a6a7a', fontSize: '0.8rem', marginBottom: '16px' }}>
+        <h3 style={{ color: '#1a5a8a', fontSize: '0.8rem', marginBottom: '16px' }}>
           // QUICK LOAD
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -248,14 +299,14 @@ export default function IFRSPage() {
               style={{
                 background: 'transparent',
                 border: '1px solid #404040',
-                color: '#64a7d7',
+                color: '#4db8ff',
                 padding: '12px 16px',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
                 textAlign: 'left',
                 transition: 'all 0.2s',
               }}
-              onMouseEnter={(e) => (e.target.style.borderColor = '#64a7d7')}
+              onMouseEnter={(e) => (e.target.style.borderColor = '#4db8ff')}
               onMouseLeave={(e) => (e.target.style.borderColor = '#404040')}
             >
               {load}
@@ -264,38 +315,39 @@ export default function IFRSPage() {
         </div>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#4a6a7a', fontSize: '0.8rem', marginBottom: '16px' }}>
-          // ACCOUNTING SCENARIO
+        <h3 style={{ color: '#1a5a8a', fontSize: '0.8rem', marginBottom: '16px' }}>
+          // DEFINE YOUR IFRS SCENARIO
         </h3>
-        <p style={{ color: '#666', fontSize: '0.75rem', marginBottom: '12px' }}>
-          GROQ LLaMA 3.3 70B · IFRS SPECIALIST
-        </p>
-
-        <textarea
-          placeholder="// Describe your IFRS accounting challenge or scenario..."
-          style={{
-            width: '100%',
-            minHeight: '150px',
-            background: '#0a0a0a',
-            border: '1px solid #333',
-            color: '#aaa',
-            padding: '16px',
-            fontSize: '0.9rem',
-            fontFamily: 'monospace',
-            marginBottom: '16px',
-            boxSizing: 'border-box',
-          }}
-        />
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+            IFRS SCENARIO *
+          </label>
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="// Describe your IFRS scenario, standard, numbers, and required treatment..."
+            style={{
+              width: '100%',
+              minHeight: '200px',
+              background: '#0a0a0a',
+              border: '1px solid #333',
+              color: '#aaa',
+              padding: '16px',
+              fontSize: '0.9rem',
+              fontFamily: 'monospace',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
 
         <button
           type="submit"
           disabled={loading}
           style={{
             background: 'transparent',
-            border: '1px solid #64a7d7',
-            color: '#64a7d7',
+            border: '1px solid #4db8ff',
+            color: '#4db8ff',
             padding: '12px 24px',
             fontSize: '0.85rem',
             cursor: loading ? 'not-allowed' : 'pointer',
@@ -307,25 +359,21 @@ export default function IFRSPage() {
         </button>
       </form>
 
-      {/* Error */}
       {error && (
-        <div
-          style={{
-            background: 'rgba(220,53,69,0.1)',
-            border: '1px solid #dc3545',
-            color: '#ff6b6b',
-            padding: '16px',
-            marginBottom: '20px',
-            fontSize: '0.85rem',
-          }}
-        >
+        <div style={{
+          background: 'rgba(220,53,69,0.1)',
+          border: '1px solid #dc3545',
+          color: '#ff6b6b',
+          padding: '16px',
+          marginBottom: '20px',
+          fontSize: '0.85rem',
+        }}>
           {error}
         </div>
       )}
 
-      {/* Response */}
       {response && (
-        <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '24px' }}>
+        <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '32px' }}>
           <ReportRenderer text={response} />
         </div>
       )}
