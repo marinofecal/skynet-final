@@ -6,175 +6,213 @@ import Link from 'next/link';
 function ReportRenderer({ text }) {
   if (!text) return null;
 
-  const lines = text.split('\n');
-  const elements = [];
-  let i = 0;
+  const cleanText = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
 
-  while (i < lines.length) {
-    const line = lines[i];
+  const parseBold = (line) => {
+    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <strong key={i} style={{ color: '#64d07b', fontWeight: '700' }}>
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
+
+  const lines = cleanText.split('\n');
+  const elements = [];
+  let inCodeBlock = false;
+  let codeBuffer = [];
+  let tableBuffer = [];
+  let inTable = false;
+
+  const flushTable = (key) => {
+    if (tableBuffer.length === 0) return;
+    const rows = tableBuffer.filter(
+      (r) => !/^\|\s*[-:]+[-:|\s]*\|?\s*$/.test(r)
+    );
+    const parsedRows = rows.map((r) =>
+      r.split('|').map((c) => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''))
+    );
+    if (parsedRows.length === 0) {
+      tableBuffer = [];
+      return;
+    }
+    elements.push(
+      <div key={`table-${key}`} style={{ overflowX: 'auto', marginBottom: '16px' }}>
+        <table
+          style={{
+            width: '100%',
+            borderCollapse: 'collapse',
+            fontSize: '0.82rem',
+            fontFamily: 'monospace',
+          }}
+        >
+          <thead>
+            <tr>
+              {parsedRows[0].map((cell, i) => (
+                <th
+                  key={i}
+                  style={{
+                    border: '1px solid #2d5a3d',
+                    padding: '8px 12px',
+                    background: 'rgba(100,208,123,0.1)',
+                    color: '#64d07b',
+                    textAlign: 'left',
+                    fontWeight: '700',
+                  }}
+                >
+                  {cell}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {parsedRows.slice(1).map((row, rIdx) => (
+              <tr key={rIdx}>
+                {row.map((cell, cIdx) => (
+                  <td
+                    key={cIdx}
+                    style={{
+                      border: '1px solid #2d5a3d',
+                      padding: '8px 12px',
+                      color: '#cfcfcf',
+                    }}
+                  >
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+    tableBuffer = [];
+  };
+
+  lines.forEach((line, idx) => {
+    // Code block detection
+    if (line.trim().startsWith('```')) {
+      if (inCodeBlock) {
+        elements.push(
+          <pre
+            key={`code-${idx}`}
+            style={{
+              background: 'rgba(50,200,100,.05)',
+              border: '1px solid #2d5a3d',
+              color: '#64d07b',
+              padding: '12px 16px',
+              fontSize: '0.82rem',
+              overflow: 'auto',
+              marginBottom: '16px',
+              fontFamily: 'monospace',
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            {codeBuffer.join('\n')}
+          </pre>
+        );
+        codeBuffer = [];
+        inCodeBlock = false;
+      } else {
+        inCodeBlock = true;
+      }
+      return;
+    }
+
+    if (inCodeBlock) {
+      codeBuffer.push(line);
+      return;
+    }
+
+    // Table detection
+    if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
+      tableBuffer.push(line.trim());
+      inTable = true;
+      return;
+    } else if (inTable) {
+      flushTable(idx);
+      inTable = false;
+    }
+
     const trimmed = line.trim();
 
     if (!trimmed) {
-      elements.push(<div key={i} style={{ height: '0.5rem' }} />);
-      i++;
-      continue;
+      elements.push(<div key={idx} style={{ height: '0.5rem' }} />);
+      return;
     }
 
-    // CODE BLOCKS
-    if (trimmed.startsWith('```')) {
-      const codeLines = [];
-      i++;
-      while (i < lines.length && !lines[i].trim().startsWith('```')) {
-        codeLines.push(lines[i]);
-        i++;
-      }
-      if (i < lines.length) i++;
-
+    // Section headers (### or numbered sections like "1. FORMULA SECTION")
+    if (/^#{1,3}\s+/.test(trimmed) || /^\d+\.\s+[A-Z\s]+:?$/.test(trimmed)) {
+      const content = trimmed.replace(/^#{1,3}\s+/, '');
       elements.push(
-        <pre
-          key={'code' + i}
+        <h2
+          key={idx}
           style={{
-            background: 'rgba(100,208,123,.08)',
-            border: '1px solid #2d5a3d',
             color: '#64d07b',
-            padding: '12px',
-            fontSize: '0.85rem',
-            overflow: 'auto',
-            marginBottom: '12px',
-            fontFamily: 'monospace',
-            borderRadius: '4px',
-          }}
-        >
-          {codeLines.join('\n')}
-        </pre>
-      );
-      continue;
-    }
-
-    // TABLES
-    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
-      const tableLines = [];
-      while (i < lines.length && lines[i].trim().startsWith('|')) {
-        tableLines.push(lines[i].trim());
-        i++;
-      }
-
-      // Filter out separator lines (|----|----|)
-      const rows = tableLines
-        .filter(l => !/^\|[\s\-:|]+\|$/.test(l))
-        .map(l => l.split('|').filter(c => c.trim() !== '').map(c => c.trim()));
-
-      if (rows.length > 0) {
-        elements.push(
-          <div
-            key={'table' + i}
-            style={{
-              overflowX: 'auto',
-              marginBottom: '16px',
-              border: '1px solid #2d5a3d',
-              borderRadius: '4px',
-            }}
-          >
-            <table
-              style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                fontSize: '0.8rem',
-                color: '#64d07b',
-              }}
-            >
-              <tbody>
-                {rows.map((row, rowIdx) => (
-                  <tr
-                    key={rowIdx}
-                    style={{
-                      background: rowIdx === 0 ? 'rgba(100,208,123,.15)' : 'rgba(100,208,123,.02)',
-                      borderBottom: '1px solid #2d5a3d',
-                    }}
-                  >
-                    {row.map((cell, cellIdx) => (
-                      <td
-                        key={cellIdx}
-                        style={{
-                          padding: '10px 12px',
-                          textAlign: cellIdx === 0 ? 'left' : 'center',
-                          borderRight: cellIdx < row.length - 1 ? '1px solid #2d5a3d' : 'none',
-                          fontWeight: rowIdx === 0 ? '700' : '400',
-                          fontFamily: 'monospace',
-                        }}
-                      >
-                        {cell}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      }
-      continue;
-    }
-
-    // HEADERS
-    if (/^\d+\.\s/.test(trimmed)) {
-      elements.push(
-        <h3
-          key={'h' + i}
-          style={{
-            fontSize: '1rem',
+            fontSize: '1.1rem',
             fontWeight: '700',
-            color: '#64d07b',
-            marginTop: '20px',
-            marginBottom: '10px',
-            borderBottom: '1px solid #404040',
-            paddingBottom: '8px',
+            marginTop: '24px',
+            marginBottom: '12px',
+            paddingBottom: '6px',
+            borderBottom: '1px solid #2d5a3d',
+            letterSpacing: '0.5px',
           }}
         >
-          {trimmed}
-        </h3>
+          {content}
+        </h2>
       );
-      i++;
-      continue;
+      return;
     }
 
-    // BULLETS
-    if (/^[-•*]\s/.test(trimmed)) {
-      const content = trimmed.replace(/^[-•*]\s/, '');
+    // Bullet points
+    if (/^[-•*]\s+/.test(trimmed)) {
+      const content = trimmed.replace(/^[-•*]\s+/, '');
       elements.push(
-        <div key={'bullet' + i} style={{ display: 'flex', gap: '10px', marginLeft: '16px', marginBottom: '6px' }}>
-          <span style={{ color: '#64d07b', flexShrink: 0, marginTop: '2px' }}>▪</span>
-          <span style={{ fontSize: '0.85rem', color: '#b8b8b8' }}>{content}</span>
+        <div
+          key={idx}
+          style={{
+            display: 'flex',
+            gap: '12px',
+            marginBottom: '8px',
+            paddingLeft: '8px',
+          }}
+        >
+          <span style={{ color: '#64d07b', fontWeight: '700', flexShrink: 0 }}>▸</span>
+          <p style={{ fontSize: '0.88rem', lineHeight: '1.6', color: '#cfcfcf', margin: 0, flex: 1 }}>
+            {parseBold(content)}
+          </p>
         </div>
       );
-      i++;
-      continue;
+      return;
     }
 
-    // DEFAULT
     elements.push(
       <p
-        key={'p' + i}
-        style={{
-          fontSize: '0.85rem',
-          lineHeight: '1.6',
-          marginBottom: '8px',
-          color: '#b8b8b8',
-        }}
+        key={idx}
+        style={{ fontSize: '0.88rem', lineHeight: '1.7', color: '#cfcfcf', marginBottom: '12px' }}
       >
-        {trimmed}
+        {parseBold(trimmed)}
       </p>
     );
-    i++;
-  }
+  });
 
-  return <div>{elements.map((el) => el)}</div>;
+  if (inTable) flushTable('final');
+
+  return <div>{elements}</div>;
 }
 
 export default function ExcelPage() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState('');
   const [error, setError] = useState('');
+  const [problem, setProblem] = useState('');
+  const [columns, setColumns] = useState('');
+  const [output, setOutput] = useState('');
 
   const quickLoads = [
     'Build a dynamic 3-statement financial model with scenario analysis',
@@ -184,18 +222,12 @@ export default function ExcelPage() {
   ];
 
   const handleQuickLoad = (idx) => {
-    const textarea = document.querySelectorAll('textarea')[0];
-    textarea.value = quickLoads[idx];
+    setProblem(quickLoads[idx]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const textareas = document.querySelectorAll('textarea');
-    const problem = textareas[0].value.trim();
-    const columns = textareas[1].value.trim();
-    const output = textareas[2].value.trim();
-
-    if (!problem) {
+    if (!problem.trim()) {
       setError('Please describe your Excel challenge');
       return;
     }
@@ -216,11 +248,7 @@ export default function ExcelPage() {
       if (!res.ok) throw new Error('Failed to generate solution');
 
       const data = await res.json();
-      let text = data.result || '';
-
-      // Clean up escaped characters
-      text = text.replace(/\\n/g, '\n').replace(/\\"/g, '"');
-
+      const text = data.result || data.response || JSON.stringify(data);
       setResponse(text);
     } catch (err) {
       setError(err.message || 'An error occurred');
@@ -231,10 +259,8 @@ export default function ExcelPage() {
 
   return (
     <main style={{ padding: '60px 40px', maxWidth: '1000px', margin: '0 auto' }}>
-      <Link href="/">
-        <a style={{ color: '#3a7a3a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
-          ← RETURN TO BASE
-        </a>
+      <Link href="/" style={{ color: '#3a7a3a', textDecoration: 'none', marginBottom: '40px', display: 'inline-block' }}>
+        ← RETURN TO BASE
       </Link>
 
       <div style={{ marginBottom: '60px' }}>
@@ -256,7 +282,9 @@ export default function ExcelPage() {
       </div>
 
       <div style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>// QUICK LOAD</h3>
+        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
+          // QUICK LOAD
+        </h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {quickLoads.map((load, idx) => (
             <button
@@ -282,14 +310,18 @@ export default function ExcelPage() {
       </div>
 
       <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
-        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>// DEFINE YOUR PROBLEM</h3>
+        <h3 style={{ color: '#3a7a3a', fontSize: '0.8rem', marginBottom: '16px' }}>
+          // DEFINE YOUR PROBLEM
+        </h3>
 
         <div style={{ marginBottom: '24px' }}>
           <label style={{ color: '#888', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
             01 / PROBLEM OR QUESTION *
           </label>
           <textarea
-            placeholder="// Describe your Excel challenge..."
+            value={problem}
+            onChange={(e) => setProblem(e.target.value)}
+            placeholder="// Describe your Excel challenge or financial modelling problem..."
             style={{ width: '100%', minHeight: '120px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
           />
         </div>
@@ -299,7 +331,9 @@ export default function ExcelPage() {
             02 / COLUMNS / DATA STRUCTURE (optional)
           </label>
           <textarea
-            placeholder="// e.g. Date, Revenue, COGS..."
+            value={columns}
+            onChange={(e) => setColumns(e.target.value)}
+            placeholder="// e.g. Date, Revenue, COGS, EBITDA, Region..."
             style={{ width: '100%', minHeight: '80px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
           />
         </div>
@@ -309,7 +343,9 @@ export default function ExcelPage() {
             03 / DESIRED OUTPUT (optional)
           </label>
           <textarea
-            placeholder="// What should the formula produce?"
+            value={output}
+            onChange={(e) => setOutput(e.target.value)}
+            placeholder="// What should the formula or model produce?"
             style={{ width: '100%', minHeight: '80px', background: '#0a0a0a', border: '1px solid #333', color: '#aaa', padding: '16px', fontSize: '0.9rem', fontFamily: 'monospace', boxSizing: 'border-box' }}
           />
         </div>
@@ -339,7 +375,7 @@ export default function ExcelPage() {
       )}
 
       {response && (
-        <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '24px' }}>
+        <div style={{ background: '#0a0a0a', border: '1px solid #333', padding: '32px' }}>
           <ReportRenderer text={response} />
         </div>
       )}
