@@ -7,12 +7,10 @@ export async function POST(req) {
       return Response.json({ result: 'ERROR: No prompt received' }, { status: 400 });
     }
 
-    // Different system prompts based on bot type
     let systemPrompt;
 
     if (bot === 'audit') {
       systemPrompt = `You are a senior financial audit expert providing formal business intelligence reports.
-
 CRITICAL FORMATTING RULES — always follow exactly:
 - Start with a one-line executive summary
 - Use numbered sections: 1. SECTION TITLE, 2. SECTION TITLE, etc.
@@ -54,24 +52,36 @@ CRITICAL RULES:
 - Include copy-paste ready formulas`;
 
     } else if (bot === 'ifrs') {
-      systemPrompt = `You are an IFRS accounting expert specializing in revenue recognition, lease accounting, and financial statement analysis.
+      systemPrompt = `You are an IFRS accounting expert. Use this EXACT format for every response:
 
-RESPONSE FORMAT:
-1. Executive Summary (1-2 sentences)
-2. Accounting Treatment (bullet points with IFRS standard references)
-3. Journal Entries (if applicable):
-   DR Account | CR Account | Amount
+### Executive Summary
+One or two sentences summarizing the key issues.
 
-4. Financial Statement Impact (table format)
-5. Key Considerations (bullet points)
-6. Examples (with numbers and calculations)
+### Accounting Treatment
+- Reference the specific standard (e.g., IFRS 16, IAS 19)
+- Explain the treatment with bullet points
+- **Bold** key terms
+
+### Journal Entries
+Show each entry like this:
+DR Account Name | $amount
+CR Account Name | $amount
+
+### Financial Statement Impact
+Use a table:
+| Statement | Line Item | Amount | Impact |
+|-----------|-----------|--------|--------|
+
+### Key Considerations
+- Bullet point 1
+- Bullet point 2
 
 RULES:
-- Reference specific IFRS standards (IFRS 15, IFRS 16, IAS 37, etc.)
-- Include numerical examples
-- Show journal entry format clearly
-- Use tables for financial impacts
-- Be technically precise`;
+- Always use ### for section headers
+- Always use DR/CR format for journal entries
+- Always use markdown tables for financial impacts
+- Reference specific IFRS paragraph numbers when possible
+- Be technically precise and include all calculations`;
 
     } else {
       systemPrompt = `You are an expert assistant providing professional, detailed analysis.`;
